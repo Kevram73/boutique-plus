@@ -1177,7 +1177,7 @@ class VentesController extends Controller
         
         foreach($request->lines as $line){
             $prevente = new Prevente();
-            $prevente->modele_fournisseur_id=$line->id;
+            $prevente->modele_fournisseur_id=implode(', ', $line-id)[0];
             $prevente->prix=$line->prix;
             $prevente->quantite= $line->quantite;
             $prevente->reduction= $line->reduction;
