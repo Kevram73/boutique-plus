@@ -1156,11 +1156,6 @@ class VentesController extends Controller
 
     public function store(Request $request)
     {
-        $jsonData = $request->json()->all();
-        // Vérification si des données ont été reçues
-        if (empty($jsonData)) {
-            return response()->json(['error' => 'Aucune donnée reçue'], 400);
-        }
 
         //error_log($allcommande);
         $i=DB::table('journals')->max('id');
@@ -1171,7 +1166,7 @@ class VentesController extends Controller
         $vente ->numero="VENT".now()->format('Y')."-".$ed;
         $vente ->date_vente= now();
         $vente ->user_id= Auth::user()->id;
-        $vente ->client_id= $jsonData["client"];
+        $vente ->client_id= $request->client;
         $vente ->journal_id= $i;
         $vente ->type_vente= 1;
         $vente ->boutique_id= Auth::user()->boutique->id;
@@ -1180,7 +1175,7 @@ class VentesController extends Controller
         $total = 0;
         $allReduction = 0;
         
-        foreach($jsonData['lines'] as $line){
+        foreach($request->lines as $line){
             $prevente = new Prevente();
             $prevente->modele_fournisseur_id=$line["id"];
             $prevente->prix=$line["prix"];
