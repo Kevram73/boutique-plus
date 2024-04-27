@@ -319,11 +319,11 @@ $('#valider').on('click',function (e) {
 
                 for (let i = 0; i < $table2.data().length; i++) {
                     let dataObj = {
-                        id: $table2.data()[i].id,
-                        prix: $table2.data()[i].prix,
-                        quantite: $table2.data()[i].quantite,
-                        reduction: $table2.data()[i].reduction * 1,
-                        livraison: $table2.data()[i].livraison
+                        "id": $table2.data()[i].id,
+                        "prix": $table2.data()[i].prix,
+                        "quantite": $table2.data()[i].quantite,
+                        "reduction": $table2.data()[i].reduction * 1,
+                        "livraison": $table2.data()[i].livraison
                     };
                 
                     jsonData.push(dataObj);
