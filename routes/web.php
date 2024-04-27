@@ -354,10 +354,10 @@ Route::get('/retourventedetail-{id}', 'VentesController@retourventedetail')->nam
 Route::post('/storeretourevente-{id}', 'VentesController@storeretourevente')->name('storeretourevente');
 Route::get('/retoureventeverification-{id}', 'VentesController@retoureventeverification')->name('retoureventeverification');
 
-Route::post('/storevente', 'VentesController@store');
-Route::post('/storevente2', 'VentesController@store2');
-Route::post('/storevente3', 'VentesController@store3');
-Route::post('/storevente4', 'VentesController@store4');
+Route::post('/storevente', 'VentesController@store')->name('storevente');
+Route::post('/storevente2', 'VentesController@store2')->name('storevente2');
+Route::post('/storevente3', 'VentesController@store3')->name('storevente3');
+Route::post('/storevente4', 'VentesController@store4')->name('storevente4');
 Route::post('/storedevis', 'VentesController@storedevis');
 Route::get('/allvente', 'VentesController@index');
 Route::get('/verification', 'VentesController@verification');
