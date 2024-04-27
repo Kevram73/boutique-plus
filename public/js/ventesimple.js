@@ -342,10 +342,7 @@ $('#valider').on('click',function (e) {
                         url :url,
                         type : "post",
                         data: dataToSend,
-                        headers: {
-                            'Content-Type': 'application/json', 
-                        },
-
+                       
                         success : function(data) {
                             window.location='/reglements-'+data.id;
                         },
