@@ -1156,7 +1156,7 @@ class VentesController extends Controller
 
     public function store(Request $request)
     {
-        $jsonData = $request->json()->all();
+        $jsonData = $request->json();
         // Vérification si des données ont été reçues
         if (empty($jsonData)) {
             return response()->json(['error' => 'Aucune donnée reçue'], 400);
