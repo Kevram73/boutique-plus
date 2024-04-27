@@ -9,7 +9,9 @@ use App\commandeModele;
 use App\Fournisseur;
 use App\Historique;
 use App\Modele;
+use App\Etat;
 use App\Journal_achat;
+use App\modeleFournisseur;
 use App\Produit;
 use App\produitProvision;
 use App\Provision;
@@ -204,7 +206,7 @@ class CommandesController extends Controller
                 })
                 ->where('ventes.client_id', '=', $clients[$i]->id)
                 ->SUM('reglements.montant_restant');
-            $credit[$i] = $total;
+            $credit[$i] = $total; 
         }
         $cre=count($clients);
         return view('newcommande2',compact('categorie', 'produits', 'modeles', 'fournisseurs', 'mod','modele2','clients','credit','cre'));
@@ -281,8 +283,31 @@ class CommandesController extends Controller
 
             $commande= Commande::findOrFail($commande ->id);
             $commande->totaux=$commande->totaux+  $commandemodele -> total;
-            $commande->update();
+            $commande->update();  
+        $commande= Commande::findOrFail($commande->id);
+
+            if($commande->credit == 1)
+            {
+                $fournisseur = Fournisseur::find($commande->fournisseur_id);
+
+                // Mise à jour des informations de l'utilisateur
+                $fournisseur->solde = $commande->totaux + $fournisseur->solde;
+    
+                // Sauvegarde des modifications
+                $fournisseur->save();
+            }
         }
+        
+        $etat = new Etat();
+        $etat->fournisseur_id = $commande->fournisseur_id;
+        $etat->amount = $commande->totaux;
+        $etat->created_at = now();
+        $etat->updated_at = now();
+        $etat->total = $fournisseur->solde;
+        $etat->order_num = $commande->numero;
+        $etat->type = "commande";
+        $etat->save();
+    
 
         $historique=new Historique();
         $historique->actions = "Creer";
@@ -333,7 +358,30 @@ class CommandesController extends Controller
             $commande= Commande::findOrFail($commande ->id);
             $commande->totaux=$commande->totaux+  $commandemodele -> total;
             $commande->update();
+
+            $commande= Commande::findOrFail($commande->id);
+
+            if($commande->credit == 1)
+            {
+                $fournisseur = Fournisseur::find($commande->fournisseur_id);
+
+                // Mise à jour des informations de l'utilisateur
+                $fournisseur->solde = $commande->totaux + $fournisseur->solde;
+    
+                // Sauvegarde des modifications
+                $fournisseur->save();
+            }
         }
+        
+        $etat = new Etat();
+        $etat->fournisseur_id = $commande->fournisseur_id;
+        $etat->amount = $commande->totaux;
+        $etat->created_at = now();
+        $etat->updated_at = now();
+        $etat->total = $fournisseur->solde;
+        $etat->order_num = $commande->numero;
+        $etat->type = "commande";
+        $etat->save();
 
         $historique=new Historique();
         $historique->actions = "Creer";
@@ -383,6 +431,17 @@ class CommandesController extends Controller
             $commande= Commande::findOrFail($commande ->id);
             $commande->totaux=$commande->totaux+  $commandemodele -> total;
             $commande->update();
+          
+              if($commande ->credit==1)
+            {
+                $fournisseur = Fournisseur::find($commande->fournisseur_id);
+    
+                // Mise à jour des informations de l'utilisateur
+                $fournisseur->solde = $commande->totaux + $fournisseur->solde;
+    
+                // Sauvegarde des modifications
+                $fournisseur->save();
+            }
         }
 
         $historique=new Historique();
@@ -980,7 +1039,80 @@ class CommandesController extends Controller
 
     public function historique()
     {
-        return view('historiqueachat');
+        $fournisseurs=Fournisseur::all();
+        $produits=Modele::all()     
+           ->where ('boutique_id', '=',Auth::user()->boutique->id );
+        ;
+        return view('historiqueachat',compact('fournisseurs','produits'));
+    }
+
+    public function allreportvent(Request $request)
+    {
+        // dd($request->all());
+        $modele=Modele::with(['produit','boutique'])
+        ->join('modele_fournisseurs', function ($join) {
+            $join->on('modeles.id', '=', 'modele_fournisseurs.modele_id');
+        })
+        ->join('preventes', function ($join) {
+            $join->on('preventes.modele_fournisseur_id', '=', 'modele_fournisseurs.id');
+        })
+        ->join('ventes', function ($join) {
+            $join->on('ventes.id', '=', 'preventes.vente_id');
+        })
+        ->join('users', function ($join) {
+            $join->on('ventes.user_id', '=', 'users.id');
+        });
+
+        if($request->client > 0)
+        {
+            $modele->join('clients', function ($join) {
+                $join->on('ventes.client_id', '=', 'clients.id');
+            });
+        }
+
+        $modele
+        ->where ('modeles.boutique_id', '=',Auth::user()->boutique->id );
+
+        if($request->produit > 0)
+        {
+            $modele
+            ->where ('modeles.id', '=', $request->produit);
+        }
+
+        if($request->type > 0)
+        {
+            $modele
+            ->where ('ventes.type_vente', '=', $request->type);
+        }
+
+        if($request->client > 0)
+        {
+            $modele
+            ->where ('clients.id', '=', $request->client);
+        }
+
+        if(!empty($request->debut))
+        {
+            $modele
+            ->where ('ventes.created_at', '>=', $request->debut);
+        }
+
+        if(!empty($request->fin))
+        {
+            $modele
+            ->where ('ventes.created_at', '<=', $request->fin);
+        }
+
+        $modele = $modele
+                    ->selectRaw('ventes.date_vente as date, preventes.quantite as quantite, preventes.prixtotal as montant, ventes.numero as numero, ventes.id as vente_id, CONCAT(users.nom, " ", users.prenom) as user')
+                    ->orderBy('ventes.created_at', 'Desc')
+                    ->get();
+
+        return datatables()->of($modele)
+        // ->addColumn('numero', function ($clt) {
+        //     return  '<a href="/showvente-' . $clt->vente_id . '">'. $clt->num .'</a>';
+        // })
+        ->make(true) ;
     }
 
     public function adminhistorique()
@@ -988,6 +1120,116 @@ class CommandesController extends Controller
         $boutiques=Boutique::all();
         return view('adminhistoriqueachat',compact('boutiques'));
     }
+
+    public function allfournihistorique(Request $request)
+    {
+        //echo $request->product;
+        /*  $test = DB::table('modeles')
+             //->join('modele_fournisseurs', 'modeles.id', '=', 'modele_fournisseurs.modele_id')
+            
+              ->join('commande_modeles', 'commande_modeles.modele', '=', 'modeles.id')
+               ->join('commandes', 'commandes.id', '=', 'commande_modeles.commande_id')
+              ->join('fournisseurs', 'fournisseurs.id', '=', 'commandes.fournisseur_id')
+               ->select('fournisseurs.nom', 'modeles.libelle', 'commandes.date_commande', 'commande_modeles.quantite', 'commande_modeles.prix', 'commande_modeles.total')
+             ->where('modeles.id', 1)
+             ->get();
+             dd($test); */
+
+        $modele=Modele::with(['produit','boutique'])
+        ->join('commande_modeles', function ($join) {
+            $join->on('modeles.id', '=', 'commande_modeles.modele');
+        })
+       ->join('commandes', function ($join) {
+            $join->on('commandes.id', '=', 'commande_modeles.commande_id');
+        })
+         ->join('fournisseurs', function ($join) {
+            $join->on('fournisseurs.id', '=', 'commandes.fournisseur_id');
+        })          ;
+        //dd($modele);
+
+        if($request->produit > 0)
+        {
+         $modele = $modele
+             ->where ('modeles.id', '=', $request->produit);
+        }  
+        
+        if($request->fournisseur > 0)
+         {
+            // echo " Je recupere le fournisseur -------------------------------";
+             $modele=$modele
+             ->where ('fournisseurs.id', '=', $request->fournisseur);
+         }
+         if(!empty($request->debut))
+         {
+             $modele
+             ->where ('commandes.created_at', '>=', $request->debut);
+         }
+ 
+         if(!empty($request->fin))
+         {
+             $modele
+             ->where ('commandes.created_at', '<=', $request->fin);
+         }
+        $modele=$modele
+        ->selectRaw('commandes.date_commande as date,fournisseurs.nom as nom,modeles.libelle as libelle, commande_modeles.quantite as quantite,commande_modeles.prix as price_unit, commande_modeles.total as montant')
+                    //->orderBy('commandes.created_at', 'Desc')
+        ->get();
+
+         return datatables()->of($modele)
+       
+        ->make(true) ;   
+     }
+    
+
+
+    public function allfournihistoriquesum(Request $request)
+    {
+        $modele=Modele::with(['produit','boutique'])
+        ->join('commande_modeles', function ($join) {
+            $join->on('modeles.id', '=', 'commande_modeles.modele');
+        })
+       ->join('commandes', function ($join) {
+            $join->on('commandes.id', '=', 'commande_modeles.commande_id');
+        })
+         ->join('fournisseurs', function ($join) {
+            $join->on('fournisseurs.id', '=', 'commandes.fournisseur_id');
+        });  
+        //dd($modele);
+
+        if($request->product > 0)
+        {
+            $modele
+            ->where ('modeles.id', '=', $request->product);
+        }
+
+        $modele
+        ->where ('modeles.boutique_id', '=',Auth::user()->boutique->id );
+
+        if($request->fournisseur > 0)
+        {
+            $modele
+            ->where ('fournisseurs.id', '=', $request->fournisseur);
+        }
+        if(!empty($request->debut))
+        {
+            $modele
+            ->where ('commandes.created_at', '>=', $request->debut);
+        }
+
+        if(!empty($request->fin))
+        {
+            $modele
+            ->where ('commandes.created_at', '<=', $request->fin);
+        }
+        $modele
+        ->selectRaw('SUM(commande_modeles.quantite) as quantite, SUM(commande_modeles.total) as montant');
+
+        $modele = $modele
+        ->first();
+
+        return $modele;
+    }
+
 
 
 }

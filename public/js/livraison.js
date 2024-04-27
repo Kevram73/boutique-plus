@@ -6,7 +6,7 @@ $('#credit').on('click', function(){
 var livraisonTable;
 
 
-
+console.log('ajout detail');
 
 $(function () {
 
@@ -96,11 +96,11 @@ $('#produit').on('change',function ( ) {
 function show(id){
 
     $.ajax({
-        url: '/showlivraison-'+id,
+        url: '/livraison-'+id,
         type: "get",
         success : function(data) {
 
-            window.location='/detaillivraison-'+id
+            window.location='/livraison-'+id
 
         },
         error : function(data){

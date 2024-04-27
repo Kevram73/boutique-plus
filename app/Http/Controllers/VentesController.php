@@ -12,6 +12,8 @@ use App\Prevente;
 use App\Produit;
 use App\Reglement;
 use App\vente;
+use App\Livraison;
+use App\livraisonCommande;
 use App\DevisVente;
 use App\DevisLignesVente;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +30,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use PDF;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Illuminate\Support\Facades\View;
 
 class VentesController extends Controller
 {
@@ -54,60 +59,108 @@ class VentesController extends Controller
         return datatables()->of($vente)
             ->addColumn('action', function ($clt) {
                 return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
-                                     <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>'
+                                     <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a> <a class="btn btn-warning" href="/livraison/bon/'. $clt->id .'"><i class="fa fa-file"></i></a>'
                                       ;
             })
             ->make(true);
     }
 
+    // public function liste()
+    // {
+
+    //     //get ventes joining on users
+    //     $vente=vente::join('users', function ($join) {
+    //         $join->on('ventes.user_id', '=', 'users.id');
+    //     })->
+    //     orderBy('ventes.created_at', 'DESC')->get();
+
+    //     $modele2=DB::table('modeles')
+    //         ->join('produits', function ($join) {
+    //             $join->on('modeles.produit_id', '=', 'produits.id');
+    //         })
+    //         ->where ('modeles.boutique_id', '=',Auth::user()->boutique->id )
+    //         ->whereColumn('modeles.seuil','>=','modeles.quantite')
+    //         ->get();
+    //     $mod=count($modele2);
+    //     $clients=DB::table('clients')
+    //         ->join('ventes', function ($join) {
+    //             $join->on('ventes.client_id', '=', 'clients.id');
+    //         })
+    //         ->join('reglements', function ($join) {
+    //             $join->on('reglements.vente_id', '=', 'ventes.id');
+    //         })
+    //         ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
+    //         ->where('reglements.montant_restant', '>', 0)
+    //         ->select('clients.nom as nom','clients.id as id')
+    //         ->groupBy('id', 'clients.nom')
+    //         ->get();
+    //     $credit=array();
+    //     for ($i =0 ;$i<count($clients);$i++) {
+    //         $total = DB::table('reglements')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('reglements.vente_id', '=', 'ventes.id');
+    //             })
+    //             ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
+    //             ->where('ventes.client_id', '=', $clients[$i]->id)
+    //             ->SUM('reglements.montant_restant');
+    //         $credit[$i] = $total;
+    //     }
+    //     $cre=count($clients);
+    //     $historique=new Historique();
+    //     $historique->actions = "Liste";
+    //     $historique->cible = "Ventes";
+    //     $historique->user_id =Auth::user()->id;
+    //     $historique->save();
+    //     return view('vente',compact('vente','modele2','mod','clients','credit','cre'));
+    // }
+    
     public function liste()
     {
-
-        //get ventes joining on users
-        $vente=vente::join('users', function ($join) {
-            $join->on('ventes.user_id', '=', 'users.id');
-        })->
-        orderBy('ventes.created_at', 'DESC')->get();
-
-        $modele2=DB::table('modeles')
-            ->join('produits', function ($join) {
-                $join->on('modeles.produit_id', '=', 'produits.id');
-            })
-            ->where ('modeles.boutique_id', '=',Auth::user()->boutique->id )
-            ->whereColumn('modeles.seuil','>=','modeles.quantite')
-            ->get();
-        $mod=count($modele2);
-        $clients=DB::table('clients')
-            ->join('ventes', function ($join) {
-                $join->on('ventes.client_id', '=', 'clients.id');
-            })
-            ->join('reglements', function ($join) {
-                $join->on('reglements.vente_id', '=', 'ventes.id');
-            })
-            ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
-            ->where('reglements.montant_restant', '>', 0)
-            ->select('clients.nom as nom','clients.id as id')
-            ->groupBy('id', 'clients.nom')
-            ->get();
-        $credit=array();
-        for ($i =0 ;$i<count($clients);$i++) {
-            $total = DB::table('reglements')
-                ->join('ventes', function ($join) {
-                    $join->on('reglements.vente_id', '=', 'ventes.id');
-                })
-                ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
-                ->where('ventes.client_id', '=', $clients[$i]->id)
-                ->SUM('reglements.montant_restant');
-            $credit[$i] = $total;
+        // Récupération des ventes avec les utilisateurs associés
+        $ventes = Vente::join('users', 'ventes.user_id', '=', 'users.id')
+                       ->where('ventes.boutique_id', '=', Auth::user()->boutique->id)
+                       ->orderBy('ventes.created_at', 'DESC')
+                       ->get();
+    
+        // Récupération des modèles de produits disponibles dans la boutique
+        $modeles = Modele::join('produits', 'modeles.produit_id', '=', 'produits.id')
+                         ->where('modeles.boutique_id', '=', Auth::user()->boutique->id)
+                         ->whereColumn('modeles.seuil', '>=', 'modeles.quantite')
+                         ->get();
+    
+        // Comptage des modèles de produits
+        $nombreModeles = $modeles->count();
+    
+        // Récupération des clients avec un crédit restant à payer
+        $clients = Client::join('ventes', 'ventes.client_id', '=', 'clients.id')
+                         ->join('reglements', 'reglements.vente_id', '=', 'ventes.id')
+                         ->where('ventes.boutique_id', '=', Auth::user()->boutique->id)
+                         ->where('reglements.montant_restant', '>', 0)
+                         ->select('clients.nom as nom', 'clients.id as id')
+                         ->groupBy('id', 'clients.nom')
+                         ->get();
+    
+        // Calcul du crédit pour chaque client
+        $creditClients = [];
+        foreach ($clients as $client) {
+            $totalCredit = Reglement::join('ventes', 'reglements.vente_id', '=', 'ventes.id')
+                                    ->where('ventes.boutique_id', '=', Auth::user()->boutique->id)
+                                    ->where('ventes.client_id', '=', $client->id)
+                                    ->sum('reglements.montant_restant');
+            $creditClients[$client->id] = $totalCredit;
         }
-        $cre=count($clients);
-        $historique=new Historique();
+    
+        // Enregistrement de l'action dans l'historique
+        $historique = new Historique();
         $historique->actions = "Liste";
         $historique->cible = "Ventes";
-        $historique->user_id =Auth::user()->id;
+        $historique->user_id = Auth::user()->id;
         $historique->save();
-        return view('vente',compact('vente','modele2','mod','clients','credit','cre'));
+    
+        // Renvoi de la vue avec les données
+        return view('vente', compact('ventes', 'modeles', 'nombreModeles', 'clients', 'creditClients'));
     }
+
 
     public function reglement($id)
     {
@@ -351,15 +404,33 @@ class VentesController extends Controller
             ->get();
 
         $name = "devis_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
-        $pdf = null;
+        
             try{
-                $pdf = PDF::loadView('facturedevis',compact('devis', 'devislignes', 'client'))
-                        ->setPaper('a4')
-                        ->save(public_path("devis/".$name));
+                $options = new Options();
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('isRemoteEnabled', TRUE);
+                $options->set('isPhpEnabled', true);
+        
+                $dompdf = new Dompdf($options);
+        
+                // Chargez la vue dans Dompdf
+                $view = view('facturedevis',compact('devis', 'devislignes', 'client'))->render();
+                $dompdf->loadHtml($view);
+        
+                // Définissez la taille du papier
+                $dompdf->setPaper('a4');
+        
+                // Rendez le PDF
+                $dompdf->render();
+        
+                // Enregistrez le PDF dans un répertoire
+                file_put_contents(public_path("devis/" . $name), $dompdf->output());
+        
             }catch(Exception $e)
             {}
 
-            return $pdf->download($name);
+            //return $pdf->download($name);
+            return response()->download(public_path("devis/" . $name));
     }
 
     public function facturedevisgros(Request $request, $id)
@@ -393,13 +464,31 @@ class VentesController extends Controller
         $name = "devis_de_gros_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
         $pdf = null;
             try{
-                $pdf = PDF::loadView('facturedevisgros',compact('devis', 'devislignes', 'client'))
-                        ->setPaper('a4')
-                        ->save(public_path("devis/".$name));
+                $options = new Options();
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('isRemoteEnabled', TRUE);
+                $options->set('isPhpEnabled', true);
+        
+                $dompdf = new Dompdf($options);
+        
+                // Chargez la vue dans Dompdf
+                $view = view('facturedevisgros',compact('devis', 'devislignes', 'client'))->render();
+                $dompdf->loadHtml($view);
+        
+                // Définissez la taille du papier
+                $dompdf->setPaper('a4');
+        
+                // Rendez le PDF
+                $dompdf->render();
+        
+                // Enregistrez le PDF dans un répertoire
+                file_put_contents(public_path("devis/" . $name), $dompdf->output());
+        
             }catch(Exception $e)
             {}
 
-            return $pdf->download($name);
+            //return $pdf->download($name);
+            return response()->download(public_path("devis/" . $name));
     }
 
     public function facturecredit(Request $request, $id)
@@ -477,7 +566,7 @@ class VentesController extends Controller
             $name = "facture_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
             $pdf = null;
             $all_vente = Vente::find($id);
-            try{
+            /* try{
                 $pdf = PDF::loadView('facturecredit',compact('all_vente', 'vente','modele2','mod','total','clients','credit','cre'))
                         ->setPaper('a4')
                         ->save(public_path("factures/".$name));
@@ -486,9 +575,39 @@ class VentesController extends Controller
             {}
 
             // return $pdf->stream();
-            return $pdf->download($name);
+            return $pdf->download($name); */
 
-        // return view('facturecredit',compact('vente','modele2','mod','total','clients','credit','cre'));
+            $client = DB::table('clients')->where('id', $all_vente->client_id)->first();
+
+            try {
+                // Créez une instance de Dompdf avec des options
+                $options = new Options();
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('isPhpEnabled', true);
+        
+                $dompdf = new Dompdf($options);
+        
+                // Chargez la vue dans Dompdf
+                $view = view('facturecredit', compact('all_vente', 'vente', 'modele2', 'mod', 'total', 'clients', 'credit', 'cre', 'client'))->render();
+                $dompdf->loadHtml($view);
+        
+                // Définissez la taille du papier
+                $dompdf->setPaper('a4');
+        
+                // Rendez le PDF
+                $dompdf->render();
+        
+                // Enregistrez le PDF dans un répertoire
+                file_put_contents(public_path("factures/" . $name), $dompdf->output());
+        
+                // Mettez à jour la base de données avec le nom du fichier
+                DB::table('ventes')->where('id', $id)->update(['facture' => $name]);
+        
+                return response()->download(public_path("factures/" . $name));
+        
+            } catch (Exception $e) {
+                return response()->json(['message' => $e->getMessage()]);
+            }
     }
 
     public function facturegros(Request $request, $id)
@@ -638,19 +757,50 @@ class VentesController extends Controller
             ->SUM('preventes.prixtotal');
 
         $name = "facture_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
-        $all_vente = Vente::find($id);
+        $all_vente = vente::find($id);
         $client=DB::table('clients')->where('id', $all_vente->client_id)->first();
-        try{
+        /* try{
             $pdf = PDF::loadView('facturesimple',compact('all_vente', 'vente','modele2','mod','total','clients','credit','cre', 'client'))
                     ->setPaper('a4')
                     ->save(public_path("factures/".$name));
+
+                    //dd($pdf);
             DB::table('ventes')->where('id',$id)->update(['facture' => $name]);
-        }catch(Exception $e)
+        }catch(Exception $e) 
         {}
 
         // return $pdf->stream();
-        return $pdf->download($name);
-        // return view('facturesimple',compact('vente','modele2','mod','total','clients','credit','cre'));
+        return $pdf->download($name); */
+        
+        // Créer une instance Dompdf
+        $dompdf = new Dompdf();
+    
+        // Rendre la vue de facture à l'aide de View
+        $html = View::make('facturesimple', compact('all_vente', 'vente', 'modele2', 'mod', 'total', 'clients', 'credit', 'cre', 'client'))->render();
+    
+        // Charger le HTML dans Dompdf
+        $dompdf->loadHtml($html);
+    
+        // Définir le format du papier et de l'orientation
+        $dompdf->setPaper('A4', 'landscape');
+    
+        // Générer le PDF
+        $dompdf->render();
+    
+        // Nom du fichier PDF
+        $name = "facture_" . date('Y-m-d_H-i-s', strtotime(now())) . ".pdf";
+    
+        // Enregistrez le PDF dans un dossier public
+        $output = $dompdf->output();
+        file_put_contents(public_path("factures/" . $name), $output);
+    
+        // Mettez à jour votre modèle de vente avec le nom du fichier PDF si nécessaire
+        DB::table('ventes')->where('id', $id)->update(['facture' => $name]);
+    
+        $pdfPath = public_path("factures/" . $name);
+
+        return response()->download($pdfPath);
+
     }
 
     public function fictiveCreate($id)
@@ -1006,48 +1156,78 @@ class VentesController extends Controller
 
     public function store(Request $request)
     {
-        $allcommande= explode( ',', $request->input('venTable') );
-        error_log($allcommande);
+        $jsonData = json_decode($request->getContent(), true);
+
+        // Vérification si des données ont été reçues
+        if (empty($jsonData)) {
+            return response()->json(['error' => 'Aucune donnée reçue'], 400);
+        }
+
+        //error_log($allcommande);
         $i=DB::table('journals')->max('id');
         $id=DB::table('ventes')->max('id');
         $ed=1+$id;
-        DB::beginTransaction();
+       //DB::beginTransaction();
         $vente = new vente();
         $vente ->numero="VENT".now()->format('Y')."-".$ed;
         $vente ->date_vente= now();
         $vente ->user_id= Auth::user()->id;
-        $vente ->client_id= $allcommande[1];
+        $vente ->client_id= $jsonData["client"];
         $vente ->journal_id= $i;
         $vente ->type_vente= 1;
         $vente ->boutique_id= Auth::user()->boutique->id;
+        $vente->delivered = "En attente";
         $vente->save();
         $total = 0;
         $allReduction = 0;
+        
+        foreach($jsonData['lines'] as $line){
+            $prevente = new Prevente();
+            $prevente->modele_fournisseur_id=$line["id"];
+            $prevente->prix=$line["prix"];
+            $prevente->quantite= $line["quantite"];
+            $prevente->reduction= $line['reduction'];
+            $prevente->livraison= $line['livraison'];
+            $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
+            $prevente->vente_id=$vente->id;
+            $prevente->save();
+            
+            $livraison = Livraison::where('numero', $line['livraison'])->get()->first();
+            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
+            $livraison_commande->quantite_vendue += $line['quantite'];
+            $livraison_commande->save();
+        }
 
-        for ($i =0 ;$i<count($allcommande);$i+=5) {
+     /*for ($i =0 ;$i<count($jsonData['line']);$i+=5) {
             $prevente = new Prevente();
             $prevente ->modele_fournisseur_id=$allcommande[$i];
             $prevente ->prix=$allcommande[$i+2];
             $prevente ->quantite= $allcommande[$i+3];
             $prevente ->reduction= $allcommande[$i+4];
+            $prevente ->livraison= $allcommande[$i+5];
             $prevente ->prixtotal = $allcommande[$i+3]*$allcommande[$i+2] - $allcommande[$i+4];
             $prevente ->vente_id=$vente->id;
             $prevente->save();
-            $modele= Modele::findOrFail($allcommande[$i]);
-            if($modele->quantite < $prevente->quantite)
-            {
-                DB::rollback();
-                return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
-            }
-            $modele->quantite=$modele->quantite -$prevente ->quantite;
-            $modele->update();
+            
+            $livraison = Livraison::where('numero', $allcommande[$i+5])->get()->first();
+            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
+            $livraison_commande->quantite_vendue += $allcommande[$i+3];
+            $livraison_commande->save();
+            //$modele= Modele::findOrFail($allcommande[$i]);
+            // if($modele->quantite < $prevente->quantite)
+            // {
+            //     DB::rollback();
+            //     return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
+            // }
+            //$modele->quantite=$modele->quantite -$prevente ->quantite;
+            //$modele->update();
 
             $total = $total + $prevente->prixtotal;
             $allReduction = $allReduction + $prevente->reduction;
-        }
-        DB::commit();
+        }*/
+        //DB::commit();
 
-        $vente=vente::findOrFail($vente->id);
+       $vente=vente::findOrFail($vente->id);
         $vente->montant_reduction = $allReduction;
 
         if($request->input('setTva') == "on")
@@ -1059,9 +1239,55 @@ class VentesController extends Controller
             $vente->montant_ht = $montant_ht;
             $vente->montant_tva = $montant_tva;
             $vente->totaux= $montant_ht + $montant_tva;
+             if($request->input('checkavoir') == "on")
+            {
+                 $client = Client::find($vente->client_id);
+                  $vente->with_avoir = true;
+                    if($client->avoir > $vente->totaux)
+                    {
+
+                    $client->avoir = $client->avoir - $vente->totaux;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
+
+                    }
+                    elseif($client->avoir < $vente->totaux)
+                    {
+
+                    $client->avoir = 0;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
+
+                    }
+                    // Sauvegarde des modifications
+                    $client->save();
+            }
         }else{
             $vente->with_tva = false;
             $vente->totaux = $total;
+             if($request->input('checkavoir') == "on")
+            {
+                 $client = Client::find($vente->client_id);
+                  $vente->with_avoir = true;
+                    if($client->avoir > $vente->totaux)
+                    {
+
+                    $client->avoir = $client->avoir - $vente->totaux;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
+
+                    }
+                    elseif($client->avoir < $vente->totaux)
+                    {
+
+                    $client->avoir = 0;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
+
+                    }
+                    // Sauvegarde des modifications
+                    $client->save();
+            }
         }
 
         $vente->update();
@@ -1095,13 +1321,13 @@ class VentesController extends Controller
                 ->SUM('reglements.montant_restant');
             $credit[$i] = $total;
         }
-        $cre=count($clients);
+     $cre=count($clients);
         $historique=new Historique();
         $historique->actions = "Creer";
         $historique->cible = "Ventes";
         $historique->user_id =Auth::user()->id;
         $historique->save();
-        $total = DB::table('ventes')
+          $total = DB::table('ventes')
             ->join('preventes', function ($join) {
                 $join->on('preventes.vente_id', '=', 'ventes.id');
             })
@@ -1109,15 +1335,15 @@ class VentesController extends Controller
             ->SUM('preventes.prixtotal');
         $id=DB::table('factures')->max('id');
         $ed=1+$id;
-        $facture=new Facture();
+         $facture=new Facture();
         $facture->prixapayer =$total;
         $facture->montant_reduction =$allReduction;
         $facture->vente_id =$vente->id;
         $facture ->numero="FACT".now()->format('Y')."-".$ed;
         $facture->save();
-        if ($mod>0){
+       /* if ($mod>0){
          Alert::warning('Attention quantité inferieure au seuil','Veuillez vous approvisionner');
-        }
+        }*/
         $clients=DB::table('clients')
             ->join('ventes', function ($join) {
                 $join->on('ventes.client_id', '=', 'clients.id');
@@ -1151,7 +1377,7 @@ class VentesController extends Controller
         $i=DB::table('journals')->max('id');
         $id=DB::table('ventes')->max('id');
         $ed=1+$id;
-        DB::beginTransaction();
+       DB::beginTransaction();
         $vente = new vente();
         $vente ->numero="VENT".now()->format('Y')."-".$ed;
         $vente ->date_vente= now();
@@ -1160,6 +1386,7 @@ class VentesController extends Controller
         $vente ->journal_id= $i;
         $vente ->type_vente= 2;
         $vente ->boutique_id= Auth::user()->boutique->id;
+        $vente->delivered = "En attente";
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1173,14 +1400,14 @@ class VentesController extends Controller
             $prevente ->prixtotal =$prevente ->prix *$prevente ->quantite - $prevente->reduction;
             $prevente ->vente_id=$vente->id;
             $prevente->save();
-            $modele= Modele::findOrFail($allcommande[$i]);
-            if($modele->quantite < $prevente ->quantite)
-            {
-                DB::rollback();
-                return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
-            }
-            $modele->quantite=$modele->quantite -$prevente ->quantite;
-            $modele->update();
+            //$modele= Modele::findOrFail($allcommande[$i]);
+            // if($modele->quantite < $prevente ->quantite)
+            // {
+            //     DB::rollback();
+            //     return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
+            // }
+            //$modele->quantite=$modele->quantite -$prevente ->quantite;
+            //$modele->update();
 
             $total = $total + $prevente->prixtotal;
             $allReduction = $allReduction + $prevente->reduction;
@@ -1198,13 +1425,66 @@ class VentesController extends Controller
             $vente->montant_ht = $montant_ht;
             $vente->montant_tva = $montant_tva;
             $vente->totaux= $montant_ht + $montant_tva;
+
+             // Récupération de l'utilisateur à mettre à jour
+             $client = Client::find($vente->client_id);
+              $vente->with_avoir = true;
+            if($client->avoir > $vente->totaux)
+            {
+
+             $client->avoir = $client->avoir - $vente->totaux;
+             // Mise à jour des informations de l'utilisateur
+             $client->solde = $client->avoir - $vente->totaux + $client->solde;
+
+            }
+            elseif($client->avoir < $vente->totaux)
+            {
+
+             $client->avoir = 0;
+             // Mise à jour des informations de l'utilisateur
+             $client->solde =$vente->totaux - $client->avoir  + $client->solde;
+
+            }
+             // Sauvegarde des modifications
+             $client->save();
+
+
         }else{
             $vente->with_tva = false;
             $vente->totaux = $total;
+             // Récupération de l'utilisateur à mettre à jour
+             $client = Client::find($vente->client_id);
+
+             // Mise à jour des informations de l'utilisateur
+             $client->solde = $vente->totaux + $client->solde;
+
+             // Sauvegarde des modifications
+             $client->save();
         }
 
         $vente->update();
+             if($request->input('checkavoir') == "on")
+            {
+                 $client = Client::find($vente->client_id);
+                    if($client->avoir > $vente->totaux)
+                    {
 
+                    $client->avoir = $client->avoir - $vente->totaux;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
+
+                    }
+                    elseif($client->avoir < $vente->totaux)
+                    {
+
+                    $client->avoir = 0;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
+
+                    }
+                    // Sauvegarde des modifications
+                    $client->save();
+            }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
@@ -1217,6 +1497,7 @@ class VentesController extends Controller
         $historique->cible = "Ventes";
         $historique->user_id =Auth::user()->id;
         $historique->save();
+
         $total = DB::table('ventes')
             ->join('preventes', function ($join) {
                 $join->on('preventes.vente_id', '=', 'ventes.id');
@@ -1272,6 +1553,7 @@ class VentesController extends Controller
         $vente ->journal_id= $i;
         $vente ->type_vente= 3;
         $vente ->boutique_id= Auth::user()->boutique->id;
+        $vente->delivered = "En attente";
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1310,6 +1592,29 @@ class VentesController extends Controller
 
         $vente->update();
 
+            if($request->input('checkavoir') == "on")
+            {
+                 $client = Client::find($vente->client_id);
+                  $vente->with_avoir = true;
+                    if($client->avoir > $vente->totaux)
+                    {
+
+                    $client->avoir = $client->avoir - $vente->totaux;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
+
+                    }
+                    elseif($client->avoir < $vente->totaux)
+                    {
+
+                    $client->avoir = 0;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
+
+                    }
+                    // Sauvegarde des modifications
+                    $client->save();
+            }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
@@ -1378,6 +1683,7 @@ class VentesController extends Controller
         $vente ->journal_id= $i;
         $vente ->type_vente= 4;
         $vente ->boutique_id= Auth::user()->boutique->id;
+        $vente->delivered = "En attente";
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1391,14 +1697,14 @@ class VentesController extends Controller
             $prevente ->prixtotal =$prevente ->prix *$prevente ->quantite - $prevente->reduction;
             $prevente ->vente_id=$vente->id;
             $prevente->save();
-            $modele= Modele::findOrFail($allcommande[$i]);
-            if($modele->quantite < $prevente ->quantite)
-            {
-                DB::rollback();
-                return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
-            }
-            $modele->quantite=$modele->quantite -$prevente ->quantite;
-            $modele->update();
+            //$modele= Modele::findOrFail($allcommande[$i]);
+            // if($modele->quantite < $prevente ->quantite)
+            // {
+            //     DB::rollback();
+            //     return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
+            // }
+            //$modele->quantite=$modele->quantite -$prevente ->quantite;
+            //$modele->update();
 
             $total = $total + $prevente->prixtotal;
             $allReduction = $allReduction + $prevente->reduction;
@@ -1421,7 +1727,29 @@ class VentesController extends Controller
         }
 
         $vente->update();
+         if($request->input('checkavoir') == "on")
+            {
+                 $client = Client::find($vente->client_id);
+                  $vente->with_avoir = true;
+                    if($client->avoir > $vente->totaux)
+                    {
 
+                    $client->avoir = $client->avoir - $vente->totaux;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
+
+                    }
+                    elseif($client->avoir < $vente->totaux)
+                    {
+
+                    $client->avoir = 0;
+                    // Mise à jour des informations de l'utilisateur
+                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
+
+                    }
+                    // Sauvegarde des modifications
+                    $client->save();
+            }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
@@ -1651,32 +1979,59 @@ class VentesController extends Controller
             ->first();
         return $credit->montant_restant;
     }
-
+    public function avoir($id)
+    {
+        $credit =DB::table('clients')
+            -> where ('id', '=',$id)
+            -> select ('clients.avoir','clients.created_at')
+            ->latest()
+            ->first();
+        return $credit->avoir;
+    }
     public function debiteurs()
     {
-        $clients = Client::where ('clients.boutique_id', '=',Auth::user()->boutique->id )->get();
+        $clients = Client::where ('clients.boutique_id', '=',Auth::user()->boutique->id )
+        ->where('clients.solde','>',0)
+        ->select ('clients.nom', 'clients.contact', 'clients.adresse','clients.solde', 'clients.created_at')
+        ->get();
 
-        $array = [];
+       /*  $array = [];
         foreach($clients as $client)
         {
             $data = Reglement::where('clients.id', $client->id)
             ->join('clients', 'reglements.client_id', '=', 'clients.id')
             ->join('ventes', 'reglements.vente_id', '=', 'ventes.id')
-            ->select ('clients.nom', 'clients.contact', 'clients.adresse', 'reglements.montant_restant','reglements.created_at')
-            ->latest()
-            ->first();
+            ->select ('clients.nom', 'clients.contact','clients.solde', 'clients.adresse', 'reglements.montant_restant','reglements.created_at')
 
-            if($data != null && $data->montant_restant > 0)
+
+            if($data != null && $data->montant_restant > 0 && $data->solde >0 )
             {
                 $array[] = $data;
             }
-        }
+        } */
 
-        return datatables()->of($array)
+        return datatables()->of($clients)
         ->make(true);
+       /*  $client =Client::with('boutique')->where ('boutique_id', '=',Auth::user()->boutique->id )->orderBy('created_at', 'DESC')->get();
+        return datatables()->of($client)
+
+            ->make(true); */
     }
 
+    public function alldebiteurs()
+    {
+        $clients = Client::where('clients.solde','>',0)
+        ->join('boutiques', 'clients.boutique_id', '=', 'boutiques.id')
 
+        ->select ('boutiques.nom as boutique', 'clients.id', 'clients.nom', 'clients.contact', 'clients.adresse','clients.solde', 'clients.created_at')
+        ->get();
+
+        return datatables()->of($clients)
+        ->addColumn('action', function ($clt) {
+            return '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>';
+        })
+        ->make(true);
+    }
     public function journal()
     {
 
@@ -1818,7 +2173,7 @@ class VentesController extends Controller
     }
     public function ventemois($id,$ed)
     {
-        $vente = DB::table('ventes')
+        /*$vente = DB::table('ventes')
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
@@ -1830,7 +2185,20 @@ class VentesController extends Controller
             ->where('journals.annee', '=', $ed)
             // ->select('ventes.id as id','ventes.numero as vente','ventes.totaux as totaux', 'users.nom as user')
             ->selectRaw('ventes.id as id, ventes.numero as vente, ventes.totaux as totaux, CONCAT(users.nom, " ", users.prenom) as user')
+            ->get();*/
+        $vente = DB::table('ventes')
+            ->join('journals', function ($join) use ($id, $ed) {
+                $join->on('ventes.journal_id', '=', 'journals.id')
+                     ->where('journals.mois', '=', $id)
+                     ->where('journals.annee', '=', $ed);
+            })
+            ->join('users', function ($join) {
+                $join->on('ventes.user_id', '=', 'users.id');
+            })
+            ->where('ventes.boutique_id', '=', Auth::user()->boutique->id)
+            ->selectRaw('ventes.id as id, ventes.numero as vente, ventes.totaux as totaux, CONCAT(users.nom, " ", users.prenom) as user')
             ->get();
+
         return datatables()->of($vente)
             ->addColumn('action', function ($clt) {
                 return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>';
@@ -1840,6 +2208,9 @@ class VentesController extends Controller
     public function adminventemois($id,$ed,$ad)
     {
         $vente = DB::table('ventes')
+        ->join('users', function ($join) {
+            $join->on('ventes.user_id', '=', 'users.id');
+        })
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
@@ -1847,8 +2218,8 @@ class VentesController extends Controller
             ->where('journals.mois', '=', $id)
             ->where('journals.annee', '=', $ed)
             ->select('ventes.id as id','ventes.numero as vente','ventes.totaux as totaux', 'users.nom as user')
-
             ->get();
+          //  dd($vente);
         return datatables()->of($vente)
             ->addColumn('action', function ($clt) {
                 return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>';
@@ -1858,7 +2229,7 @@ class VentesController extends Controller
 
     public function venteannee($id)
     {
-        $vente = DB::table('ventes')
+        /*$vente = DB::table('ventes')
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
@@ -1868,6 +2239,13 @@ class VentesController extends Controller
             ->where ('journals.boutique_id', '=',Auth::user()->boutique->id)
             ->where('journals.annee', '=', $id)
             // ->select('ventes.id as id','ventes.numero as vente','ventes.totaux as totaux', 'users.nom as user')
+            ->selectRaw('ventes.id as id, ventes.numero as vente, ventes.totaux as totaux, CONCAT(users.nom, " ", users.prenom) as user')
+            ->get();*/
+        $vente = DB::table('ventes')
+            ->join('journals', 'ventes.journal_id', '=', 'journals.id')
+            ->join('users', 'ventes.user_id', '=', 'users.id')
+            ->where('ventes.boutique_id', '=', Auth::user()->boutique->id) // Check for ventes.boutique_id
+            ->where('journals.annee', '=', $id) // Check for journals.annee
             ->selectRaw('ventes.id as id, ventes.numero as vente, ventes.totaux as totaux, CONCAT(users.nom, " ", users.prenom) as user')
             ->get();
         return datatables()->of($vente)
@@ -1954,13 +2332,12 @@ class VentesController extends Controller
     public function recuperdatevente()
     {
         $date = DB::table('ventes')
-            ->join('journals', function ($join) {
-                $join->on('ventes.journal_id', '=', 'journals.id');
-            })
-            ->where ('journals.boutique_id', '=',Auth::user()->boutique->id)
-            ->select('ventes.journal_id as journal','journals.id as id','journals.date_creation as date')
-            ->groupBy('journal', 'id', 'date')
-            ->get() ;
+            ->join('journals', 'ventes.journal_id', '=', 'journals.id')
+            ->where('journals.boutique_id', '=', Auth::user()->boutique->id)
+            ->select('ventes.journal_id as journal', 'journals.id as id', 'journals.date_creation as date')
+            ->distinct()
+            ->get();
+
         $a=array();
         $d=array();
         $table=array();
@@ -2266,5 +2643,128 @@ class VentesController extends Controller
 
         return view('retourventedetail', compact('retourLignes'));
     }
+    
+    public function bon_de_livraison(Request $request, $id)
+    {
+
+        $name = "bon_livraison_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
+        $vente = DB::table('ventes')
+            ->join('preventes', function ($join) {
+                $join->on('preventes.vente_id', '=', 'ventes.id');
+            })
+            ->join('modeles', function ($join) {
+                $join->on('modeles.id', '=', 'preventes.modele_fournisseur_id');
+            })
+            ->join('produits', function ($join) {
+                $join->on('produits.id', '=', 'modeles.produit_id');
+            })
+            ->join('clients', function ($join) {
+                $join->on('clients.id', '=', 'ventes.client_id');
+            })
+            ->where('ventes.id','=',$id)
+            ->select('ventes.numero as numero',
+                'ventes.date_vente as date',
+                'ventes.facture as facture',
+                'modeles.libelle as modele',
+                'modeles.ref_modele as ref',
+                'produits.nom as produit',
+                'preventes.quantite as quantite',
+                'preventes.prix as prix',
+                'preventes.prixtotal as prixtotal',
+                'clients.nom as Nclient',
+                'ventes.created_at as create',
+                'ventes.updated_at as update')
+            ->get();
+        $total = DB::table('ventes')
+            ->join('preventes', function ($join) {
+                $join->on('preventes.vente_id', '=', 'ventes.id');
+            })
+            ->where('ventes.id','=',$id)
+            ->SUM('preventes.prixtotal');
+        $all_vente = Vente::find($id);
+        
+        try{
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', TRUE);
+            $options->set('isPhpEnabled', true);
+
+            $dompdf = new Dompdf($options);
+
+            // Chargez la vue dans Dompdf
+            $view = view('bon_livraison', compact('vente', 'total', 'all_vente'))->render();
+            $dompdf->loadHtml($view);
+
+            // Définissez la taille du papier
+            $dompdf->setPaper('a4');
+
+            // Rendez le PDF
+            $dompdf->render();
+
+            // Enregistrez le PDF dans un répertoire
+            file_put_contents(public_path("bons/" . $name), $dompdf->output());
+
+        }catch(Exception $e)
+        {}
+
+        //return $pdf->download($name);
+        return response()->download(public_path("bons/" . $name));
+    }
+    
+    public function getLivraisonsByProduit(Request $request)
+    {
+        try {
+            // Obtenir les paramètres de la requête
+            $modele_id = $request->query('modele_id');
+            $boutique_id = $request->query('boutique_id');
+    
+            // Valider que les paramètres sont des nombres
+            if (!is_numeric($modele_id) || !is_numeric($boutique_id)) {
+                return response()->json([
+                    'error' => 'Les paramètres modele_id et boutique_id doivent être des nombres.',
+                ], 400);
+            }
+    
+            // Récupérer les livraisons associées au modèle et à la boutique
+            $livraisons = livraisonCommande::join('livraisons', 'livraison_commandes.livraison_id', '=', 'livraisons.id') // Jointure explicite
+                            ->join('commande_modeles', 'livraison_commandes.commande_modele_id', '=', 'commande_modeles.id') // Jointure explicite
+                            ->where('livraisons.boutique_id', $boutique_id) // Filtrage par boutique_id
+                            ->where('commande_modeles.modele', $modele_id) // Filtrage par modele_id
+                            ->with(['livraison', 'commandeModele.modele']) // Charger les relations nécessaires
+                            ->get(); // Obtenir les résultats
+
+        
+            if ($livraisons->isEmpty()) {
+                return response()->json([
+                    'message' => 'Aucune livraison trouvée pour ce modèle et cette boutique.',
+                    'data' => $livraisons
+                ], 404);
+            }
+    
+            // Mapper les résultats pour obtenir les données requises
+            $livraisons_data = $livraisons->map(function ($livraison_commande) {
+                $livraison = $livraison_commande->livraison;
+    
+                return [
+                    'id' => $livraison->id,
+                    'numero' => $livraison->numero,
+                    'date_livraison' => $livraison->date_livraison,
+                    'modele_libelle' => $livraison_commande->modele_produit()->libelle, // Libelle du modèle
+                    'quantite_restante' => $livraison_commande->quantite_livre, // Quantité restante
+                ];
+            });
+    
+            return response()->json([
+                'livraisons' => $livraisons_data,
+            ]);
+    
+        } catch (Exception $e) {
+            // Gestion des exceptions inattendues
+            return response()->json([
+                'error' => 'Erreur inattendue : ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
 }

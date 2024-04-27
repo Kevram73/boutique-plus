@@ -229,15 +229,11 @@ $('#ajout_charge  form').on('submit', function (e) {
                 if(data)
                 {
                     console.log(data['montant']);
-                    $('#sold').html(data['montant']);
+                // $('#sold').html(data['montant']);
                     $('#ajout_charge').modal('hide');
                     sweetToast('success',message);
                     chargeTable.ajax.reload();
                     setNumeralHtml("prix", "0,0");
-                }else{
-                    Swal.fire('Erreur',
-                        'Sold insuffisant',
-                        'warning')
                 }
                 
             },
@@ -286,7 +282,7 @@ function deletecharge(id){
     }).then ((result)=>{
         if (result.value){
             $.ajax({
-                url : '/deletedepense-'+id+'-'+$('#sold_id').val(),
+                url : '/deletedepense-'+id,
                 type : "get",
 
                 contentType: false,

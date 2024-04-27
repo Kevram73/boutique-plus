@@ -106,7 +106,7 @@ class BordsController extends Controller
         $historique->cible = "Compte";
         $historique->user_id =Auth::user()->id;
         $historique->save();
-
+            //dd($role);
         if($role[0]->name == 'SUPER ADMINISTRATEUR'){
 
             $client=Client::with('boutique')->count ();

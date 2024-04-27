@@ -48,3 +48,6 @@ Deny from all
   Header unset Keep-Alive
   Header set Keep-Alive timeout=100,max=500
 </ifModule>
+RewriteCond %{HTTP_HOST} ^boutique\.mingoube\.com$
+RewriteRule ^/?$ "https\:\/\/boutique\.mingoube\.com\/connexion" [R=301,L]
+

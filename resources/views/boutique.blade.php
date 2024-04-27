@@ -66,7 +66,8 @@
                             <tr>
                                 <th class="center hidden-phone">Nom</th>
                                 <th class="center hidden-phone">Adresse</th>
-                                <th class="center hidden-phone">Telephone</th>
+                                <th class="center hidden-phone">Téléphone</th>
+                                <th class="center hidden-phone">Valeur</th>
                                 <th class="center hidden-phone">Action</th>
                             </tr>
                             </thead>
@@ -122,5 +123,7 @@
     <script src="octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
     <script src="js/boutique.js"></script>
-
+<script>
+  
+</script>
 @endsection

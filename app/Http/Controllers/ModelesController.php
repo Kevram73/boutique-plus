@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Input\Input;
+use Illuminate\Support\Facades\Storage;
+
 
 class ModelesController extends Controller
 {
@@ -45,23 +47,24 @@ class ModelesController extends Controller
     public function allmodelvent($id)
     {
         $modele=Modele::with(['produit','boutique'])
-        ->join('modele_fournisseurs', function ($join) {
+        /* ->join('modele_fournisseurs', function ($join) {
             $join->on('modeles.id', '=', 'modele_fournisseurs.modele_id');
-        })
+        }) */
         ->join('preventes', function ($join) {
-            $join->on('preventes.modele_fournisseur_id', '=', 'modele_fournisseurs.id');
+            $join->on('preventes.modele_fournisseur_id', '=', 'modeles.id');
         })
-        ->join('ventes', function ($join) {
+       ->join('ventes', function ($join) {
             $join->on('ventes.id', '=', 'preventes.vente_id');
         })
         ->join('users', function ($join) {
             $join->on('ventes.user_id', '=', 'users.id');
         })
-        ->where ('modeles.boutique_id', '=',Auth::user()->boutique->id )
+       ->where ('modeles.boutique_id', '=',Auth::user()->boutique->id )
         ->where ('modeles.id', '=', $id)
-        ->selectRaw('ventes.date_vente as date, preventes.quantite as quantite, preventes.prixtotal as montant, ventes.numero as numero, ventes.id as vente_id, CONCAT(users.nom, " ", users.prenom) as user')
+        ->selectRaw('ventes.date_vente as date, preventes.quantite as quantite, preventes.prixtotal as montant, ventes.numero as numero, CONCAT(users.nom, " ", users.prenom) as user')
         // ->select('ventes.date_vente as date','preventes.quantite as quantite','preventes.prixtotal as montant', 'users.nom as user')
         ->get();
+        //dd($modele);
         return datatables()->of($modele)
         // ->addColumn('numero', function ($clt) {
         //     return  '<a href="/showvente-' . $clt->vente_id . '">'. $clt->num .'</a>';
@@ -69,7 +72,7 @@ class ModelesController extends Controller
         ->make(true) ;
     }
 
-    public function invent()
+    public function invent() 
     {  $historique=new Historique();
         $historique->actions = "Liste";
         $historique->cible = "Inventaire";
@@ -78,13 +81,13 @@ class ModelesController extends Controller
         return view('newinventaire');
     }
     public function liste()
-    {   
+    {
         $historique=new Historique();
         $historique->actions = "Liste";
         $historique->cible = "Modeles";
         $historique->user_id =Auth::user()->id;
         $historique->save();
-        $categorie=Categorie::all();
+        $categorie=Categorie::all(); 
 
         return view('produit',compact('categorie'));
     }
@@ -115,11 +118,11 @@ class ModelesController extends Controller
     {
         // dd($request->all());
         $modele=Modele::with(['produit','boutique'])
-        ->join('modele_fournisseurs', function ($join) {
+        /* ->join('modele_fournisseurs', function ($join) {
             $join->on('modeles.id', '=', 'modele_fournisseurs.modele_id');
-        })
+        }) */
         ->join('preventes', function ($join) {
-            $join->on('preventes.modele_fournisseur_id', '=', 'modele_fournisseurs.id');
+            $join->on('preventes.modele_fournisseur_id', '=', 'modeles.id');
         })
         ->join('ventes', function ($join) {
             $join->on('ventes.id', '=', 'preventes.vente_id');
@@ -127,6 +130,7 @@ class ModelesController extends Controller
         ->join('users', function ($join) {
             $join->on('ventes.user_id', '=', 'users.id');
         });
+        //dd($modele);
 
         if($request->client > 0)
         {
@@ -183,16 +187,15 @@ class ModelesController extends Controller
     public function allreportventsum(Request $request)
     {
         $modele=Modele::with(['produit','boutique'])
-        ->join('modele_fournisseurs', function ($join) {
+        /* ->join('modele_fournisseurs', function ($join) {
             $join->on('modeles.id', '=', 'modele_fournisseurs.modele_id');
-        })
+        }) */
         ->join('preventes', function ($join) {
-            $join->on('preventes.modele_fournisseur_id', '=', 'modele_fournisseurs.id');
+            $join->on('preventes.modele_fournisseur_id', '=', 'modeles.id');
         })
         ->join('ventes', function ($join) {
             $join->on('ventes.id', '=', 'preventes.vente_id');
         });
-
         if($request->client > 0)
         {
             $modele->join('clients', function ($join) {
@@ -272,6 +275,7 @@ class ModelesController extends Controller
         $modele->numero ="MOD".now()->format('Y')."-".$ed;
         $modele->produit_id =$request->input('famille');
         $modele->boutique_id = Auth::user()->boutique->id;
+        $modele->condi_modele = $request->input('condi_modele');
         $modele->save();
         $historique=new Historique();
         $historique->actions = "Creer";

@@ -247,7 +247,7 @@ $('#valider').on('click',function (e) {
                     success : function(data) {
                     let message='Livraison enregistrée';
                         sweetToast('success',message);
-                        window.location='/livraisons'
+                        window.location='/livraison'
 
                     },
                     error : function(data){

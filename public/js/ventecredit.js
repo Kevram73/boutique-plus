@@ -11,7 +11,7 @@ function sweetToast(type,text){
         showConfirmButton: false,
         timer: 1500,
         animation : true,
-    });
+    }); 
 }
 
 $("#client").select2( {
@@ -60,12 +60,32 @@ $('#client').on('change',function ( ) {
         url: '/recuperercredit-' + $('#client').val(),
         type: "get",
         success: function (data) {
+           // $('#avoir').val(null);
+
             if (data>0){
                 $('#titre').text( 'CE CLIENT NOUS DOIT:');
                 $('#sCredit').text(data);
+                $('#avoir').text(data);
+                    //alert(data);
                 $('#verification').modal('show');
             }
         },
+        error: function (data) {
+            console.log("erreur")
+        },
+    })
+})
+
+
+$('#client').on('change',function ( ) {
+    $.ajax({
+        url: '/recupereravoir-' + $('#client').val(),
+        type: "get",
+        success: function (data) {
+
+                $('#avoir').val(data);
+
+            },
         error: function (data) {
             console.log("erreur")
         },
@@ -188,10 +208,7 @@ $(function( ) {
 })
 $('#ajout').on('click',function () {
     let message;
-    if( ($('#quantite').val() -$('#stock').val())>0 ){
-        message='Quantite superieure au stock...'
-        sweetToast('warning',message);
-    } else{
+    
         if( $('#modele').val() ==null   ||   $('#prix').val() <= 0
             || $('#prix').val()  ==''   || $('#quantite').val()==''  || $('#quantite').val()<=0 ){
             message='Veuillez bien remplir tous les champs svp...'
@@ -243,7 +260,7 @@ $('#ajout').on('click',function () {
             trouveEmporte = true;
         }
 
-    } }
+    } 
 })
 function calTotal(table)
 {
@@ -311,6 +328,7 @@ $('#valider').on('click',function (e) {
                     }
                 }
                 $('#venTable').val(content)
+                 $('#avoirvenTable').val(content)
                 e.preventDefault();
                 if (e.isDefaultPrevented()){
                     $.ajax({

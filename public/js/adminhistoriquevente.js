@@ -32,6 +32,7 @@ $('#choix').on('change',function ( ) {
             '<option value="11">Novembre</option>',
             '<option value="12">Decembre</option>');
         $('#an').show()
+
         $.ajax({
             url: '/adminanneevente-'+ $('#boutique').val(),
             type: "get",
@@ -212,6 +213,7 @@ $('#choix').on('change',function ( ) {
                 });
             })
         }
+        
         if ($('#choix').val()=="an"){
             $('#jr').hide();
             $('#depense').show();

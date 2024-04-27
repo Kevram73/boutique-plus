@@ -9,8 +9,8 @@
             <header class="page-header">
                 <h2>Dépôt</h2>
             </header>
-
-            <div class="row">
+ 
+            <div class="row"> 
                 <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">

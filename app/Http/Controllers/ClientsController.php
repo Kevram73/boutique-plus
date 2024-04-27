@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Boutique;
+
+use App\InventoryDebtor;
 use App\Historique;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,6 +51,22 @@ class ClientsController extends Controller
         return view('client');
     }
 
+ public function storeDEBITEUR(Request $request)
+    {
+        $client = new InventoryDebtor();
+        $client->nom = $request->input('nom');
+        $client->prenom = $request->input('prenom');
+        $client->contact = $request->input('contact');
+        $client->solde= $request->input('solde');
+        $client->boutique_id = Auth::user()->boutique->id;
+        $client->save();
+        $historique = new Historique();
+        $historique->actions = "Creer";
+        $historique->cible = "Débiteur inventeur";
+        $historique->user_id = Auth::user()->id;
+        $historique->save();
+        return $request->input();
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -72,6 +90,9 @@ class ClientsController extends Controller
         $client->email = $request->input('email');
         $client->contact = $request->input('contact');
         $client->adresse = $request->input('adresse');
+        $client->avoir= $request->input('avoir');
+
+        $client->solde= $request->input('solde');
         $client->boutique_id = Auth::user()->boutique->id;
         $client->save();
         $historique = new Historique();
@@ -79,7 +100,12 @@ class ClientsController extends Controller
         $historique->cible = "Clients";
         $historique->user_id = Auth::user()->id;
         $historique->save();
-        return $request->input();
+    //        return $request->input();
+        return view('client');
+    }
+    
+    public function clientAjout(){
+        return view('clientAjout');
     }
 
     /**
@@ -125,6 +151,9 @@ class ClientsController extends Controller
         $client->email = $request->input('email');
         $client->contact = $request->input('contact');
         $client->adresse = $request->input('adresse');
+        $client->avoir = $request->input('avoir');
+
+        $client->solde = $request->input('solde');
         $client->update();
         $historique = new Historique();
         $historique->actions = "Modifier";

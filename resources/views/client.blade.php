@@ -16,7 +16,7 @@
                             <a href="#" class="fa fa-caret-down"></a>
                         </div>
 
-                        <h1 class="panel-title">LISTES DES  CLIENTS</h1>
+                        <h1 class="panel-title">LISTES DES  CLIENTS bb</h1>
                     </header>
 
                     <div class="panel-body">
@@ -54,6 +54,12 @@
                                                 <label class="col-sm-3 control-label">Adresse</label>
                                                 <div class="col-sm-9">
                                                     <input type="integer" name="adresse" id="adresse" class="form-control" placeholder="Adidogome, Lome"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-lg">
+                                                <label class="col-sm-3 control-label">Avoir Client</label>
+                                                <div class="col-sm-9">
+                                                    <input type="integer" name="avoir" id="avoir" class="form-control" placeholder=" 0 "/>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

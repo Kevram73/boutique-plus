@@ -13,7 +13,7 @@
                     <header class="panel-heading">
                         <div class="panel-actions">
                             <a href="#" class="fa fa-caret-down"></a>
-                        </div>
+                        </div> 
                         <h1 class="panel-title">FOURNISSEUR    :     {{ $fournisseur->nom.' ' }} </h1>
                         <input type="hidden" id="fournisseur_id" value="{{ $fournisseur->id }}">
                     </header>
@@ -22,51 +22,70 @@
                     <div class="panel-body">
                         <div class="row">
                             <ul class="list-group">
-                                <li class="list-group-item"><center><h3>Historique des paiments</h3></center></span> </b></li>
-                                @if (isset($reglementfournisseur) && isset($commandefournisseur))
-                                    <li class="list-group-item">Total Payé :<b> <span class="text-danger" class="prix">{{$reglementfournisseur->donner}}</span> </b></li>
-                                    <li class="list-group-item">Restant :<b> <span class="text-danger" class="prix">{{$commandefournisseur->total - $reglementfournisseur->donner < 1 ? '-' : $commandefournisseur->total - $reglementfournisseur->donner }}</span> </b></li>
-                                @endif
-                            </ul>
+                                <li class="list-group-item"><center><h3>Situation de {{ $fournisseur->nom.' ' }}</h3></center></span> </b></li>
+                                <li class="list-group-item">Total Commande :<b> <span class="text-danger" class="prix">{{$vente_etats}}</span> </b></li>
+
+                                    <li class="list-group-item">Total Payé :<b> <span class="text-danger" class="prix">{{$reglement_etats}}</span> </b></li>
+                                    <li class="list-group-item">Restant :<b> <span class="text-danger" class="prix">{{ $fournisseur->solde }}</span> </b></li>
+                                
+                            </ul> 
                         </div>
                         <table class="table table-bordered table-striped mb-none" id="reglementTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf" >
                             <thead>
                             <tr>
-                                <th class="center hidden-phone">Total</th>
-                                <th class="center hidden-phone">Montant payé</th>
-                                <th class="center hidden-phone">Restant</th>
-                                <th class="center hidden-phone">Regler le</th>
-                                <th class="center hidden-phone">Actions</th>
+                                <th class="center hidden-phone">Date</th>
+                                <th class="center hidden-phone">Designation</th>
+                                <th class="center hidden-phone">Débit</th>
+                                <th class="center hidden-phone">Crédit</th>
+                                <th class="center hidden-phone">Solde</th>
                             </tr>
                             </thead>
                             <tbody class="center hidden-phone">
-
+                                @foreach($etats as $etat)
+                                    <tr>
+                                        <td>{{ $etat->created_at }}</td>
+                                        @if($etat->type == "vente")
+                                        <td>COMMANDE N°{{ $etat->order_num }}</td>
+                                        @else
+                                        <td>ACCOMPTE DE {{ $fournisseur->nom }}</td>
+                                        @endif
+                                        @if($etat->type == "vente")
+                                        <td>{{ $etat->amount }}</td>
+                                        <td>-------</td>
+                                        @else
+                                        <td>-------</td>
+                                        <td>{{ $etat->amount }}</td>
+                                        @endif
+                                        
+                                        <td>{{ $etat->total }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                         <br>
-                        <div class="row">
-                            <ul class="list-group">
-                                <li class="list-group-item"><center><h3>Liste Commande</h3></center></span> </b></li>
-                                @if (isset($commandeClient))
-                                    <li class="list-group-item">Total Commande :<b> <span class="text-danger" class="prix">{{ $commandefournisseur->total }}</span> </b></li>
-                                @endif
-                            </ul>
-                        </div>
-                        <table class="table table-bordered table-striped mb-none" id="venteTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf" >
-                            <thead>
-                            <tr>
-                                <th class="center hidden-phone">Numero</th>
-                                <th class="center hidden-phone">Montant Total</th>
-                                <th class="center hidden-phone">Date de vente</th>
-                                <th class="center hidden-phone">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody class="center hidden-phone">
+                        <!--<div class="row">-->
+                        <!--    <ul class="list-group">-->
+                        <!--        <li class="list-group-item"><center><h3>Liste Commande</h3></center></span> </b></li>-->
+                        <!--        @if (isset($commandeClient))-->
+                        <!--            <li class="list-group-item">Total Commande :<b> <span class="text-danger" class="prix">{{ $commandefournisseur->total }}</span> </b></li>-->
+                        <!--        @endif-->
+                        <!--    </ul>-->
+                        <!--</div>-->
+                        <!--<table class="table table-bordered table-striped mb-none" id="venteTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf" >-->
+                        <!--    <thead>-->
+                        <!--    <tr>-->
+                        <!--        <th class="center hidden-phone">Numero</th>-->
+                        <!--        <th class="center hidden-phone">Montant Total</th>-->
+                        <!--        <th class="center hidden-phone">Date de vente</th>-->
+                        <!--        <th class="center hidden-phone">Action</th>-->
+                        <!--    </tr>-->
+                        <!--    </thead>-->
+                        <!--    <tbody class="center hidden-phone">-->
 
 
 
-                            </tbody>
-                        </table>
+                        <!--    </tbody>-->
+                        <!--</table>-->
                     </div>
                     <div class="modal fade " id="ajout_reglement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">
@@ -137,7 +156,7 @@
     <script src="octopus/assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
-    <script src="js/reglement_achat_show.js"></script>
+    <!--<script src="js/reglement_achat_show.js"></script>-->
     <script>
 
         function setNumeralHtml(element, format, surfix="")

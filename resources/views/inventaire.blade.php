@@ -43,6 +43,7 @@
                                     <!-- Inventaire pending table -->
                                     <div id="inventaire_pending" class="tab-pane active">
                                         <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" id="btnAddInventaire"><i class="fa fa-plus"></i>Ajouter un inventaire</a>
+                                      <!-- a href="{{ route('ajouterinventaire') }}">Ajouter un inventaire</a-->
                                         <table class="table table-bordered table-striped mb-none" id="inventaireTablePending" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                                             <thead>
                                             <tr>

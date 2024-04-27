@@ -4,8 +4,7 @@
 @endsection
 @section('contenu')
     <-- Inventory debtor modal-->
-    <div class="modal fade" id="addInvDebtorModal"
-         tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="addInvDebtorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -25,6 +24,48 @@
         </div>
     </div>
 
+    <div class="modal fade " id="ajout_client" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header " style="background-color: #0b93d5;border-top-left-radius: inherit;border-top-right-radius: inherit">
+                    <h4 class="modal-title-user" id="myModalLabel" style="color: white"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form" action="" method="POST" class="	form-validate form-horizontal mb-lg" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        <div class="form-group mt-lg">
+                            <label class="col-sm-3 control-label">Nom</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="nom"  id="nom" class="form-control" placeholder=" ATO Kodjo, BTD Construction" required/>
+                                <input type="hidden" name="idclient" id="idclient"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Prénom</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="email" id="email" class="form-control" placeholder="aaaa " />
+                            </div>
+                        </div>
+                        <div class="form-group mt-lg">
+                            <label class="col-sm-3 control-label">Contact</label>
+                            <div class="col-sm-9">
+                                <input type="integer" name="contact" id="contact" class="form-control" placeholder="92658797"/>
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" class="btn btn-primary" id="btnadd"><i class="fa fa-check"></i> Valider</button>
+                                <button type="button" class="mb-xs mt-xs mr-xs btn btn-default  " data-dismiss="modal"><i class="fa fa-times"></i> Annuler</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Insert inventory debitor modales  end-->
     <div class="inner-wrapper">
         <section role="main" class="content-body">
@@ -64,15 +105,17 @@
                                         <textarea class="form-control" id="inv_motif_id" rows="3" name="inv_motif" required></textarea>
                                     </div>
                                 </div>
-                                <input type="hidden" id="inven_id" name="inven_id" value="{{$inventaire[0]->inventaire_id}}"></input>
+                                <input type="hidden" id="inven_id" name="inven_id" value="{{$inventaire[0]->inventaire_id}}">
 
-                                <button type="button" class="btn btn-primary"
-                                        id="btnAddDebtor"
-                                >
+                                <button type="button" class="btn btn-primary"  id="btnAddDebtor">
                                     <i class="fa fa-plus"></i>
                                 </button>
                                 <div class="col-md-12 text-right" style="margin-top: 25px;">
-                                    <button type="submit" class="btn btn-primary" id="ajout"><i class="fa fa-check"></i> Ajouter</button>
+
+                                    @if ($montant_total_maquant != $montant_total_debiteur_inventair)
+                                            <button type="submit" class="btn btn-primary" id="ajout"><i class="fa fa-check"></i> Ajouter</button>
+
+                                    @endif()
                                     <button type="reset" class="mb-xs mt-xs mr-xs btn btn-default  "  id="annuler"><i class="fa fa-times"></i> Annuler</button>
                                 </div>
 
@@ -104,7 +147,7 @@
                                 <td class="center hidden-phone">{{$ven->nom}} </td>
                                 <td class="center hidden-phone">{{$ven->prenom}} </td>
                                 <td class="center hidden-phone">{{$ven->montant}} FCFA</td>
-                                <td class="center hidden-phone">{{$ven->motif}} FCFA</td>
+                                <td class="center hidden-phone">{{$ven->motif}}</td>
 
                             </tr>
 
@@ -146,7 +189,7 @@
                             <li class="list-group-item">Date de l'inventaire :<b> <span class="text-danger" >{{$inventaire[0]->date}}</span> </b></li>
                             <li class="list-group-item">Utilisateur :<b> <span class="text-danger" >{{$inventaire[0]->utilisateur}} - {{$inventaire[0]->prenom}}</span> </b></li>
                             @if ($inventaire[0] && $inventaire[0]->observation)
-                            <li class="list-group-item">Observation :<b> <span class="text-danger" >{{$inventaire[0]->observatin}}</span> </b></li>
+                            <li class="list-group-item">Observation :<b> <span class="text-danger" >{{$inventaire[0]->observation}}</span> </b></li>
                             @endif
                         </ul>
 
@@ -202,8 +245,12 @@
 
                         </table>
                         <a class=" btn btn-lg mb-xs mt-xs mr-xs btn btn-danger"  href="{{route('inventaire')}}"><i class="fa  fa-times"></i>Fermé</a>
-                        <a class=" btn btn-lg mb-xs mt-xs mr-xs btn btn-success"
+                        @if ($montant_total_maquant == $montant_total_debiteur_inventair)
+                            <a class=" btn btn-lg mb-xs mt-xs mr-xs btn btn-success"
                            href="/detailinventaireprint-{{ $inventaire[0]->inventaire_id }}"><i class="fa  fa-print"></i>{{ '  ' }}Validé</a>
+
+                        @endif()
+
                     </div>
 
                 </section>
@@ -221,18 +268,68 @@
         components: {Select2}
     }
 
-    /**
-     * $('#btnAddDebtor').on('click',function(){
-        console.log("clicked");
-        $('#addInvDebtorModal').show();
-    }) ;
-     */
+
 </script>
     <script src="octopus/assets/vendor/jquery/jquery.js"></script>
     <script src="octopus/assets/vendor/bootstrap/js/bootstrap.js"></script>
     <script src="octopus/assets/vendor/nanoscroller/nanoscroller.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js"></script>
-    <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>8
+    <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
+            <script>
 
+function sweetToast(type,text){
+    return  Swal.fire({
+        position: 'top-end',
+        icon: type,
+        title: text,
+        showConfirmButton: false,
+        timer: 2000,
+        animation : true,
+    });
+}
+                $('#btnAddDebtor').on('click', function(){
+    $('.modal-title-user').text('ENREGISTREMENT DU DEBITEUR INVENTAIRE');
+    $('#btnadd').text('Valider');
+    $('#btnadd').removeClass('btn-warning');
+    $('#btnadd').addClass('btn-primary');
+    $('#idclient').val(null);
+    $('#nom').val(null);
+    $('#email').val(null);
+    $('#contact').val(null);
+    $('#ajout_client').modal('show');
+    });
+
+
+    $('#ajout_client  form').on('submit', function (e) {
+
+    let url,message;
+    if (!$('#idclient').val()){
+        url = '/ajoutDEBITEURINVENT'
+        message = 'Débiteur inventaire enregistré'
+    }
+e.preventDefault();
+if (e.isDefaultPrevented()){
+    $.ajax({
+        url : url ,
+        type : "post",
+        // data : $('#modal-form-user').serialize(),
+     data: new FormData($("#ajout_client form")[0]),
+        //data: new FormData($("#modal-form-user")[0]),
+        contentType: false,
+        processData: false,
+        success : function(data) {
+
+            $('#ajout_client').modal('hide');
+            sweetToast('success',message);
+
+            window.location.reload();
+        },
+        error : function(data){
+          alert('erreur')
+        }
+    });
+}
+});
+           </script>
 @endsection

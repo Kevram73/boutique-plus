@@ -9,6 +9,7 @@ function sweetToast(type,text){
     });
 }
 
+console.log('js affiche looooooooooo pardon');
 
 $('#client').on('change',function ( ) {
     $('#total').empty();
@@ -143,7 +144,7 @@ $(function () {
                     1: "1 ligne séléctionnée"
                 }
             }
-        },
+        }, 
         ajax: '/debiteurs',
         "columns": [
 
@@ -155,19 +156,21 @@ $(function () {
     });
 });
 
-$('#btnreglement').on('click', function(){
+$("#montantTotal").html( calTotal( $debiteurTable.data() ) );
+                    setNumeralHtml("prix", "0,0");
 
-    $('.modal-title-user').text('ENREGISTREMENT DU REGLEMENT');
-    $('#idreglement').val(null);
-    $('#client').val(null);
-    $('#btnadd').text('Valider');
-    $('#btnadd').removeClass('btn-warning');
-    $('#btnadd').addClass('btn-primary');
-    $('#total').val(null);
-    $('#donne').val(null);
-    $('#restant').val(null);
-    $('#ajout_reglement').modal('show');
-});
+function calTotal(table)
+{
+    let t = 0;
+    for(let i = 0; i < table.length; i++)
+    {
+        t += table[i].total;
+    }
+    return t;
+}
+  
+console.log('AZER');
+
 
 //post des données
 $('#ajout_reglement  form').on('submit', function (e) {

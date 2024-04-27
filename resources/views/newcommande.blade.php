@@ -107,9 +107,23 @@
                             {{csrf_field()}}
                             <input type="hidden"  name="comTable" id="comTable">
                             <input type="hidden"  name="fournisseur" id="fournisseur_id">
-
+         @if (Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first()
+&& Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first()->pivot->is_active)
+                                <div class="row" style="width: 40%">
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <label class="form-label d-inline mr-5" for="credit">A CREDIT</label>
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <input class="form-control d-inline mr-5" checked type="checkbox" name="credit" id="credit">
+                                    </div>
+                                </div>
+                            @endif
                         </form>
                     </div>
+
+
+
+
                     <table class="table table-bordered table-striped mb-none" id="commandeTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                         <thead>
                         <tr>

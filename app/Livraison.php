@@ -12,4 +12,8 @@ class Livraison extends Model
     public function boutique(){
         return $this->belongsTo('App\Boutique');
     }
+    public function commandes()
+    {
+        return $this->hasMany(livraisonCommande::class, 'livraison_id');
+    }
 }

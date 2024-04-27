@@ -5,7 +5,7 @@ $('#choix').on('change',function ( ) {
         $('#depenses').val(null);
         $('#moi').show();
         $('#mois').empty()
-        $('#mois').append('<option value=""></option>',
+        $('#mois').append('<option value=""></option>', 
             '<option value="1">Janvier</option>',
             '<option value="2">Fevrier</option>',
             '<option value="3">Mars</option>',
@@ -52,10 +52,10 @@ $('#choix').on('change',function ( ) {
                         $('#c').text(data[0]+'   cfa');
                         $('#ca').text(data[1]+'   cfa');
                         $('#cpv').text(data[2]+'   cfa');
-                        $('#i').text(data[3]+'   cfa');
+                        $('#i').text(data[4]+'   cfa');
                         $('#mb').text(data[1]-data[2]+'   cfa');
                         $('#rai').text(data[1]-data[2]-data[0]-data[5]+'   cfa');
-                        $('#rn').text(data[1]-data[2]-data[0]-data[3]-data[5]+'   CFA');
+                        $('#rn').text(data[1]-data[2]-data[0]-data[4]-data[5]+'   CFA');
                 },
                 error: function (data) {
                     console.log("erreur")

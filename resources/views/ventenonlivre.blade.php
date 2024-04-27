@@ -142,6 +142,24 @@
                         @endif
                         </form>
                     </div>
+                    
+                    <div id="avoircomform">
+                                <form  method="POST" class="	form-validate form-horizontal mb-lg" >
+                                    {{csrf_field()}}
+                                        <input type="hidden"  name="avoirvenTable" id="avoirvenTable">
+                                        <div class="row" style="width: 40%">
+                                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                                    <label class="form-label d-inline mr-5" for="setTav">AVOIR </label>
+                                                </div>
+                                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                                    <input class="form-control d-inline mr-5" type="checkbox" name="checkavoir" id="checkavoir">
+                                                </div>
+                                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                                    <input class="form-control d-none mr-5" type="number" name="avoir" id="avoir">
+                                                </div>
+                                            </div>
+                                </form>
+                        </div>
                     <table class="table table-bordered table-striped mb-none" id="venteTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                         <thead>
                             <tr>

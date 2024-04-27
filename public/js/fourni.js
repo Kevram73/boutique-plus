@@ -85,7 +85,7 @@ $('#categorie').on('change',function ( ) {
 
         },
         error: function (data) {
-            console.log("erreur")
+            console.log("erreur") 
         },
     })
 })

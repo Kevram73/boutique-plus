@@ -14,6 +14,18 @@
 
 
         @yield('css')
+
+        <style>
+            .container {
+                display: flex;
+                align-items: center;
+            }
+
+            .image {
+                width: 200px; /* Ajustez la largeur selon vos besoins */
+                margin-right: 20px; /* Ajustez la marge selon vos besoins */
+            }
+        </style>
 	</head>
 	<body>
 

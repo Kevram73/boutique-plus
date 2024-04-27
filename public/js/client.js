@@ -68,7 +68,7 @@ $(function () {
 
 });
 $('#btnclient').on('click', function(){
-    $('.modal-title-user').text('ENREGISTREMENT DU CLIENT (Particulier/Entreprise');
+    $('.modal-title-user').text('ENREGISTREMENT DU CLIENT (Particulier/Entreprise)');
     $('#btnadd').text('Valider');
     $('#btnadd').removeClass('btn-warning');
     $('#btnadd').addClass('btn-primary');
@@ -77,6 +77,7 @@ $('#btnclient').on('click', function(){
     $('#email').val(null);
     $('#contact').val(null);
     $('#adresse').val(null);
+    $('#avoir').val(null);
     $('#ajout_client').modal('show');
 });
 
@@ -138,6 +139,8 @@ function showclt(id){
             $('#sEmail').text(data.email);
             $('#sContact').text(data.contact);
             $('#sAdresse').text(data.adresse);
+            $('#sAvoir').text(data.avoir);
+
             $('#sCreate').text(data.created_at);
             $('#sUpdate').text(data.updated_at);
             $('#detailClient').modal('show');
@@ -165,6 +168,8 @@ function editclt(id){
             $('#email').val(data.email);
             $('#contact').val(data.contact);
             $('#adresse').val(data.adresse);
+            $('#avoir').val(data.avoir);
+
             $('#ajout_client').modal('show');
 
         },

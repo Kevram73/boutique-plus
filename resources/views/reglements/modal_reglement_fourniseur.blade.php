@@ -18,11 +18,11 @@
                                         <option value="{{$cli->id}}">{{$cli->nom}}</option>
                                     @endforeach
                                 </optgroup>
-                            </select>
+                             </select>
                         </div>
                     </div>
                     <div class="form-group mt-lg">
-                        <label class="col-sm-3 control-label">Total a payer</label>
+                        <label class="col-sm-3 control-label">Total à payer</label>
                         <div class="col-sm-9">
                             <input type="number" name="total" id="total" class="form-control"  readonly="readonly" required/>
                             <input type="hidden" name="idreglement" id="idreglement"/>
@@ -43,50 +43,24 @@
                         </div>
                     </div>
                     <div class="form-group mt-lg">
-                        <label class="col-sm-3 control-label">Banques</label>
+                        <label class="col-sm-3 control-label">Compte</label>
                         <div class="col-sm-9">
-                            <select  name="banque" id="banque"
+                            <select  name="compte" id="compte"
                                      class="form-control populate">
                                 <optgroup label="Choisir un banques">
                                     <option value=""></option>
                                     @foreach($banques as $banque_item)
-                                        <option value="{{$banque_item->id}}">
-                                            {{$banque_item->nom}}
+                                        <option id="addBanqueSelect" value="{{$banque_item->id}}">
+                                            {{$banque_item->banques}}  -  {{$banque_item->numero}}
                                         </option>
                                     @endforeach
                                 </optgroup>
                             </select>
-                            <input type="hidden" name="boutiqueid"
-                                   value="{{Auth::user()->boutique_id}}"
-                                   id="idBoutique"/>
+                            <input type="hidden" class="form-control" name="solde" id="solde">
+
                         </div>
                     </div>
-                    <div class="form-group mt-lg" id="group_compte">
-                        <div class="form-row">
-                            <div class="col">
-                                <label class="col-sm-3 control-label">Compte</label>
-                                    <div class="col-sm-3" >
-                                        <select  name="compte" id="compte"
-                                                 class="form-control populate"
-                                                 >
-                                            <optgroup label="Choisir un banques"
-                                                      id="addBanqueSelect">
-
-                                            </optgroup>
-                                        </select>
-                                    </div>
-
-                            </div>
-                            <div class="col mb-2">
-                                <label class="col-sm-3 control-label">Solde Total</label>
-                                <div class="col-sm-3" id="idForCompteAmount">
-                                    <input type="text" class="form-control" name="solde" id="solde">
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
+                 
 
 
 

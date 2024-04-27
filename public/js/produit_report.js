@@ -1,4 +1,4 @@
-function setNumeralHtml(element, format, surfix="", type="html")
+  function setNumeralHtml(element, format, surfix="", type="html")
 {
     var prices = $("."+element);
 
@@ -19,8 +19,8 @@ function setNumeralHtml(element, format, surfix="", type="html")
         }
 
     }
-
-}
+  
+} 
 
 $("#voir").on('click', function(){
     getSum();

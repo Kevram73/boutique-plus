@@ -7,10 +7,16 @@ use App\Fournisseur;
 use App\Historique;
 use App\modeleFournisseur;
 use App\Produit;
+use App\livraisonCommande;
+use App\Livraison;
 use App\Provision;
+use App\Decharge;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PDF;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class FournisseursController extends Controller
 {
@@ -263,11 +269,25 @@ class FournisseursController extends Controller
     }
     public function modele($id)
     {
-        $modele=DB::table('modeles')
-            ->where ('modeles.boutique_id', '=',Auth::user()->boutique->id)
-            ->where ('produit_id', '=', $id)
-            ->where ('quantite', '>',  0)
+        // Récupération du $result
+        $result = livraisonCommande::join('commande_modeles AS cm', 'livraison_commandes.commande_modele_id', '=', 'cm.id')
+            ->join('livraisons AS l', 'livraison_commandes.livraison_id', '=', 'l.id')
+            ->where('l.boutique_id', Auth::user()->boutique_id)
+            ->whereColumn('livraison_commandes.quantite_vendue', '<', 'livraison_commandes.quantite_livre')
+            ->select('cm.modele') // Extraction du champ 'modele'
+            ->groupBy('cm.modele')
             ->get();
+        
+        // Obtenir les IDs des modèles
+        $modeles_ids = $result->pluck('modele'); // Pluck 'modele' from $result
+        
+        // Filtrer $modele en utilisant whereIn()
+        $modele = DB::table('modeles')
+            ->where('produit_id', $id)
+            ->whereIn('modeles.id', $modeles_ids)
+            ->get(); // Obtenir les données
+
+        
         return $modele;
     }
 
@@ -418,4 +438,115 @@ class FournisseursController extends Controller
         //     ->get();
         // return $produit;
     }
+    
+    public function decharge_liste(Request $request){
+        $decharges = Decharge::all();
+        $fournisseurs = Fournisseur::all();
+        return view("decharges", compact('decharges', 'fournisseurs'));
+    }
+    
+    public function generate_decharge(Request $request){
+
+        $name = "decharge_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
+
+            try{
+                $options = new Options();
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('isRemoteEnabled', TRUE);
+                $options->set('isPhpEnabled', true);
+
+                $dompdf = new Dompdf($options);
+
+                // Chargez la vue dans Dompdf
+                $view = view('decharge')->render();
+                $dompdf->loadHtml($view);
+
+                // Définissez la taille du papier
+                $dompdf->setPaper('a4');
+
+                // Rendez le PDF
+                $dompdf->render();
+
+                // Enregistrez le PDF dans un répertoire
+                file_put_contents(public_path("decharges/" . $name), $dompdf->output());
+
+            }catch(Exception $e)
+            {}
+
+            //return $pdf->download($name);
+            return response()->download(public_path("decharges/" . $name));
+    }
+    
+    public function save_decharge(Request $request){
+        $request->validate([
+            'nom' => 'required|max:255',
+            'prenoms' => 'required|max:255',
+            'motif' => 'required',
+            'montant' => 'required',
+            'cni' => 'required',
+            'document' => 'required'
+        ]);
+        
+        if ($request->hasFile('document')) {
+            $file = $request->file('document');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('decharge', $filename, 'public');
+        }
+
+        // Create a new post using the validated data
+        $decharge = new Decharge();
+        $decharge->nom = $request->nom;
+        $decharge->prenoms = $request->prenoms;
+        $decharge->motif = $request->motif;
+        $decharge->montant = $request->montant;
+        $decharge->cni = $request->cni;
+        if($request->fournisseur_id){
+            $decharge->fournisseur_id = $request->fournisseur_id;   
+        }
+        $decharge->filename = $filename;
+        $decharge->save();
+
+        // Redirect to a specified route with a success message
+        return back()->with('success', 'Décharge créée avec succès!');
+    }
+    
+    public function delete_decharge(int $id){
+        $decharge = Decharge::findOrFail($id);
+        $decharge->delete();
+        
+        return back()->with('success', 'Décharge supprimée avec succès!');
+    }
+    
+    public function edit_decharge(Request $request, $id)
+    {
+        $request->validate([
+            'nom' => 'required|max:255',
+            'prenoms' => 'required|max:255',
+            'motif' => 'required',
+            'montant' => 'required',
+            'cni' => 'required',
+            'document' => 'required'
+        ]);
+        
+        if ($request->hasFile('document')) {
+            $file = $request->file('document');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('decharge', $filename, 'public');
+        }
+        
+        $decharge = Decharge::findOrfail($id);
+        $decharge->nom = $request->nom;
+        $decharge->prenoms = $request->prenoms;
+        $decharge->motif = $request->motif;
+        $decharge->montant = $request->montant;
+        $decharge->cni = $request->cni;
+        if($request->fournisseur_id){
+            $decharge->fournisseur_id = $request->fournisseur_id;   
+        }
+        $decharge->filename = $filename;
+        $decharge->save();
+        
+        return back()->with('success', 'Décharge modifiée avec succès!');
+    }
+
 }

@@ -9,7 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.2.5|^8.0",
-        "barryvdh/laravel-dompdf": "^0.8.6",
+        "barryvdh/laravel-dompdf": "^1.0",
+        "barryvdh/laravel-snappy": "^1.0",
+        "dompdf/dompdf": "^1.2",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
@@ -19,6 +21,7 @@
         "realrashid/sweet-alert": "^2.0",
         "select2/select2": "^4.0",
         "spatie/laravel-permission": "^3.2",
+        "tecnickcom/tcpdf": "^6.6",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {

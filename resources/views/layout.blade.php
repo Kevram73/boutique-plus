@@ -17,10 +17,10 @@
 
 
 		<!-- Vendor CSS -->
-		<link rel="stylesheet" href="octopus/assets/vendor/bootstrap/css/bootstrap.css" />
-		<link rel="stylesheet" href="octopus/assets/vendor/font-awesome/css/font-awesome.css" />
-		<link rel="stylesheet" href="octopus/assets/vendor/magnific-popup/magnific-popup.css" />
-        <link rel="stylesheet" href="octopus/assets/vendor/select2/select2.css" />
+		<link rel="stylesheet" href="{{ asset('octopus/assets/vendor/bootstrap/css/bootstrap.css')}}" />
+		<link rel="stylesheet" href="{{ asset('octopus/assets/vendor/font-awesome/css/font-awesome.css')}}" />
+		<link rel="stylesheet" href="{{ asset('octopus/assets/vendor/magnific-popup/magnific-popup.css')}}" />
+        <link rel="stylesheet" href="{{ asset('octopus/assets/vendor/select2/select2.css')}}" />
 
 
 
@@ -29,16 +29,16 @@
 
 
         <!-- Theme CSS -->
-		<link rel="stylesheet" href="octopus/assets/stylesheets/theme.css" />
+		<link rel="stylesheet" href="{{ asset('octopus/assets/stylesheets/theme.css')}}" />
 
 		<!-- Skin CSS -->
-		<link rel="stylesheet" href="octopus/assets/stylesheets/skins/default.css" />
+		<link rel="stylesheet" href="{{ asset('octopus/assets/stylesheets/skins/default.css')}}" />
 
 		<!-- Theme Custom CSS -->
-		<link rel="stylesheet" href="octopus/assets/stylesheets/theme-custom.css">
+		<link rel="stylesheet" href="{{ asset('octopus/assets/stylesheets/theme-custom.css')}}">
 
 		<!-- Head Libs -->
-		<script src="octopus/assets/vendor/modernizr/modernizr.js"></script>
+		<script src="{{ asset('octopus/assets/vendor/modernizr/modernizr.js')}}"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
 
         <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
@@ -131,6 +131,7 @@
 											<span><TABLE>{{ Str::upper(__('msg.dashboard')) }}</TABLE></span>
 										</a>
 									</li>
+									 @if (Auth::user()->boutique->is_central == 0)
                                     <li class="nav-parent">
                                         <a>
                                             <i class="fa   fa-shopping-cart" aria-hidden="true"></i>
@@ -142,11 +143,23 @@
                                                     {{ Str::upper(__('msg.sales')) }}
                                                 </a>
                                             </li>
-                                            <!-- <li>
-                                                <a href="{{route('prestations')}}">
-                                                    SERVICES
+                                            <li>
+                                                <a href="{{route('depenses')}}">
+                                                    <i class="fa  fa-money" aria-hidden="true"></i>
+                                                    <span>DEPENSES</span>
                                                 </a>
-                                            </li> -->
+                                            </li>
+                                            <li>
+                                                <a href="/listeglobal">
+                                                    <i class="fa  fa-money" aria-hidden="true"></i>
+                                                    <span>CAISSES</span>
+                                                </a>
+                                            </li>
+                                            <!-- <li>-->
+                                            <!--    <a href="{{route('prestations')}}">-->
+                                            <!--        SERVICES-->
+                                            <!--    </a>-->
+                                            <!--</li> -->
                                             @if (Auth::user()->boutique->settings->where('tag', 'livraison_vente')->first() && Auth::user()->boutique->settings->where('tag', 'livraison_vente')->first()->pivot->is_active)
                                             <li>
                                                 <a href="{{route('livraisons2')}}">
@@ -156,29 +169,12 @@
                                             @endif
                                         </ul>
                                     </li>
+                                    @endif
 
-                                    <li class="nav-parent">
-                                        <a>
-                                            <i class="fa   fa-truck" aria-hidden="true"></i>
-                                            <span>{{ Str::upper(__('msg.procurement')) }}</span>
-                                        </a>
-                                        <ul class="nav nav-children">
-                                            <li>
-                                                <a href="{{route('provisions')}}">
-                                                    {{ Str::upper(__('msg.orders')) }}
-                                                </a>
-                                            </li>
-                                            @if (Auth::user()->boutique->settings->where('tag', 'livraison_commande')->first() && Auth::user()->boutique->settings->where('tag', 'livraison_commande')->first()->pivot->is_active)
-                                            <li>
-                                                <a href="{{route('livraisons')}}">
-                                                    {{ Str::upper(__('msg.delivery')) }}
-                                                </a>
-                                            </li>
-                                            @endif
-                                        </ul>
-                                    </li>
+
 
                                     @if ((Auth::user()->boutique->settings->where('tag', 'reglement')->first() && Auth::user()->boutique->settings->where('tag', 'reglement')->first()->pivot->is_active) || (Auth::user()->boutique->settings->where('tag', 'reglement_achat')->first() && Auth::user()->boutique->settings->where('tag', 'reglement_achat')->first()->pivot->is_active))
+                                    @if (Auth::user()->boutique->is_central == 0)
                                     <li class="nav-parent">
                                         <a>
                                             <i class="fa   fa-money" aria-hidden="true"></i>
@@ -192,18 +188,50 @@
                                                     {{ Str::upper(__('msg.sales')) }}
                                                 </a>
                                             </li>
-                                            @endif
-
-                                            @if (Auth::user()->boutique->settings->where('tag', 'reglement_achat')->first() && Auth::user()->boutique->settings->where('tag', 'reglement_achat')->first()->pivot->is_active)
+                                            @if (Auth::user()->boutique->is_central == 1)
                                             <li>
                                                 <a href="{{route('reglementachatlist')}}">
                                                     FOURNISSEURS
                                                 </a>
                                             </li>
                                             @endif
+
+                                            @endif
+
+                                        </ul>
+                                    </li>
+                                    @else
+                                    <li class="nav-parent">
+                                        <a>
+                                            <i class="fa   fa-money" aria-hidden="true"></i>
+                                            <span>{{ Str::upper(__('msg.reglements')) }}</span>
+                                        </a>
+                                        <ul class="nav nav-children">
+
+                                            @if (Auth::user()->boutique->settings->where('tag', 'reglement')->first() && Auth::user()->boutique->settings->where('tag', 'reglement')->first()->pivot->is_active)
+                                            @if (Auth::user()->boutique->is_central == 0)
+                                            <li>
+                                                <a href="{{route('reglementlist')}}">
+                                                    {{ Str::upper(__('msg.sales')) }}
+                                                </a>
+                                            </li>
+                                            @endif
+                                            <li>
+                                                <a href="{{route('reglementachatlist')}}">
+                                                    FOURNISSEURS
+                                                </a>
+                                            </li>
+                                            
+
+                                            @endif
+
                                         </ul>
                                     </li>
                                     @endif
+                                    
+                                    
+                                    @endif
+                                    @if (Auth::user()->boutique->is_stock == 0)
                                     <li class="nav-parent">
                                         <a>
                                             <i class="fa  fa-cubes" aria-hidden="true"></i>
@@ -227,19 +255,101 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    @endif
+                                    @if (Auth::user()->boutique->is_central == 1)
+
                                     <li class="nav-parent">
-                                        <a href="/banques">
+                                        <a>
+                                            <i class="fa   fa-truck" aria-hidden="true"></i>
+                                            <span>{{ Str::upper(__('msg.procurement')) }}</span>
+                                        </a>
+                                        <ul class="nav nav-children">
+                                            <li>
+                                                <a href="{{route('provisions')}}">
+                                                    {{ Str::upper(__('msg.orders')) }}
+                                                </a>
+                                            </li>
+                                            @if (Auth::user()->boutique->settings->where('tag', 'livraison_commande')->first() && Auth::user()->boutique->settings->where('tag', 'livraison_commande')->first()->pivot->is_active)
+                                            <li>
+                                                <a href="{{route('livraisons')}}">
+                                                    {{ Str::upper(__('msg.delivery')) }}
+                                                </a>
+                                            </li>
+                                            @endif
+                                        </ul>
+                                    </li>
+                                    <li class="nav-parent">
+                                        <a>
                                             <i class="fa  fa-bank" aria-hidden="true"></i>
-                                            <span>BANQUES</span>
+                                            <span>BANQUE</span>
                                         </a>
+
+                                          <ul class="nav nav-children">
+
+                                            <li>
+                                                <a href="{{route('banques')}}">
+
+                                                    <i class="fa  fa-money" aria-hidden="true"></i>
+                                                    <span>BANQUES</span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="{{route('comptes')}}">
+                                                    <i class="fa  fa-money" aria-hidden="true"></i>
+                                                    <span>COMPTES</span>
+
+                                                </a>
+                                            </li>
+                                            <li >
+                                                <a href="/allversements">
+                                                    <i class="fa  fa-money" aria-hidden="true"></i>
+                                                    <span>VERSEMENT</span>
+
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </li>
-                                    <li class="nav-parent">
-                                        <a href="/caisses">
+                                    
+                                    @if (Auth::user()->boutique->is_central == 1)
+                                    <li>
+                                        <a href="{{route('reglementlistallshoop')}}">
                                             <i class="fa  fa-money" aria-hidden="true"></i>
-                                            <span>CAISSES</span>
+                                            <span>{{ Str::upper(__('msg.creances'))  }}</span>
                                         </a>
                                     </li>
+                                    @endif
+                                    
+                                    @endif
+                                    <li class="nav-parent">
+                                        <a>
+                                            <i class="fa  fa-book" aria-hidden="true"></i>
+                                            <span>RESULTAT</span>
+                                        </a>
+                                        <ul class="nav nav-children">
+
+
+                                            <li >
+                                                <a href="/situationsBoutiques">
+                                                    <i class="fa  fa-bank" aria-hidden="true"></i>
+                                                    <span>SITUATION BOUTIQUES</span>
+                                                </a>
+                                            </li>
+
+
+                                            <li>
+                                                <a href="{{route('resultat')}}">
+                                                    <i class="fa  fa-book" aria-hidden="true"></i>
+                                                    <span>{{ Str::upper(__('msg.results'))  }}</span>
+                                                </a>
+                                            </li>ro
+                                        </ul>
+                                    </li>
+
+
+
                                     @if (Auth::user()->boutique->settings->where('tag', 'inventaire')->first() && Auth::user()->boutique->settings->where('tag', 'inventaire')->first()->pivot->is_active)
+                                    @if (Auth::user()->boutique->is_central == 0)
                                     <li>
                                         <a href="{{route('inventaire')}}">
                                             <i class="fa  fa-list-alt" aria-hidden="true"></i>
@@ -247,33 +357,44 @@
                                         </a>
                                     </li>
                                     @endif
+                                    @endif
+                                    @if (Auth::user()->boutique->is_central == 0)
                                     <li>
                                         <a href="{{route('clients')}}">
                                             <i class="fa  fa-user"></i>
                                             <span>CLIENTS</span>
                                         </a>
                                     </li>
+                                    @endif
+                                    @if (Auth::user()->boutique->is_central == 1)
                                     <li>
                                         <a href="{{route('fournisseurs')}}">
-                                            <i class="fa fa-child" aria-hidden="true"></i>
+                                            <i class="fa  fa-user"></i>
                                             <span>{{ Str::upper(__('msg.providers')) }}</span>
                                         </a>
                                     </li>
-
                                     <li>
-                                        <a href="{{route('depenses')}}">
-                                            <i class="fa  fa-money" aria-hidden="true"></i>
-                                            <span>DEPENSES</span>
+                                        <a href="{{route('decharges')}}">
+                                            <i class="fa  fa-file"></i>
+                                            <span>DECHARGES</span>
                                         </a>
                                     </li>
+                                    @endif
+                                    
+                                    
+
+
 
                                     @if (Auth::user()->boutique->settings->where('tag', 'charge')->first() && Auth::user()->boutique->settings->where('tag', 'charge')->first()->pivot->is_active)
+                                    @if (Auth::user()->boutique->is_central == 0)
                                     <li>
-                                        <a href="{{route('charges')}}">
-                                            <i class="fa  fa-briefcase" aria-hidden="true"></i>
-                                            <span>CHARGES</span>
-                                        </a>
+                                       <a href="{{route('charges')}}">
+                                          <i class="fa  fa-briefcase" aria-hidden="true"></i>
+                                          <span>CHARGES</span>
+                                       </a>
                                     </li>
+                                    @endif
+
                                     @endif
                                     @if (Auth::user()->boutique->settings->where('tag', 'immobilisation')->first() && Auth::user()->boutique->settings->where('tag', 'immobilisation')->first()->pivot->is_active)
                                     <li class="nav-parent">
@@ -302,12 +423,7 @@
                                             <span>{{ Str::upper(__('msg.history'))  }}</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="{{route('resultat')}}">
-                                            <i class="fa  fa-book" aria-hidden="true"></i>
-                                            <span>{{ Str::upper(__('msg.results'))  }}</span>
-                                        </a>
-                                    </li>
+
                                     <li>
                                         <a href="{{route('utilisateurs')}}">
                                             <i class="fa fa-users"></i>
@@ -358,6 +474,9 @@
                                                 </a>
                                             </li>
                                             @endif
+                                            
+                                    
+                                    
                                         </ul>
                                     </li>
 
@@ -495,12 +614,44 @@
                                             <span>BOUTIQUES</span>
                                         </a>
                                     </li>
+                                     <li>
+                                                <a href="{{route('resultatsuper')}}">
+                                                    <i class="fa  fa-book" aria-hidden="true"></i>
+                                                    <span>{{ Str::upper(__('msg.results'))  }}</span>
+                                                </a>
+                                            </li>
                                     <li>
                                         <a href="{{route('utilisateurs')}}">
                                             <i class="fa fa-users"></i>
                                             <span>USERS</span>
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="/caisses">
+                                            <i class="fa  fa-money" aria-hidden="true"></i>
+                                            <span>CAISSES</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-parent">
+                                        <a>
+                                            <i class="fa fa-institution" aria-hidden="true"></i>
+                                            <span>INVENTAIRE</span>
+                                        </a>
+                                        <ul class="nav nav-children">
+                                            <li>
+                                                <a href="{{route('inventairesuper')}}">
+                                                    PAR BOUTIQUE
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('inventaireglobal')}}">
+                                                    GLOBAL
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+
                                     <li class="nav-parent">
                                         <a>
                                             <i class="fa   fa-truck" aria-hidden="true"></i>
@@ -530,6 +681,7 @@
                                             <span>{{ Str::upper(__('msg.account'))  }}</span>
                                         </a>
                                     </li>
+
                                     @endrole
 								</ul>
 							</nav>
@@ -541,13 +693,13 @@
 
 
 		<!-- Vendor -->
-		<script src="octopus/assets/vendor/jquery/jquery.js"></script>
-		<script src="octopus/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
-		<script src="octopus/assets/vendor/bootstrap/js/bootstrap.js"></script>
-		<script src="octopus/assets/vendor/nanoscroller/nanoscroller.js"></script>
-		<script src="octopus/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-		<script src="octopus/assets/vendor/magnific-popup/magnific-popup.js"></script>
-		<script src="octopus/assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
+		<script src="{{ asset('octopus/assets/vendor/jquery/jquery.js')}}"></script>
+		<script src="{{ asset('octopus/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js')}}"></script>
+		<script src="{{ asset('octopus/assets/vendor/bootstrap/js/bootstrap.js')}}"></script>
+		<script src="{{ asset('octopus/assets/vendor/nanoscroller/nanoscroller.js')}}"></script>
+		<script src="{{ asset('octopus/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
+		<script src="{{ asset('octopus/assets/vendor/magnific-popup/magnific-popup.js')}}"></script>
+		<script src="{{ asset('octopus/assets/vendor/jquery-placeholder/jquery.placeholder.js')}}"></script>
 
         <script src="/vendor/numeral/numeral.min.js"></script>
         <script>
@@ -557,18 +709,18 @@
 
 		<!-- Specific Page Vendor -->
 
-        <script src="octopus/assets/vendor/select2/select2.js"></script>
+        <script src="{{ asset('octopus/assets/vendor/select2/select2.js')}}"></script>
 
 
 
         <!-- Theme Base, Components and Settings -->
-		<script src="octopus/assets/javascripts/theme.js"></script>
+		<script src="{{ asset('octopus/assets/javascripts/theme.js')}}"></script>
 
 		<!-- Theme Custom -->
-		<script src="octopus/assets/javascripts/theme.custom.js"></script>
+		<script src="{{ asset('octopus/assets/javascripts/theme.custom.js')}}"></script>
 
 		<!-- Theme Initialization Files -->
-		<script src="octopus/assets/javascripts/theme.init.js"></script>
+		<script src="{{ asset('octopus/assets/javascripts/theme.init.js')}}"></script>
         @yield('js')
 
 		<!-- Examples -->

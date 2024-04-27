@@ -83,7 +83,7 @@
 
                     <div class="panel-body">
                         <table class="table table-bordered table-striped mb-none" id="achatTable">
-                            <thead>
+                            <thead> 
                             <tr>
                                 <th class="center hidden-phone">Vente</th>
                                 <th class="center hidden-phone">Montant</th>

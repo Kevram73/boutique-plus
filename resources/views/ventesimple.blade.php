@@ -6,7 +6,7 @@
 @section('contenu')
     <div class="inner-wrapper">
         <section role="main" class="content-body">
-            <header class="page-header">
+            <header class="page-header"> 
                 <h2>Vente simple</h2>
             </header>
 
@@ -77,9 +77,20 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            
+                                            <div class="col-md-4 form-group">
+                                                <label class="col-sm-4 control-label">Livraison</label>
+                                                <div class="col-md-9">
+                                                    <select name="livraison" id="livraison" class="form-control" required>
+                                                        <optgroup label="Choisir une livraison">
+                                                            <!-- Les options seront ajoutées via JavaScript -->
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Quantité</label>
-                                                <div class="col-sm-9">
+                                                <div class="col-sm-9"> 
                                                     <input type="number" name="quantite"  id="quantite" class="form-control" placeholder="100"  min="1" required/>
                                                 </div>
                                             </div>
@@ -91,16 +102,11 @@
                                                          <input type="hidden" name="stock" id="stock"/>
                                                        </div>
                                             </div>
+                                            <input type="hidden" value="" id="liv_qte" />
                                         </div>
                                         <div class="row">
                                             
-                                        <div class="col-md-4 form-group"></div>
-                                        <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Stock</label>
-                                                <div class="col-sm-9">
-                                                    <input type="number" id="qteStock" class="form-control" placeholder="100"  min="1" readonly/>
-                                                </div>
-                                            </div>
+                                        
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Total</label>
                                                 <div class="col-sm-9">
@@ -108,8 +114,6 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4 form-group"></div>
-                                            <div class="col-md-4 form-group"></div>
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Réduction</label>
                                                 <div class="col-sm-9">
@@ -122,6 +126,7 @@
                                                     <button type="button" class="btn btn-primary" id="ajout"><i class="fa fa-check"></i> Ajouter</button>
                                                     <button type="button" class="mb-xs mt-xs mr-xs btn btn-default  "  id="annuler"><i class="fa fa-times"></i> Annuler</button>
                                                 </div>
+                                                <input type="hidden" id="boutique" name="boutique" value="{{ Auth::user()->boutique_id }}" />
 
                     <div id="comform">
                     <form  method="POST" class="	form-validate form-horizontal mb-lg" >
@@ -158,12 +163,31 @@
 
                     </form>
                     </div>
+                    
+                    <div id="avoircomform">
+                        <form  method="POST" class="	form-validate form-horizontal mb-lg" >
+                            {{csrf_field()}}
+                                <input type="hidden"  name="avoirvenTable" id="avoirvenTable">
+                            <div class="row" style="width: 40%">
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <label class="form-label d-inline mr-5" for="setTav">AVOIR </label>
+                                </div>
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <input class="form-control d-inline mr-5" type="checkbox" name="checkavoir" id="checkavoir">
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <input class="form-control d-none mr-5" type="number" name="avoir" id="avoir">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <table class="table table-bordered table-striped mb-none" id="venteTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                         <thead>
                         <tr>
                             <th class="center hidden-phone">Numero</th>
                             <th class="center hidden-phone">Produit</th>
                             <th class="center hidden-phone">Modele</th>
+                            <th class="center hidden-phone">Livraison</th>
                             <th class="center hidden-phone">Quantité </th>
                             <th class="center hidden-phone">Prix </th>
                             <th class="center hidden-phone">Réduction </th>
@@ -184,7 +208,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <a class="btn btn-danger" id="sup" ><i class="fa fa-trash-o" ></i>Supprimer</a>
-                            </div>
+                            </div> 
                             
                             <div class="col-md-6 text-right">
                                 <h3 class="m-0">Total: <strong id="montant_total" class="prix">0</strong></h3>
@@ -288,5 +312,40 @@
         setNumeralHtml("prix", "0,0");
     </script>
     <script src="js/ventesimple.js"></script>
+    <script>
+    
+       $('#modele').on('change', function() {
+            var modele = $(this).val();
+            var boutique_id = $('#boutique').val();
+        
+            if (modele) {
+                // Réinitialisation du champ de sélection avant la requête
+                $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
+        
+                $.ajax({
+                    url: '/getLivraisonsByProduit',
+                    type: 'GET',
+                    data: { modele_id: modele, boutique_id: boutique_id },
+                    success: function(response) {
+                        var options = '<option value="">Choisissez une livraison</option>'; // Valeur par défaut
+                        response.livraisons.forEach(function(livraison) {
+                            options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
+                        });
+        
+                        $('#livraison').html(options); // Remplir avec les nouvelles options
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Erreur lors du chargement des livraisons :", error);
+                        // Réinitialiser le champ de sélection en cas d'erreur
+                        $('#livraison').empty().append('<option value="">Erreur de chargement</option>');
+                    }
+                });
+            } else {
+                // Réinitialisation si aucun modèle n'est sélectionné
+                $('#livraison').empty().append('<option value="">Choisissez une livraison</option>');
+            }
+        });
+
+</script>
 
 @endsection

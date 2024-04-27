@@ -1,11 +1,11 @@
 function sweetToast(type,text){
     return  Swal.fire({
         position: 'top-end',
-        icon: type,
+        icon: type, 
         title: text,
         showConfirmButton: false,
         timer: 2000,
-        animation : true,
+        animation : true, 
     });
 }
 

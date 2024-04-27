@@ -31,16 +31,15 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-8">
-                                {{--
+                                
                                 <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" id="btncharge"><i class="fa fa-plus"></i> Faire une depense</a>
-                                <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" id="btndepot"><i class="fa fa-arrow-left" aria-hidden="true"></i> Faire un dépôt</a>
-                                --}}
+{{--                               <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" id="btndepot"><i class="fa fa-arrow-left" aria-hidden="true"></i> Faire un dépôt</a>
+ --}}                               
                                 <a class="btn btn-default mb-xs mt-xs mr-xs btn btn-success" id="btnhistorique"><i class="fa fa-file-text"></i>Historiques</a>
                                 <a class="btn btn-default mb-xs mt-xs mr-xs btn btn-danger" id ="btnjournal"><i class="fa fa-file-text"></i>Fermer le journal</a>
 
                             </div>
                             <div class="col-md-4 text-center">
-                                <h3 >SOLD : <strong class="prix" id="sold">{{ $sold->montant  }}</strong></h3>
                             </div>
                         </div>
 
@@ -65,7 +64,6 @@
                                                 <div class="col-sm-9">
                                                     <input type="number" name="montant"  id="montant" class="form-control" placeholder="000 000 000" required/>
                                                     <input type="hidden" name="idcharge" id="idcharge"/>
-                                                    <input type="hidden" name="sold_id" id="sold_id" value="{{$sold->id}}" />
                                                 </div>
                                             </div>
                                             <div class="form-group mt-lg">
@@ -147,7 +145,7 @@
                 var number = numeral(prices[i].innerText);
 
                 var string = number.format(format);
-                prices[i].innerText = string+" "+surfix;
+                prices[i].innerText = string+" "+surfix; 
             }
 
         }

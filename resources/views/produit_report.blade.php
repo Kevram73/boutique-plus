@@ -8,7 +8,7 @@
     <section role="main" class="content-body">
             <header class="page-header">
                 <h2>Rapport</h2>
-            </header>
+            </header> 
 
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4">
@@ -26,7 +26,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="debut">Date Début</label>
+                                <label for="debut">Date Début</label> 
                                 <input type="date" class="form-control" id="debut" placeholder="Date Début">
                             </div>
 
@@ -104,7 +104,7 @@
     </section>
     </div>
 @endsection
-@section('js')
+@section('js') 
 
     <script src="octopus/assets/vendor/jquery/jquery.js"></script>
     <script src="octopus/assets/vendor/bootstrap/js/bootstrap.js"></script>

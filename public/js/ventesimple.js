@@ -9,16 +9,16 @@ function sweetToast(type,text){
         icon: type,
         title: text,
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2000, 
         animation : true,
-    });
+    }); 
 }
 
 $("#client").select2( {
     placeholder: "Choisir un client",
     //allowClear: true
 } );
-
+ 
 $("#produit").select2( {
     placeholder: "Choisir un produit",
     //allowClear: true
@@ -54,6 +54,34 @@ $('#categorie').on('change',function ( ) {
         },
     })
 });
+
+$('#checkavoir').on('change',function () {
+    var setTva = $('#checkavoir');
+    var avoir = $("#avoir");
+    // let  message= "Set TVA "+ setTva.attr("checked");
+    if (setTva.is(":checked"))
+    {
+        avoir.css('display', 'inline-block');
+    }else{
+        avoir.css('display', 'none');
+    }
+    // sweetToast('success',message);
+})
+
+$('#client').on('change',function ( ) {
+    $.ajax({
+        url: '/recupereravoir-' + $('#client').val(),
+        type: "get",
+        success: function (data) {
+
+                $('#avoir').val(data);
+
+            },
+        error: function (data) {
+            console.log("erreur")
+        },
+    })
+})
 
 $('#produit').on('change',function ( ) {
     $.ajax({
@@ -154,6 +182,7 @@ $(function( ) {
                 { data: 'id' },
                 { data: 'produit' },
                 { data: 'modele' },
+                { data: 'livraison' },
                 { data: 'quantite' },
                 { data: 'prix' },
                 { data: 'reduction' },
@@ -174,10 +203,7 @@ $(function( ) {
 
 $('#ajout').on('click',function () {
     let message;
-        if( ($('#quantite').val() -$('#stock').val())>0 ){
-            message='Quantite superieure au stock...'
-            sweetToast('warning',message);
-        } else{
+        
         if($('#modele').val() ==null   ||   $('#prix').val() <= 0
             || $('#prix').val()  ==''   || $('#quantite').val()==''  || $('#quantite').val()<=0 ){
             message='Veuillez bien remplir tous les champs svp...'
@@ -196,12 +222,15 @@ $('#ajout').on('click',function () {
                 if (trouveEmporte === false) {
                     var d=document.getElementById('produit')
                     var b=document.getElementById('modele')
+                    var l=document.getElementById('livraison')
                     var produit=d.options[d.selectedIndex].text;
                     var modele=b.options[b.selectedIndex].text;
+                    var livraison=l.options[l.selectedIndex].text;
                     $table2.row.add({
                         "id":$('#mod').val()+","+$('#client').val(),
                         "produit": produit,
                         "modele":modele,
+                        "livraison": l.value,
                         "prix": $('#prix').val(),
                         "quantite": $('#quantite').val(),
                         "reduction": $('#reduction').val(),
@@ -210,7 +239,7 @@ $('#ajout').on('click',function () {
 
 
 
-
+ 
                     $('#quantite').val(null);
                     $('#reduction').val(null);
                     $('#prixQte').val(null);
@@ -229,7 +258,7 @@ $('#ajout').on('click',function () {
                 }
 
             }
-            }
+            
 
 })
 
@@ -279,7 +308,7 @@ $('#valider').on('click',function (e) {
 
             url = '/storevente'
 
-
+ 
             e.preventDefault()
 
             if ($table2.data().length <= 0 ){
@@ -290,14 +319,14 @@ $('#valider').on('click',function (e) {
                 let content =''
                 for(let i = 0; i <  $table2.data().length; i++){
                     if (i!=$table2.data().length-1){
-                        content +=   $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite+"," + ($table2.data()[i].reduction * 1)+","
+                        content +=   $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite+"," + ($table2.data()[i].reduction * 1)+"," + $table2.data()[i].livraison +","
 
                     }else{
-                        content +=  $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite +","+ ($table2.data()[i].reduction * 1)
+                        content +=  $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite +","+ ($table2.data()[i].reduction * 1) + "," + $table2.data()[i].livraison
                     }
                 }
                 $('#venTable').val(content)
-
+                console.log(content)
                 e.preventDefault();
                 if (e.isDefaultPrevented()){
                     $.ajax({
@@ -309,7 +338,7 @@ $('#valider').on('click',function (e) {
                         contentType: false,
                         processData: false,
                         success : function(data) {
-
+                            
                             window.location='/reglements-'+data.id;
                         },
                         error : function(data){

@@ -208,7 +208,7 @@ function changeState(id){
                 'Etat de l\'employé modifié')
         }
     });
-}
+} 
 
 function resetPwd(id){
     Swal.fire({

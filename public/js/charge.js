@@ -71,6 +71,17 @@ $(function () {
             {data: "libelle",name : 'libelle'},
             {data: "montant",name : 'montant'},
             {data: "date",name : 'date'},
+            {
+                data: "statut",
+                render : function (data, type, row) {
+                    if(data == 1)
+                    {
+                        return "<strong ><span class='badge badge-success'>O U I</span></strong>";
+                    }else{
+                        return "<strong ><span class='badge badge-danger'>N O N</span></strong>";
+                    }
+                }
+            },
             {data: "action", name : 'action' , orderable: false, searchable: false}
 
 
@@ -194,6 +205,7 @@ function editcharge(id){
             $('#idcharge').val(data.id);
             $('#type').val(data.type);
             $('#libelle').val(data.libelle);
+            $('#compte').val(data.compte);
             $('#btnadd').text('Modifier');
             $('#btnadd').removeClass('btn-primary');
             $('#btnadd').addClass('btn-warning');
@@ -243,6 +255,7 @@ function deletecharge(id){
     });
 }
 
+console.log('vraiment plus')
 $('#btnjournal').on('click',function (e) {
     $.ajax({
         url : '/fermercharge',
@@ -270,3 +283,24 @@ $('#btnjournal').on('click',function (e) {
 
 })
 
+
+
+   
+   
+$('#compte').on('change', function() {
+    var userId = $(this).val();
+    $.get('/get-solde-' + userId, function(data) {
+    var solder = data.solder;
+    console.log(solder);
+    console.log('vraiment je   plus')
+    var donne = $('#montant').val();
+    if (parseFloat(donne) >= parseFloat(solder)) {
+    //alert('Le montant est supérieur ou égal au solde de l'utilisateur sélectionné.');
+    let _m = " Votre compte a un solde insufisant" ;
+                sweetToast('warning',_m) ;
+    }
+    });
+    });
+
+
+    

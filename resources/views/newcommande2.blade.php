@@ -10,7 +10,7 @@
                 <h2>Commande non livree</h2>
             </header>
 
-            <div class="row">
+            <div class="row"> 
                 <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">
@@ -103,43 +103,33 @@
                                                     <button type="button" class="mb-xs mt-xs mr-xs btn btn-default  "  id="annuler"><i class="fa fa-times"></i> Annuler</button>
                                                 </div>
 
-                    <div id="comform">
-                        <form  method="POST" class="	form-validate form-horizontal mb-lg" >
-                            {{csrf_field()}}
-                            <input type="hidden"  name="comTable" id="comTable">
-                            <input type="hidden"  name="fournisseur" id="fournisseur_id">
-                            <!-- @if (Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first() && Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first()->pivot->is_active)
-                            <div class="row" style="width: 40%">
-                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                    <label class="form-label d-inline mr-5" for="credit">A CREDIT</label>
-                                </div>
-                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                    <input class="form-control d-inline mr-5" type="checkbox" name="credit" id="credit">
-                                </div>
-                            </div>
-                            @endif -->
-                            @if (Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first()
-&& Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first()->pivot->is_active)
-                                <div class="row" style="width: 40%">
-                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                        <label class="form-label d-inline mr-5" for="credit">A CREDIT</label>
-                                    </div>
-                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                        <input class="form-control d-inline mr-5" type="checkbox" name="credit" id="credit">
-                                    </div>
-                                </div>
-                            @endif
-                        </form>
-                    </div>
+                                                <div id="comform">
+                                                    <form  method="POST" class="form-validate form-horizontal mb-lg" >
+                                                        {{csrf_field()}}
+                                                        <input type="hidden"  name="comTable" id="comTable">
+                                                        <input type="hidden"  name="fournisseur" id="fournisseur_id">
+                                     @if (Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first()
+                            && Auth::user()->boutique->settings->where('tag', 'commande_a_credit')->first()->pivot->is_active)
+                                                            <div class="row" style="width: 40%">
+                                                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                                                    <label class="form-label d-inline mr-5" for="credit">A CREDIT</label>
+                                                                </div>
+                                                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                                                    <input class="form-control d-inline mr-5" checked type="checkbox" name="credit" id="credit">
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    </form>
+                                                </div>
+         
                     <table class="table table-bordered table-striped mb-none" id="commandeTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                         <thead>
                         <tr>
                             <th class="center hidden-phone">Numero</th>
-                            <th class="center hidden-phone">Produit</th>
+                            <th class="center hidden-phone">Produits</th>
                             <th class="center hidden-phone">Modele</th>
                             <th class="center hidden-phone">Quantité </th>
                             <th class="center hidden-phone">Prix </th>
-                            <th class="center hidden-phone">A Crédit</th>
                             <th class="center hidden-phone">Total </th>
                         </tr>
                         </thead>

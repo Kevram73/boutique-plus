@@ -4,6 +4,7 @@ return [
     'dashboard' => 'Tableau de bord',
     'thesales' => 'Les Ventes',
     'reglements' => 'Reglements',
+    'creances' => 'Créances',
     'procurement' => 'Approvisionnement',
     'sales' => 'Ventes',
     'buys' => 'Achats',

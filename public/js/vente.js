@@ -152,6 +152,19 @@ function deletepro(id){
     });
 }
 
+function pdfpro(id){
+    $.ajax({
+        url: '/livraison/bon/'+id,
+        type: "get",
+        success : function(data) {
+         window.location='/ventes'
+        },
+        error : function(data){
+            console.log(data)
+        }
+    })
+}
+
 $('#btnhistorique').on('click',function (e) {
     window.location='/historiquevente'
 });

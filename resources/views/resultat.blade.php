@@ -6,7 +6,7 @@
                 <h2>Compte de résultat</h2>
             </header>
 
-                <div class="row">
+                <div class="row"> 
                     <div class="col-md-4 form-group">
                         <label class="col-md-4 control-label">Afficher</label>
                         <div class="col-md-9 form-group">

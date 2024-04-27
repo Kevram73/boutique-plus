@@ -31,6 +31,12 @@ class DepenseController extends Controller
         $sold->save();
         }
 
+       /*  $totauxVentes = DB::table('ventes')
+        ->where('boutique_id', Auth::user()->boutique->id)->first()
+        ->selectRaw('SUM(ventes.totaux)' )
+        ->get(); */
+ 
+
         $historique = new Historique();
         $historique->actions = "liste";
         $historique->cible = "Depense";
@@ -38,7 +44,13 @@ class DepenseController extends Controller
         $historique->save();
         return view('depenses/index', compact('sold'));
     }
+   public function justificatifdepense($id)
+    {
+        $depense = DepenseFile::where('depense_id',$id)->first();
+        //dd($depense);
 
+        return view('depenses.depensesjustif',compact('depense'));
+    }
 
     /**
      * Display a listing of the resource.
@@ -54,7 +66,10 @@ class DepenseController extends Controller
                 return
                         '<a class="btn btn-info" href="/depense-files-' . $clt->id . '"> <i class="fa fa-file"></i></a>
                         <a class="btn btn-success" onclick="editcharge(' . $clt->id . ')"> <i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-danger" onclick="deletecharge(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>';
+                        <a class="btn btn-danger" onclick="deletecharge(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>
+                                                <a class="btn btn-warning" href="/viewDepense-files-' . $clt->id . '"> <i class="fa fa-eye"></i>    </a>
+
+                        ';
             })
             ->make(true);
     }
@@ -110,22 +125,20 @@ class DepenseController extends Controller
         $charge->motif = $request->motif;
 
         $charge->journal_id = $id;
-        $charge->user_id = Auth::user()->id;
-        $charge->sold_id = $request->sold_id;
+        $charge->user_id = Auth::user()->id;/* 
+        $charge->sold_id = $request->sold_id; */
         $charge->boutique_id =Auth::user()->boutique->id;
 
         $charge->save();
 
-        $sold = Sold::find($request->sold_id);
+       /*  $sold = Sold::find($request->sold_id);
         if($sold->montant <= $request->montant)
         {
             DB::rollback();
             return null;
         }
-
-
         $sold->montant -= $request->montant;
-        $sold->update();
+        $sold->update(); */
 
         $historique = new Historique();
         $historique->actions = "Creer";
@@ -135,7 +148,7 @@ class DepenseController extends Controller
 
         DB::commit();
 
-        return $sold;
+        return redirect("/depenses")->with('success', 'Dépenses effectuer avec success');
     }
 
     public function store_depot(Request $request)

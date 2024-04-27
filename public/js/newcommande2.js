@@ -180,7 +180,6 @@ $(function( ) {
                 { data: 'modele' },
                 { data: 'quantite' },
                 { data: 'prix' },
-                {data:'credit'},
                 { data: 'total' },
             ]
 
@@ -228,7 +227,6 @@ $('#ajout').on('click',function () {
                 "modele":modele,
                 "prix": $('#prix').val(),
                 "quantite": $('#quantite').val(),
-                "credit":$("#credit").prop("checked") ? "OUI" :"NON",
                 "total": $('#prix').val() * $('#quantite').val(),
                 //"à crédit":$("#credit").val();
 
@@ -236,7 +234,6 @@ $('#ajout').on('click',function () {
 
             $('#prix').val(null);
             $('#quantite').val(null);
-            $("#credit").val(null);
 
         }else{
             $table2.data()[position].quantite = parseInt( $table2.data()[position].quantite) + parseInt( $('#quantite').val()) ;

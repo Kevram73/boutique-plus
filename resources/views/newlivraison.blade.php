@@ -49,7 +49,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <label class="col-sm-6 control-label">Quantité a livrer</label>
+                                                <label class="col-sm-6 control-label">Quantité à livrer</label>
                                                 <div class="col-sm-9">
                                                     <input type="number" name="quant"  id="quant" class="form-control" readonly="readonly" />
                                                 </div>

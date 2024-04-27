@@ -1,133 +1,259 @@
-@extends('layoutimprimer')
-@section('contenu')
-    <body onload="window.print(); fermer()">
-    <div class="wrapper">
-        <!-- Main content -->
-        <section class="invoice">
-
-            <div class="row invoice-info">
-                <div class="col-sm-4 invoice-col">
-
-                    <address>
-                        <b> {{Auth::user()->boutique->nom}}</b><br>
-                        Adresse: {{Auth::user()->boutique->adresse}}<br>
-                        Telephone:  {{Auth::user()->boutique->telephone}}
-                    </address>
-                </div>
-            </div>
-            <!-- /.row -->
-
-            <div class="row invoice-info">
-                    <div class="col-sm-4 invoice-col">
-                    <h6><strong>INFORMATIONS DU CLIENT</strong></h6>
-                    <address>
-                        <b> Nom : <span class="text-danger" >{{$client->nom}}</span> </b><br>
-                        <b>Contact : <span class="text-danger" >{{$client->contact}}</span> </b><br>
-                        <b>Adresse : <span class="text-danger" >{{$client->adresse}}</span> </b><br>
-                    </address>
-                </div>
-                <!-- /.col -->
-                {{-- <div class="col-sm-4 invoice-col">
-                    <address>
-                        <strong></strong>
-                    </address>
-                </div> --}}
-                <!-- /.col -->
-                <div class="col-sm-4 invoice-col">
-                    <h6><strong>INFORMATIONS DU DEVIS</strong></h6>
-                    <address>
-                        <b>Devis N*: <span class="text-danger" >{{$devis->numero}}</span> </b><br>
-                        <b>Date du devis : <span class="text-danger" >{{$devis->date_devis}}</span> </b><br>
-                        <b>Montant total : <span class="text-danger prix" >{{ $devis->totaux }} FCFA</span> </b><br>
-                    </address>
-                </div>
-                <!-- /.col -->
-
-
-                <!-- /.col -->
-            </div>
-
-
-            <h5 align="center"><strong>LISTE DES PRODUITS DU DEVIS DE VENTE</strong></h5>
-            <br>
-            <!-- Table row -->
-
-            <div class="row">
-                <div class="col-12 table-responsive">
-                    <table class="table table-bordered table-striped mb-none" id="afficheTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf" >
-                        <thead>
-                        <tr>
-                            <th class="center hidden-phone">Désignation</th>
-                            <th class="center hidden-phone">Prix unitaire</th>
-                            <th class="center hidden-phone">Quantité </th>
-                            <th class="center hidden-phone">Réduction </th>
-                            <th class="center hidden-phone">Prix total </th>
-                        </tr>
-                        </thead>
-                        <tbody class="center hidden-phone">
-
-                        @foreach($devislignes as $devisligne)
-
-                            <tr class="gradeA">
-                                <td class="center hidden-phone" style="width: 30% !important;">{{$devisligne->produit}} - {{$devisligne->modele}}  </td>
-                                <td class="center hidden-phone prix-n">{{$devisligne->prix}}</td>
-                                <td class="center hidden-phone">{{$devisligne->quantite}}</td>
-                                <td class="center hidden-phone">{{$devisligne->reduction}} FCFA</td>
-                                <td class="center hidden-phone prix">{{$devisligne->prixtotal}} FCFA</td>
-                            </tr>
-
-                        @endforeach
-                        </tbody>
-                    </table>
-                    <center><li class="list-group-item center hidden-phone" >Montant réduction :<b> <span class="prix">{{$devis->montant_reduction}} FCFA</span></b></li></center>
-                    @if (!$devis->with_tva)
-                    <center><li class="list-group-item center hidden-phone" >Montant total :<b> <span class="text-danger prix"  id="prixTotal">{{$devis->totaux}} FCFA</span></b></li></center>
-                    @endif
-                </div>
-                @if ($devis->with_tva)
-                <div>
-                    <table class="table" style="width: 45%; position: absolute; right: -10px;">
-                        <tr>
-                            <td style="border-top-style:none;">TVA</td>
-                            <td class="text-center" style="border-top-style:none;">{{ $devis->tva }} %</td>
-                        </tr>
-                        <tr>
-                            <td>Montant TVA</td>
-                            <td class="text-center">{{ $devis->montant_tva }}</td>
-                        </tr>
-                        <tr>
-                            <td>Montant HT</td>
-                            <td class="text-center">{{ $devis->montant_ht }}</td>
-                        </tr>
-                        <tr>
-                            <td>Montant TTC</td>
-                            <td class="text-center">{{ $devis->totaux }} FCFA</td>
-                        </tr>
-                    </table>
-                </div>
-                @endif
-            </div>
-    </div>
-    </body>
-@endsection
-@section('js')
-<script>
-
-    function setNumeralHtml(element, format, surfix="")
-    {
-        var prices = $("."+element);
-
-        for(var i=0; i<prices.length; i++)
-        {
-            var number = numeral(prices[i].innerText);
-
-            var string = number.format(format);
-            prices[i].innerText = string+" "+surfix;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devis en détail</title>
+    
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 25mm 20mm 25mm;
+        }
+        body{
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+          
+        }
+        
+        body::before{
+            content: '';
+          position: absolute;
+          top: 50;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-image: url('https://boutique.mingoube.com/image/logo-MINGOUBE.png');
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-position: center;
+          opacity: 0.4; /* Adjust the opacity as needed */
+          z-index: -1;
         }
 
-    }
+        header img {
+            width: 100%;
+            height: auto;
+        }
 
-    setNumeralHtml("prix", "0,0", "FCFA");
-    setNumeralHtml("prix-n", "0,0");
-</script>
-@endsection
+        .header-text{
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        table th, table td { border: 1px solid #4a4a4a; padding: 5px; text-align: left; }
+        table th { background-color: #c6c6c6; }
+        table * { font-size: 14px; }
+
+        .inline-elt{
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .inline-elt h5, .inline-elt span{
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .condition, .date {
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: left;
+        }
+        
+        .date{
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .bottom-text{
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .bottom-text span{
+            font-weight: bold;
+        }
+
+        .separator {
+            margin-top: 50px;
+            border-top: 3px solid #4a4a4a;
+            border-bottom: 2px solid #323d7c;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .footer-info {
+            margin-bottom: 5px;
+        }
+        
+        .footer-info span {
+            font-weight: bold;
+        }
+        
+        .bottom-space {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 120px;
+            font-size: 14px;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        
+        .bottom-space .second{
+            text-align: right;
+            margin-top: -15px;
+        }
+        .header-container {
+            background-color: #004a99; /* Dark blue background */
+            color: white;
+            padding: 10px 20px; /* Adjust the padding to fit your content */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            width: 100px; /* Adjust based on actual logo size */
+            height: auto;
+        }
+
+        .header-text-logo {
+            text-align: left;
+            font-size: 12px; /* Adjust the size as needed */
+        }
+
+        .header-text-logo h3 {
+            margin: 0;
+            padding: 0;
+            font-size: 20px; /* Adjust the size as needed */
+            font-weight: bold;
+        }
+
+        .header-text-logo p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://boutique.mingoube.com/image/top.png" />
+    </header>
+    
+    <h3 class="header-text">Devis Détail</h3>
+
+    <!-- Head Table -->
+    <table id="head-table" style="width: 60%;">
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{$devis->numero}}</td>
+                <td>{{$devis->date_devis}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Inline Elements Section -->
+    <div class="inline-elt">
+        <div>Client: <span>{{$client->nom}}</span></div>
+        <div>Contact: <span>{{$client->contact}}</span></div>
+    </div>
+
+    <!-- Main Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Désignations</th>
+                <th>Prix Unit</th>
+                <th>Quantités</th>
+                <th>Réduction</th>
+                <th>Montants</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($devislignes as $devisligne)
+            <tr>
+                <td>{{$loop->iteration}}</td>
+                <td>{{$devisligne->produit}} - {{$devisligne->modele}} </td>
+                <td>{{number_format($devisligne->prix, 2, ',', '.')}}</td>
+                <td>{{$devisligne->quantite}}</td>
+                <td>{{number_format($devisligne->reduction, 2, ',', '.')}} FCFA</td>
+                <td>{{number_format($devisligne->prixtotal, 2, ',', '.')}} FCFA</td>
+            </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="5">TOTAL</th>
+                @if($devis->with_tva == 1)
+                <th>{{number_format($devis->montant_ht, 2, ',', '.')}} FCFA</th>
+                @else
+                <th>{{ number_format($devis->totaux, 2, ',', '.') }} FCFA</th>
+                @endif
+            </tr>
+        </tfoot>
+    </table>
+    @if($devis->with_tva == 1)
+    <table id="footer-table" style="width: 80%;">
+        <thead>
+            <tr>
+                <th>Prix Total HT</th>
+                <th>TVA {{ $devis->tva }} %</th>
+                <th>Prix Total TTC</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ number_format($devis->montant_ht, 2, ',', '.') }} FCFA</td>
+                <td>{{ number_format($devis->montant_tva, 2, ',', '.') }} FCFA</td>
+                <td>{{ number_format($devis->totaux, 2, ',', '.')}} FCFA</td>
+            </tr>
+        </tbody>
+    </table>
+    @endif
+
+    <!-- Footer Text -->
+    <p class="bottom-text">Arrêter la présente Facture à la somme TTC de: <span>@php $fmt = new NumberFormatter('fr', NumberFormatter::SPELLOUT);
+echo $fmt->format($devis->totaux); @endphp Francs CFA.</span></p>
+
+    <h3 class="condition">Condition de paiement :</h3>
+    <p class="date">Fait à {{ Auth::user()->boutique->nom }}, ce @php 
+    setlocale(LC_TIME, 'fr_FR.UTF-8');
+    $date = new DateTimeImmutable(now());
+    echo strftime('%A %d %B %Y', $date->getTimestamp());
+@endphp</p>
+    
+    <div class="bottom-space">
+        <p>Client:</p>
+        <p class="second">Kanfitine MINGOUBE</p>
+    </div>
+
+    <div class="separator"></div>
+
+    <footer>
+        <div class="footer-info">SIS à DJAPENI, Rue Numero 1 Carréfour Non Loin de L'EPP  DJAPENI, Cinkasse-Togo</div>
+        <div class="footer-info">Tél: +228 90 48 40 05 | NIF : 1001178767 | N° R.C.C.M : TG-LOM 2019 B 0001</div>
+        <div class="footer-info">E-mail: <span>mingoubek@gmail.com</span> | Site web: <span>www.migoubeetfils.com</span></div>
+    </footer>
+    
+</body>
+</html>

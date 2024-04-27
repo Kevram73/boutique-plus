@@ -254,7 +254,7 @@ class UserController extends Controller
 
         return datatables()->of($users)
             ->addColumn('action', function ($role){
-                 if($role->flag_etat == false){
+                 if($role->flag_etat == false){ 
                 return ' <a class="btn btn-info " onclick="showUser('.$role->id.')" ><i class="fa  fa-info"></i></a>
                 <a class="btn btn-success" onclick="editUser('.$role->id.')"> <i class="fa fa-pencil"></i></a>
                 <a class="btn btn-warning" onclick="resetPwd('.$role->id.')"> <i class="fa fa-refresh"></i></a>

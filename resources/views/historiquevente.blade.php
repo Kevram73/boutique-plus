@@ -89,10 +89,24 @@
             </div>
         </section>
     </div>
+    <script>
+        function show(id){
+        $.ajax({
+            url: '/showvente-'+id,
+            type: "get",
+            success : function(data) {
+                window.location='/detailvente-'+id
+            },
+            error : function(data){
+                window.location='/detailvente2-'+id
+            }
+        })
+    }
+    </script>
 @endsection
 @section('js')
 
-    <script src="octopus/assets/vendor/jquery/jquery.js"></script>
+    <script src="octopus/assets/vendor/jquery/jquery.js"></script> 
     <script src="octopus/assets/vendor/bootstrap/js/bootstrap.js"></script>
     <script src="octopus/assets/vendor/nanoscroller/nanoscroller.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>

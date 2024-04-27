@@ -6,6 +6,7 @@ return [
     'reglements' => 'Reglements',
     'procurement' => 'Procurement',
     'sales' => 'Sales',
+    'creances' => 'Receivables',
     'buys' => 'Purchases',
     'orders' => 'Orders',
     'delivery' => 'Delivery',

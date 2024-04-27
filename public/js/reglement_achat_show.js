@@ -92,7 +92,7 @@ $(function () {
             {data :  "total",name : 'total', orderable: false, searchable: false},
             {data :  "montant_donne",name : 'montant_donne', orderable: false, searchable: false},
             {data :  "montant_restant",name : 'montant_restant', orderable: false, searchable: false},
-            {data :  "date_reglement",name : 'date_reglement'},
+            {data :  "created_at",name : 'created_at'},
             {data :  "action",name : 'action'}
         ]
 

@@ -71,8 +71,30 @@ $('#client').on('change',function ( ) {
         },
     })
 })
-
-
+$('#checkavoir').on('change',function () {
+    var setTva = $('#checkavoir');
+    var avoir = $("#avoir");
+    // let  message= "Set TVA "+ setTva.attr("checked");
+    if (setTva.is(":checked"))
+    {
+        avoir.css('display', 'inline-block');
+    }else{
+        avoir.css('display', 'none');
+    }
+    // sweetToast('success',message);
+})
+$('#client').on('change',function ( ) {
+    $.ajax({
+        url: '/recupereravoir-' + $('#client').val(),
+        type: "get",
+        success: function (data) {
+                $('#avoir').val(data);
+            },
+        error: function (data) {
+            console.log("erreur")
+        },
+    })
+})
 
 $('#produit').on('change',function ( ) {
     $.ajax({
@@ -189,10 +211,7 @@ $(function( ) {
 })
 $('#ajout').on('click',function () {
     let message;
-    if( ($('#quantite').val() -$('#stock').val())>0 ){
-        message='Quantite superieure au stock...'
-        sweetToast('warning',message);
-    } else{
+    
         if( $('#modele').val() ==null   ||   $('#prix').val() <= 0
             || $('#prix').val()  ==''   || $('#quantite').val()==''  || $('#quantite').val()<=0 ){
             message='Veuillez bien remplir tous les champs svp...'
@@ -243,7 +262,7 @@ $('#ajout').on('click',function () {
             trouveEmporte = true;
         }
 
-    } }
+    } 
 })
 function calTotal(table)
 {
@@ -312,6 +331,7 @@ $('#valider').on('click',function (e) {
                     }
                 }
                 $('#venTable').val(content)
+                 $('#avoirvenTable').val(content)
                 e.preventDefault();
                 if (e.isDefaultPrevented()){
                     $.ajax({

@@ -5,7 +5,7 @@
             <header class="page-header">
                 <h2>Historique des divers</h2>
             </header>
-
+ 
             <div class="row"  id="inventaire">
                 <div class="row">
                     <div class="col-md-4 form-group">
@@ -88,7 +88,7 @@
                             <tr>
                                 <th class="center hidden-phone">Libelle</th>
                                 <th class="center hidden-phone">Montant</th>
-                            </tr>
+                            </tr> 
                             </thead>
                             <tbody class="center hidden-phone">
 

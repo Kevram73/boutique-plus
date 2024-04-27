@@ -319,42 +319,35 @@ $('#btnAddInventaire').on('click', function(){
 
 //post des données
 $('#ajout_inventaie form').on('submit', function (e) {
-
-    let url,message;
-    // if (!$('#').val()){
-    //     url = '/ajoutfournisseur'
-    //     message = 'Fournisseur enregistré'
-    // }
-    // else{
-    //     url = '/updatefournisseur'
-    //     message = 'Fournisseur enregistré'
-    // }
-
-    url = "/createinventaire"
+    let url, message;
+    url = '/createinventaire';
+    message = 'Inventaire enregistré';
 
     e.preventDefault();
-    if (e.isDefaultPrevented()){
+    if (e.isDefaultPrevented()) {
+        const formData = new FormData($("#ajout_inventaie form")[0]);
+
+        // Affichez les données dans la console
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+
         $.ajax({
-            url : url ,
-            type : "post",
-            // data : $('#modal-form-user').serialize(),
-            data: new FormData($("#ajout_inventaie form")[0]),
-            //data: new FormData($("#modal-form-user")[0]),
+            url: url,
+            type: "post",
+            data: formData,
             contentType: false,
             processData: false,
-            success : function(data) {
-                sweetToast('success',message);
-
+            success: function (data) {
                 $('#ajout_inventaie').modal('hide');
-
+                sweetToast('success', message);
                 inventaireTablePending.ajax.reload();
             },
-            error : function(data){
-              alert('erreur')
+            error: function (data) {
+                alert('Erreur de génération du PDF');
             }
         });
     }
-
 });
 
 function deleteinventaire(id){

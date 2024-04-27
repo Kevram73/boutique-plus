@@ -1,6 +1,6 @@
 
 
-var categorieTable;
+var boutiqueTable;
 function sweetToast(type,text){
     return  Swal.fire({
         position: 'top-end',
@@ -54,12 +54,13 @@ $(function () {
                 }
             }
         },
-        ajax: '/allboutique',
+        ajax: '/allboutique', 
         "columns": [
 
             {data: "nom",name : 'nom'},
             {data: "adresse",name : 'adresse'},
             {data: "telephone",name : 'telephone'},
+            {data: "valeur",name : 'valeur'},
             {data: "action", name : 'action' , orderable: false, searchable: false}
         ]
 
@@ -220,3 +221,30 @@ Swal.fire({
 
 
 
+function changeState(id){
+    Swal.fire({
+        position: 'center',
+        title: 'Voulez-vous bloquer  le stock de cette Boutique ?',
+        text:"Elle n'aura plus de stock",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor:'#3085d6',
+        cancelButtonColor:'#d33',
+        confirmButtonText:'Oui '
+    }).then ((result)=>{
+        if (result.value){
+            $.ajax({
+                url : '/changeBoutiqState-'+id,
+                type : "get",
+                success : function(data) {
+                    boutiqueTable.ajax.reload();
+                },
+                error : function(data){
+                }
+            });
+
+            Swal.fire('Effectué',
+                'Etat du stock modifié')
+        }
+    });
+}

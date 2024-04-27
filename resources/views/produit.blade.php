@@ -93,6 +93,12 @@
                                                     <input type="integer" name="seuil" id="seuil" class="form-control" placeholder="100" required/>
                                                 </div>
                                             </div>
+                                            <div class="form-group mt-lg">
+                                                <label class="col-sm-3 control-label">Conditionnement</label>
+                                                <div class="col-sm-9">
+                                                    <input type="integer" name="condi_modele" id="condi_modele" class="form-control" placeholder="100" required/>
+                                                </div>
+                                            </div>
                                             <div class="modal-footer">
                                                 <div class="col-md-12 text-right">
                                                     <button type="submit" class="btn btn-primary" id="btnadd"><i class="fa fa-check"></i> Valider</button>
@@ -109,6 +115,7 @@
                             <tr>
                                 <th class="center hidden-phone">Nom</th>
                                 <th class="center hidden-phone">Modele</th>
+                                <th class="center hidden-phone">Conditionnement</th>
                                 <th class="center hidden-phone">Quantité </th>
                                 <th class="center hidden-phone">Prix unitaire (détail)</th>
                                 <th class="center hidden-phone">Prix unitaire (de gros)</th>
@@ -145,6 +152,7 @@
                         <li class="list-group-item">Prix (de gros) :<b> <span class="text-danger" id="sPrixDeGros"></span> </b></li>
                         <li class="list-group-item">Prix d'achat (dernier) :<b> <span class="text-danger" id="sPrixAchat"></span> </b></li>
                         <li class="list-group-item">Quantité seuil :<b> <span class="text-danger " id="sSeuil" ></span></b></li>
+                        <li class="list-group-item">Conditionnement :<b> <span class="text-danger " id="sCondi" ></span></b></li>
 
                         <li class="list-group-item">
                             crée le :<b> <span class="text-danger" id="sCreate"></span></b> </li>
@@ -215,16 +223,15 @@
         </div>
 
     </div>
-@endsection
+@endsection 
 @section('js')
 
     <script src="octopus/assets/vendor/jquery/jquery.js"></script>
     <script src="octopus/assets/vendor/bootstrap/js/bootstrap.js"></script>
-    <script src="octopus/assets/vendor/nanoscroller/nanoscroller.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
     <script src="js/modele.js"></script>
-    <script src="js/seuil.js"></script>
+    <script src="js/seuil.js"></script> 
 
 @endsection

@@ -7,6 +7,7 @@ use App\Modele;
 use App\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BoutiquesController extends Controller
 {
@@ -27,18 +28,56 @@ class BoutiquesController extends Controller
      */
     public function index()
     {
-        $boutique=Boutique::all();
+        //$boutique=Boutique::all();
+        $boutique = DB::table('boutiques')
+        ->join('modeles', function ($join) {
+            $join->on('modeles.boutique_id', '=', 'boutiques.id');
+        })
+        ->selectRaw('SUM(modeles.quantite * modeles.prix_achat) as valeur, boutiques.*')
+          ->groupBy('boutiques.id','boutiques.nom','boutiques.adresse','boutiques.telephone','boutiques.is_stock',
+        'boutiques.contact','boutiques.created_at','boutiques.updated_at','boutiques.is_central')
+        ->get();
+                // dd($boutique);
 
         return datatables()->of($boutique)
             ->addColumn('action', function ($clt){
-
+                if($clt->is_stock == false){
                 return ' <a class="btn btn-info " onclick="showboutique('.$clt->id.')" ><i class="fa  fa-info"></i></a>
                             <a class="btn btn-warning " onclick="showvaleur('.$clt->id.')" ><i class="fa fa-money"></i></a>
                                     <a class="btn btn-primary" href="/settings-'.$clt->id.'"> <i class="fa fa-cog"></i></a>
+                                    <a class="btn btn-primary" onclick="changeState('.$clt->id.')"><i class="fa  fa-unlock"></i></a>
                                     <a class="btn btn-success" onclick="editboutique('.$clt->id.')"> <i class="fa fa-pencil"></i></a>
                                     <a class="btn btn-danger" onclick="deleteboutique('.$clt->id.')"><i class="fa fa-trash-o"></i></a> ';
+                                }
+                                elseif ($clt->is_stock == true){
+                                    return ' <a class="btn btn-info " onclick="showboutique('.$clt->id.')" ><i class="fa  fa-info"></i></a>
+                                    <a class="btn btn-warning " onclick="showvaleur('.$clt->id.')" ><i class="fa fa-money"></i></a>
+                                            <a class="btn btn-primary" href="/settings-'.$clt->id.'"> <i class="fa fa-cog"></i></a>
+                                            <a class="btn btn-danger" onclick="changeState('.$clt->id.')"><i class="fa   fa-unlock-alt"></i></a>                                             <a class="btn btn-success" onclick="editboutique('.$clt->id.')"> <i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-danger" onclick="deleteboutique('.$clt->id.')"><i class="fa fa-trash-o"></i></a> ';
+                                        }
             })
             ->make(true) ;
+    }
+
+    public function  changeState($id){
+
+        $user = Boutique::findOrFail($id);
+        if($user->is_stock==false){
+            $user->is_stock = true;
+            $user->update();
+        }
+        else{
+            $user->is_stock = false;
+            $user->update();
+        }
+        $historique=new Historique();
+        $historique->actions = "Bloqué";
+        $historique->cible = "Stock";
+        $historique->user_id =Auth::user()->id;
+        $historique->save();
+
+        return [];
     }
 
     public function settingIndex($id)
@@ -184,5 +223,42 @@ class BoutiquesController extends Controller
         $boutique= Boutique::findOrFail($id);
         $boutique ->delete();
         return [];
+    }
+
+    public function modeleboutique($id)
+    {
+        $boutique = DB::table('modeles')
+            ->join('boutiques', function ($join) {
+                $join->on('modeles.boutique_id', '=', 'boutiques.id');
+            })
+            //->join('produits', function ($join) {
+               // $join->on('produits.id', '=', 'modeles.produit_id');
+           // })
+            ->where('boutiques.id','=',$id)
+            ->select(
+                'boutiques.nom as nom',
+                'modeles.libelle as modele',
+                'modeles.id as id')
+                //'produits.nom as produit')
+            ->get();
+        return $boutique;
+    }
+
+    public function commandeboutique($id)
+    {
+        $boutique = DB::table('commandes')
+            ->join('boutiques', function ($join) {
+                $join->on('commandes.boutique_id', '=', 'boutiques.id');
+            })
+            //->join('livraisons', function ($join) {
+               // $join->on('livraisons.boutique_id', '=', 'boutiques.id');
+           // })
+            ->where('boutiques.id','=',$id)
+            ->select(
+                'boutiques.nom as nom',
+                'commandes.numero as numero',
+                'livraisons.date_livraison as date_livraison')
+            ->get();
+        return $boutique;
     }
 }

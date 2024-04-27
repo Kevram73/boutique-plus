@@ -78,7 +78,7 @@ $('#banque').on('change',function () {
 
 });
 
-$('#compte').on('change',function () {
+$('#comptes').on('change',function () {
     let _x = $('#compte').val() ;
     console.log(_x);
 
@@ -87,17 +87,19 @@ $('#compte').on('change',function () {
     $.ajax({
         url : _getAcountUrl,
         type : "get",
-        // data : $('#modal-form-user').serialize(),
-        //data: new FormData($("#ajout_reglement form")[0]),
-        //data: new FormData($("#modal-form-user")[0]),
+         data : $('#modal-form-user').serialize(),
+        data: new FormData($("#ajout_reglement form")[0]),
+        data: new FormData($("#modal-form-user")[0]),
         contentType: false,
         processData: false,
         success : function(data) {
             console.log(data[0]);
-            $('#solde').val(null);
-            $('#solde').val(data[0].solder);
-            //$('#solde').html(data[0].solder);
-
+            $('#solde').html(data[0].solde);
+            if(data.solde==0){
+                let _m = " Votre compte a un solde insufisant" ;
+                sweetToast('warning',_m) ;
+                $('#compte').val(null);
+            }
 
         },
         error : function(data){
@@ -172,7 +174,7 @@ $(function () {
             {data :  "total",name : 'total'},
             {data :  "montant_donne",name : 'montant_donne'},
             {data :  "montant_restant",name : 'montant_restant'},
-            {data :  "date_reglement",name : 'date_reglement'},
+            {data :  "created_at",name : 'created_at'},
             {data: "action", name : 'action' , orderable: false, searchable: false}
 
 
@@ -180,12 +182,12 @@ $(function () {
 
     });
 
-
+ 
 
 });
 $('#btnreglement').on('click', function(){
 
-    $('.modal-title-user').text('ENREGISTREMENT DU REGLEMENT');
+    $('.modal-title-user').text('ENREGISTREMENT  REGLEMENT FOURNISSEUR');
     $('#idreglement').val(null);
     $('#fournisseur').val(null);
     $('#btnadd').text('Valider');
@@ -204,7 +206,7 @@ $('#ajout_reglement  form').on('submit', function (e) {
     let url,message;
     if (!$('#idreglement').val()){
         url = '/storereglementachat'
-        message = 'reglement enregistré'
+        message = 'reglement enregistré' 
 
 
     }
@@ -296,5 +298,18 @@ function deletereglement(id){
     });
 }
 
-
+$('#compte').on('change', function() {
+    var userId = $(this).val();
+    $.get('/get-solde-' + userId, function(data) {
+    var solder = data.solder;
+    console.log(solder);
+    console.log('vraiment je   plus')
+    var donne = $('#donne').val();
+    if (parseFloat(donne) >= parseFloat(solder)) {
+    //alert('Le montant est supérieur ou égal au solde de l'utilisateur sélectionné.');
+    let _m = " Votre compte a un solde insufisant" ;
+                sweetToast('warning',_m) ;
+    }
+    });
+    });
 

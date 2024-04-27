@@ -35,7 +35,7 @@
                                             {{csrf_field()}}
                                             <div  class="form-group mt-lg">
                                                 <label class="col-sm-3 control-label">Type de charge</label>
-                                                <div class="col-md-9 form-group">
+                                                <div class="col-sm-9 ">
                                                     <select  name="type" id="type"  class="form-control populate">
                                                         <optgroup label="Choisir ">
                                                             <option value=""></option>
@@ -48,6 +48,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            
                                             <div class="form-group mt-lg">
                                                 <label class="col-sm-3 control-label">Libellé</label>
                                                 <div class="col-sm-9">
@@ -59,6 +60,21 @@
                                                 <label class="col-sm-3 control-label">Montant</label>
                                                 <div class="col-sm-9">
                                                     <input type="number" name="montant" id="montant" class="form-control" placeholder="" min="0" required/>
+                                                </div>
+                                            </div>
+                                            <div  class="form-group mt-lg">
+                                                <label class="col-sm-3 control-label">COMPTES</label>
+                                                <div class="col-sm-9 ">
+                                                    <select  name="compte" id="compte"  class="form-control populate">
+                                                        <optgroup label="Choisir ">
+                                                            @foreach ($banques as $banque)
+                                                                
+                                                            <option value="{{ $banque->id }}">{{ $banque->banques }} - {{ $banque->numero }}</option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    </select>
+                                                    <input type="hidden" class="form-control" name="solde" id="solde">
+
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -79,6 +95,7 @@
                                 <th class="center hidden-phone">Libellé</th>
                                 <th class="center hidden-phone">Montant</th>
                                 <th class="center hidden-phone">Date </th>
+                                <th class="center hidden-phone">Statut </th>
                                 <th class="center hidden-phone">Action </th>
                             </tr>
                             </thead>

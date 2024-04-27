@@ -13,7 +13,7 @@ var seuilTable;
 
 $(function () {
     // Enlever la fonction alerte dans la boutique principale.
-    //getSeuil();
+    getSeuil();
 });
 
 function getSeuil()

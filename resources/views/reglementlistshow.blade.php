@@ -14,7 +14,7 @@
                         <div class="panel-actions">
                             <a href="#" class="fa fa-caret-down"></a>
                         </div>
-                        <h1 class="panel-title">CLIENT    :     {{ $client->nom.' ' }} {{ $client->prenom ? $client->prenom : '' }}</h1>
+                        <h1 class="panel-title">CLIENT    :     {{ $client->nom.' ' }} </h1>
                         <input type="hidden" id="client_id" value="{{ $client->id }}">
                     </header>
 
@@ -23,9 +23,9 @@
                         <div class="row">
                             <ul class="list-group">
                                 <li class="list-group-item"><center><h3>Historique des paiments</h3></center></span> </b></li>
-                                @if (isset($reglementClient) && isset($venteClient))
-                                    <li class="list-group-item">Total Payé :<b> <span class="text-danger" class="prix">{{$reglementClient->donner}}</span> </b></li>
-                                    <li class="list-group-item">Restant :<b> <span class="text-danger" class="prix">{{$venteClient->total - $reglementClient->donner < 1 ? '-' : $venteClient->total - $reglementClient->donner }}</span> </b></li>
+                                @if (isset($reglementClient) && isset($venteClient) && isset($totalventeClient))
+                                    <li class="list-group-item">Total Payé :<b> <span class="text-danger" class="prix">{{$totalventeClient - $reglementClient->solde }}</span> </b></li>
+                                    <li class="list-group-item">Restant :<b> <span class="text-danger" class="prix">{{$reglementClient->solde}}</span> </b></li>
                                 @endif
                             </ul>
                         </div>
@@ -46,26 +46,29 @@
                         <div class="row">
                             <ul class="list-group">
                                 <li class="list-group-item"><center><h3>Liste Ventes</h3></center></span> </b></li>
-                                @if (isset($venteClient))
-                                    <li class="list-group-item">Total Vente :<b> <span class="text-danger" class="prix">{{ $venteClient->total }}</span> </b></li>
+                                @if (isset($totalventeClient))
+                                    <li class="list-group-item">Total Vente :<b> <span class="text-danger" class="prix">{{ $totalventeClient }}</span> </b></li>
                                 @endif
                             </ul>
                         </div>
                         <table class="table table-bordered table-striped mb-none" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf" >
                             <thead>
                             <tr>
+                                <th class="center hidden-phone">Date de vente</th>
                                 <th class="center hidden-phone">Numero</th>
                                 <th class="center hidden-phone">Montant Total</th>
-                                <th class="center hidden-phone">Date de vente</th>
                             </tr>
                             </thead>
                             <tbody class="center hidden-phone">
                             @if (isset($venteClient))
-                                                    <tr>
-                                                        <td>{{ $venteClient->numero }}</td>
-                                                        <td>{{ $venteClient->total }}</td>
-                                                        <td>{{ $venteClient->date }}</td>
-                                                    </tr>
+                            @foreach ($venteClient as $venteClien)
+                                 <tr>
+                                                        <td>{{ $venteClien->date }}</td>
+                                                        <td>{{ $venteClien->numero }}</td>
+                                                        <td>{{ $venteClien->total }}</td>
+                                </tr>
+                            @endforeach
+
                                             @endif
                             </tbody>
                         </table>

@@ -1,326 +1,133 @@
-
-
-var achatTable;
-function show(id){
-
-    $.ajax({
-        url: '/showvente-'+id,
-        type: "get",
-        success : function(data) {
-            window.location='/detailvente-'+id
-        },
-        error : function(data){
-            window.location='/detailvente2-'+id
-        }
-    })
-}
-$('#choix').on('change',function ( ) {
-    if ($('#choix').val()=="mois"){
-        $('#jr').hide();
-        $('#depense').show();
-        $('#depenses').val(null);
-        $('#moi').show();
-        $('#mois').empty()
-        $('#mois').append('<option value=""></option>',
-            '<option value="1">Janvier</option>',
-            '<option value="2">Fevrier</option>',
-            '<option value="3">Mars</option>',
-            '<option value="4">Avril</option>',
-            '<option value="5">Mai</option>',
-            '<option value="6">Juin</option>',
-            '<option value="7">Juillet</option>',
-            '<option value="8">Aout</option>',
-            '<option value="9">Septembre</option>',
-            '<option value="10">Octobre</option>',
-            '<option value="11">Novembre</option>',
-            '<option value="12">Decembre</option>');
-        $('#an').show()
+$(document).ready(function () {
+    var achatTable;
+    
+    function show(id){
         $.ajax({
-            url: '/anneevente',
+            url: '/showvente-'+id,
             type: "get",
-            success: function (data) {
-
-                $('#annee').empty()
-                $('#annee').append('<option value=""></option>')
-                for (var i = 0; i < data.length; i++) {
-                    $('#annee').append('<option value="' + data[i].annee + '">' + data[i].annee + '</option>')
-                }
-
+            success : function(data) {
+                window.location='/detailvente-'+id
             },
-            error: function (data) {
-                console.log("erreur")
-            },
+            error : function(data){
+                window.location='/detailvente2-'+id
+            }
         })
-        $('#mois').on('change',function ( ) {
-            $.ajax({
-                url: '/totalmois-'+ $('#mois').val()+"-"+ $('#annee').val(),
-                type: "get",
-                success: function (data) {
-                    $('#depenses').val(data);
-                },
-                error: function (data) {
-                    console.log("erreur")
-                },
-            })
-            $('#achatTable').DataTable().destroy()
-            $(function () {
-                achatTable=$('#achatTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    'paging': true,
-                    'lengthChange': true,
-                    'searching': true,
-                    'ordering': true,
-                    'info': true,
-                    'autoWidth': true,
-                    language: {
-                        "sProcessing": "Traitement en cours...",
-                        "sSearch": "Rechercher&nbsp;:",
-                        "sLengthMenu": "Afficher _MENU_ &eacute;l&eacute;ments",
-                        "sInfo": "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                        "sInfoEmpty": "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-                        "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                        "sInfoPostFix": "",
-                        "sLoadingRecords": "Chargement en cours...",
-                        "sPrint": "Imprimer",
-                        "sZeroRecords": "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                        "sEmptyTable": "Aucune donn&eacute;e disponible dans le tableau",
-                        "oPaginate": {
-                            "sFirst": "Premier",
-                            "sPrevious": "Pr&eacute;c&eacute;dent",
-                            "sNext": "Suivant",
-                            "sLast": "Dernier"
-                        },
-                        "oAria": {
-                            "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-                            "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
-                        },
-                        "select": {
-                            "rows": {
-                                _: "%d lignes séléctionnées",
-                                0: "Aucune ligne séléctionnée",
-                                1: "1 ligne séléctionnée"
-                            }
-                        }
-                    },
+    }
 
-                    ajax: '/recupererventemois-'+ $('#mois').val()+"-"+ $('#annee').val(),
-                    "columns": [
-                        {data:"vente",name : 'vente'},
-                        {data:"totaux",name : 'totaux'},
-                        {data:"user",name : 'user'},
-                        {data: "action", name : 'action' , orderable: false, searchable: false}
-
-
-                    ]
-
-                });
-            });
+    function initializeDataTable(dataUrl) {
+        if (achatTable) {
+            achatTable.destroy();
+        }
+        achatTable = $('#achatTable').DataTable({
+            processing: true,
+            serverSide: true,
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true,
+            language: {
+                // Language options
+            },
+            ajax: dataUrl,
+            columns: [
+                { data: "vente", name: 'vente' },
+                { data: "totaux", name: 'totaux' },
+                { data: "user", name: 'user' },
+                { data: "action", name: 'action', orderable: false, searchable: false }
+            ]
         });
     }
-    else {
-        if ($('#choix').val()==""){
-            $('#jr').hide();
-            $('#moi').hide();
-            $('#depense').hide();
-            $('#an').hide();
-            $('#achatTable').DataTable().destroy()
-        }
-        if ($('#choix').val()=="jour"){
-            $('#jr').show();
-            $('#depense').show();
-            $('#depenses').val(null);
-            $('#moi').hide();
-            $('#an').hide();
-            $.ajax({
-                url: '/recupererdatvente',
-                type: "get",
-                success: function (data) {
 
-                    $('#jour').empty()
-                    $('#jour').append('<option value=""></option>')
+    function fetchAndPopulateData(url, depenseSelector) {
+        $.ajax({
+            url: url,
+            type: "get",
+            success: function (data) {
+                $(depenseSelector).val(data);
+            },
+            error: function (data) {
+                console.log("Erreur");
+            }
+        });
+    }
 
-                    var tab=data;
-                    for (var i = 0; i < tab["fran"].length; i++) {
-                        $('#jour').append('<option value="'+tab["id"][i]+'">'+tab["fran"][i]+'</option>')
-                    }
+    $('#choix').on('change', function () {
+        var choixVal = $('#choix').val();
+        $('#jr, #moi, #an, #depense').hide();
+        $('#depenses').val(null);
 
-                },
-                error: function (data) {
-                    console.log("erreur")
-                },
-            })
-            $('#jour').on('change',function ( ) {
-                $.ajax({
-                    url: '/totaljour-'+ $('#jour').val(),
-                    type: "get",
-                    success: function (data) {
-                        $('#depenses').val(data);
-                    },
-                    error: function (data) {
-                        console.log("erreur")
-                    },
-                })
-                $('#achatTable').DataTable().destroy()
-                $(function () {
-                    achatTable=$('#achatTable').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        'paging': true,
-                        'lengthChange': true,
-                        'searching': true,
-                        'ordering': true,
-                        'info': true,
-                        'autoWidth': true,
-                        language: {
-                            "sProcessing": "Traitement en cours...",
-                            "sSearch": "Rechercher&nbsp;:",
-                            "sLengthMenu": "Afficher _MENU_ &eacute;l&eacute;ments",
-                            "sInfo": "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                            "sInfoEmpty": "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-                            "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                            "sInfoPostFix": "",
-                            "sLoadingRecords": "Chargement en cours...",
-                            "sPrint": "Imprimer",
-                            "sZeroRecords": "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                            "sEmptyTable": "Aucune donn&eacute;e disponible dans le tableau",
-                            "oPaginate": {
-                                "sFirst": "Premier",
-                                "sPrevious": "Pr&eacute;c&eacute;dent",
-                                "sNext": "Suivant",
-                                "sLast": "Dernier"
-                            },
-                            "oAria": {
-                                "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-                                "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
-                            },
-                            "select": {
-                                "rows": {
-                                    _: "%d lignes séléctionnées",
-                                    0: "Aucune ligne séléctionnée",
-                                    1: "1 ligne séléctionnée"
-                                }
-                            }
-                        },
-
-
-                        ajax: '/recupererventedate-'+ $('#jour').val(),
-                        "columns": [
-                            {data:"vente",name : 'vente'},
-                            {data:"totaux",name : 'totaux'},
-                            {data:"user",name : 'user'},
-                            {data: "action", name : 'action' , orderable: false, searchable: false}
-
-
-
-                        ]
-
-                    });
-                });
-            })
-        }
-        if ($('#choix').val()=="an"){
-            $('#jr').hide();
-            $('#depense').show();
-            $('#depenses').val(null);
-            $('#moi').hide();
-            $('#an').show();
+        if (choixVal == "mois") {
+            $('#depense, #moi, #an').show();
+            $('#mois').empty().append('<option value=""></option>',
+                '<option value="1">Janvier</option>',
+                '<option value="2">Fevrier</option>',
+                '<option value="3">Mars</option>',
+                '<option value="4">Avril</option>',
+                '<option value="5">Mai</option>',
+                '<option value="6">Juin</option>',
+                '<option value="7">Juillet</option>',
+                '<option value="8">Aout</option>',
+                '<option value="9">Septembre</option>',
+                '<option value="10">Octobre</option>',
+                '<option value="11">Novembre</option>',
+                '<option value="12">Decembre</option>');
             $.ajax({
                 url: '/anneevente',
                 type: "get",
                 success: function (data) {
-
-                    $('#annee').empty()
-                    $('#annee').append('<option value=""></option>')
-                    for (var i = 0; i < data.length; i++) {
-                        $('#annee').append('<option value="' + data[i].annee + '">' + data[i].annee + '</option>')
-                    }
-
+                    $('#annee').empty().append('<option value=""></option>');
+                    $.each(data, function (index, item) {
+                        $('#annee').append('<option value="' + item.annee + '">' + item.annee + '</option>');
+                    });
                 },
                 error: function (data) {
-                    console.log("erreur")
-                },
-            })
-
-            $('#annee').on('change',function ( ) {
-                $('#depenses').val(null);
-                $.ajax({
-                    url: '/totalannee-'+ $('#annee').val(),
-                    type: "get",
-                    success: function (data) {
-                        $('#depenses').val(data);
-                    },
-                    error: function (data) {
-                        console.log("erreur")
-                    },
-                })
-                $('#achatTable').DataTable().destroy()
-                $(function () {
-                    achatTable=$('#achatTable').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        'paging': true,
-                        'lengthChange': true,
-                        'searching': true,
-                        'ordering': true,
-                        'info': true,
-                        'autoWidth': true,
-                        language: {
-                            "sProcessing": "Traitement en cours...",
-                            "sSearch": "Rechercher&nbsp;:",
-                            "sLengthMenu": "Afficher _MENU_ &eacute;l&eacute;ments",
-                            "sInfo": "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                            "sInfoEmpty": "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-                            "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                            "sInfoPostFix": "",
-                            "sLoadingRecords": "Chargement en cours...",
-                            "sPrint": "Imprimer",
-                            "sZeroRecords": "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                            "sEmptyTable": "Aucune donn&eacute;e disponible dans le tableau",
-                            "oPaginate": {
-                                "sFirst": "Premier",
-                                "sPrevious": "Pr&eacute;c&eacute;dent",
-                                "sNext": "Suivant",
-                                "sLast": "Dernier"
-                            },
-                            "oAria": {
-                                "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-                                "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
-                            },
-                            "select": {
-                                "rows": {
-                                    _: "%d lignes séléctionnées",
-                                    0: "Aucune ligne séléctionnée",
-                                    1: "1 ligne séléctionnée"
-                                }
-                            }
-                        },
-
-
-                        ajax: '/recupererventeannee-'+ $('#annee').val(),
-                        "columns": [
-                            {data:"vente",name : 'vente'},
-                            {data:"totaux",name : 'totaux'},
-                            {data:"user",name : 'user'},
-                            {data: "action", name : 'action' , orderable: false, searchable: false}
-
-
-                        ]
-
+                    console.log("Erreur");
+                }
+            });
+            $('#mois').on('change', function () {
+                fetchAndPopulateData('/totalmois-' + $('#mois').val() + "-" + $('#annee').val(), '#depenses');
+                initializeDataTable('/recupererventemois-' + $('#mois').val() + "-" + $('#annee').val());
+            });
+        } else if (choixVal == "jour") {
+            $('#depense, #jr').show();
+            $.ajax({
+                url: '/recupererdatvente',
+                type: "get",
+                success: function (data) {
+                    $('#jour').empty().append('<option value=""></option>');
+                    $.each(data.fran, function (index, item) {
+                        $('#jour').append('<option value="' + data.id[index] + '">' + item + '</option>');
                     });
-                });
-            })
+                },
+                error: function (data) {
+                    console.log("Erreur");
+                }
+            });
+            $('#jour').on('change', function () {
+                fetchAndPopulateData('/totaljour-' + $('#jour').val(), '#depenses');
+                initializeDataTable('/recupererventedate-' + $('#jour').val());
+            });
+        } else if (choixVal == "an") {
+            $('#depense, #an').show();
+            $.ajax({
+                url: '/anneevente',
+                type: "get",
+                success: function (data) {
+                    $('#annee').empty().append('<option value=""></option>');
+                    $.each(data, function (index, item) {
+                        $('#annee').append('<option value="' + item.annee + '">' + item.annee + '</option>');
+                    });
+                },
+                error: function (data) {
+                    console.log("Erreur");
+                }
+            });
+            $('#annee').on('change', function () {
+                fetchAndPopulateData('/totalannee-' + $('#annee').val(), '#depenses');
+                initializeDataTable('/recupererventeannee-' + $('#annee').val());
+            });
         }
-    }
-})
-
-
-
-
-
-
-
-
-
-
-
+    });
+});

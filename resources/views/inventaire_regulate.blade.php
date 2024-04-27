@@ -2,18 +2,6 @@
 @section('css')
 <link rel="stylesheet" type="text/css"
       href="DataTables/datatables.min.css"/>
-<script>
-    /**
-
-     import Scala from "../../public/octopus/assets/vendor/codemirror/mode/clike/scala.html";
-     export default {
-        components: {Scala}
-    }
-
-     */
-
-
-</script>
 <script src="https://unpkg.com/htmx.org@1.8.5"></script>
 @endsection
 
@@ -22,7 +10,7 @@
     <div class="inner-wrapper">
         <section role="main" class="content-body">
             <header class="page-header">
-                <h2>Regularisation de l'inventaire</h2>
+                <h2>Régularisation de l'inventaire</h2>
             </header>
             <div class="modal fade " id="inventaireRegulateModal"
                  tabindex="-1"
@@ -44,41 +32,39 @@
                                 enctype="multipart/form-data">
                                 {{csrf_field()}}
                                 <div class="form-group mt-lg">
-                                    <label class="col-sm-3 control-label"
-                                           for="idDebiteur">Nom débiteurs.</label>
+                                <label class="col-sm-3 control-label">DEBITEUR</label>
+                                <div class="col-sm-9">
+                                <select  name="fournisseur" id="fournisseur"   class="form-control populate">
+                                    <optgroup label="Choisir un DEBITEUR">
+                                        <option value=""></option>
+                                        @foreach($result as $cli)
+                                            <option value="{{$cli->id}}">{{$cli->nom}}</option>
+                                        @endforeach
+                                    </optgroup>
+                                 </select>
+                                 <input type="hidden" value="{{$result[0]->id}}" name="debtor_id"/>
+                                 <input type="hidden" value="{{$id}}" name="inv_id"/>
+
+                                </div></div>
+                                <div class="form-group mt-lg">
+                                    <label class="col-sm-3 control-label">Total à payer</label>
                                     <div class="col-sm-9">
-
-                                        <select
-                                            name="debtor_id"
-                                            id="idDebiteur"
-                                            class="form-control"
-                                            hx-get="/debtor_inv_amount?inv_id={{$result[0]->id}}"
-
-                                            hx-indicator=".htmx-indicator"
-                                            hx-target="#montantId.value"
-                                        >
-                                            <optgroup label="Débiteurs">
-                                                <option value="">Selectionner débiteur</option>
-
-                                                @foreach($result as $re)
-                                                    <option value="{{$re->debtor_id}}">
-                                                        {{$re->nom}} {{$re->prenom}}
-                                                    </option>
-                                                @endforeach
-                                            </optgroup>
-
-                                        </select>
-
+                                        <input type="number" name="total" id="total"  class="form-control"  readonly="readonly" required/>
+                                        <input type="hidden" name="idreglement" id="idreglement"/>
+                                        <input type="hidden" name="reste" id="reste"/>
                                     </div>
                                 </div>
-                                <input type="hidden" value="{{$result[0]->id}}" name="inv_id"/>
-                                <div class="form-group mt-lg">
-                                    <label class="col-sm-3 control-label">Montant a rembourser</label>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Montant  payer</label>
                                     <div class="col-sm-9">
-                                        <input type="number" name="montant" id="montantId" class="form-control"
-                                               placeholder="100"  min="0"
-
-                                               required/>
+                                        <input type="number" name="donne" id="donne" class="form-control"  required/>
+                                    </div>
+                                </div>
+            
+                                <div class="form-group mt-lg">
+                                    <label class="col-sm-3 control-label" id="te">Restant</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" name="restant" id="restant" class="form-control"  readonly="readonly" required/>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -108,6 +94,8 @@
                     </header>
 
                     <div class="panel-body">
+                        <a type="button"  class="btn btn-info" data-toggle="modal" data-target="#inventaireRegulateModal"> Faire une Régularisation </a>
+
                         <table class="table table-bordered table-striped mb-none" id="regulatedTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                             <thead>
                             <tr>
@@ -116,45 +104,39 @@
                                 <th class="center hidden-phone">Nom et prénom</th>
                                 <th class="center hidden-phone">Montant à rembourser</th>
                                 <th class="center hidden-phone">Montant déja rembourser</th>
-                                <th class="center hidden-phone">Restant à rembourser.</th>
-                                <th  class="center hidden-phone">Action</th>
+                                <th class="center hidden-phone">Restant à rembourser</th>
                             </tr>
                             </thead>
                             <tbody class="center hidden-phone">
                             @php
                             $i = 1 ;
                             @endphp
-                            @foreach($result as $re)
+                            @isset($inventaire)
+                                
+                            @foreach($inventaire as $re)
                                 <tr>
 
                                     <td>{{$i++}}</td>
                                     <td>
-                                        {{$re->code_inventaire}}
+                                        {{$re->numero}}
                                     </td>
                                     <td>
                                         {{$re->nom}} {{$re->prenom}}
                                     </td>
                                     <td>
-                                        {{$re->montant_a_rembourser}}
+                                        {{$re->dette}}
                                     </td>
                                     <td>
-                                        @if($re->montant_rembourser == null)
-                                             0 FCFA
-
-                                        @endif
-
-
+                                        {{$re->montant_rembourser}}
                                     </td>
                                     <td>
-                                        {{$re->montant_a_rembourser - $re->montant_rembourser}}
-                                    </td>
-                                    <td>
-                                        <a type="button" class="btn btn-lg" data-toggle="modal" data-target="#inventaireRegulateModal"> Modifier</a>
+                                        {{$re->solde}}
                                     </td>
 
                                 </tr>
                             @endforeach
 
+                            @endisset
 
 
                             </tbody>
@@ -182,5 +164,79 @@
 
 
 
+</script>
+<script>
+    
+    $('#fournisseur').on('change',function ( ) {
+       console.log('lsuds');
+   $('#total').empty();
+   $.ajax({
+       url: '/restantinventairedebitor-'+$('#fournisseur').val(),
+       type: "get",
+       success: function (data) {
+           $('#total').empty();
+           //console.log(data.total)
+           $('#total').val(data);
+       },
+       error: function (data) {
+           console.log("erreur")
+       },
+   })
+})
+$('#donne').on('value change',function ( ) {
+   $('#restant').val($('#total').val()-$('#donne').val());
+   if ( $('#restant').val()>0) {
+       $('#te').text('Restant');
+       $('#reste').val(1);
+
+   }
+   if ( $('#restant').val()<0) {
+       $('#te').text('Monnaie');
+       $('#restant').val(   $('#restant').val()*-1);
+       $('#reste').val(0);
+   }
+})
+</script>
+
+<script>
+        
+
+    $(document).ready(function(){
+        $('#regulatedTable').DataTable({
+            "order": [[ 0, "desc" ]],
+            "pageLength":10,
+            "oLanguage": {
+                
+                "sProcessing":     "Traitement en cours...",
+                "sSearch":         "Rechercher&nbsp;:",
+                "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
+                "sInfo":           "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "sInfoPostFix":    "",
+                "sLoadingRecords": "Chargement en cours...",
+                "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
+                "oPaginate": {
+                    "sFirst":      "Premier",
+                    "sPrevious":   "Pr&eacute;c&eacute;dent",
+                    "sNext":       "Suivant",
+                    "sLast":       "Dernier"
+                },
+                
+                "oAria": {
+                    "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+                    "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
+                }
+            }
+        });
+    });
+    $(document).ready(function() {
+        $('#regulatedTable').DataTable();
+        } );
+            var modal = $('.Recherche');
+            $('.logo').click(function() {
+                modal.show();
+            });
 </script>
 @endsection
