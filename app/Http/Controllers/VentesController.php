@@ -1156,8 +1156,7 @@ class VentesController extends Controller
 
     public function store(Request $request)
     {
-        $jsonData = json_decode($request->getContent(), true);
-
+        $jsonData = $request->json()->all();
         // Vérification si des données ont été reçues
         if (empty($jsonData)) {
             return response()->json(['error' => 'Aucune donnée reçue'], 400);
@@ -1198,33 +1197,7 @@ class VentesController extends Controller
             $livraison_commande->save();
         }
 
-     /*for ($i =0 ;$i<count($jsonData['line']);$i+=5) {
-            $prevente = new Prevente();
-            $prevente ->modele_fournisseur_id=$allcommande[$i];
-            $prevente ->prix=$allcommande[$i+2];
-            $prevente ->quantite= $allcommande[$i+3];
-            $prevente ->reduction= $allcommande[$i+4];
-            $prevente ->livraison= $allcommande[$i+5];
-            $prevente ->prixtotal = $allcommande[$i+3]*$allcommande[$i+2] - $allcommande[$i+4];
-            $prevente ->vente_id=$vente->id;
-            $prevente->save();
-            
-            $livraison = Livraison::where('numero', $allcommande[$i+5])->get()->first();
-            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
-            $livraison_commande->quantite_vendue += $allcommande[$i+3];
-            $livraison_commande->save();
-            //$modele= Modele::findOrFail($allcommande[$i]);
-            // if($modele->quantite < $prevente->quantite)
-            // {
-            //     DB::rollback();
-            //     return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
-            // }
-            //$modele->quantite=$modele->quantite -$prevente ->quantite;
-            //$modele->update();
-
-            $total = $total + $prevente->prixtotal;
-            $allReduction = $allReduction + $prevente->reduction;
-        }*/
+     
         //DB::commit();
 
        $vente=vente::findOrFail($vente->id);

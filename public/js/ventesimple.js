@@ -312,33 +312,37 @@ $('#valider').on('click',function (e) {
             e.preventDefault()
 
             if ($table2.data().length <= 0 ){
-                let message;
-                message='Impossible ... Tableau vide!!!'
+                let message='Impossible ... Tableau vide!!!';
                 sweetToast('warning',message);
             }else{
-                let content =''
-                for(let i = 0; i <  $table2.data().length; i++){
-                    if (i!=$table2.data().length-1){
-                        content +=   $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite+"," + ($table2.data()[i].reduction * 1)+"," + $table2.data()[i].livraison +","
+                let jsonData = [];
 
-                    }else{
-                        content +=  $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite +","+ ($table2.data()[i].reduction * 1) + "," + $table2.data()[i].livraison
-                    }
+                for (let i = 0; i < $table2.data().length; i++) {
+                    let dataObj = {
+                        id: $table2.data()[i].id,
+                        prix: $table2.data()[i].prix,
+                        quantite: $table2.data()[i].quantite,
+                        reduction: $table2.data()[i].reduction * 1,
+                        livraison: $table2.data()[i].livraison
+                    };
+                
+                    jsonData.push(dataObj);
                 }
-                $('#venTable').val(content)
-                console.log(content)
+
+                dataToSend = {
+                    "client": $('#client').val(),
+                    "lines": jsonData,
+                }
+
+                console.log(dataToSend)
+
                 e.preventDefault();
                 if (e.isDefaultPrevented()){
                     $.ajax({
                         url :url,
                         type : "post",
-                        // data : $('#modal-form-user').serialize(),
-                        data: new FormData($("#comform form")[0]),
-                        //data: new FormData($("#modal-form-user")[0]),
-                        contentType: false,
-                        processData: false,
+                        data: dataToSend,
                         success : function(data) {
-                            
                             window.location='/reglements-'+data.id;
                         },
                         error : function(data){
