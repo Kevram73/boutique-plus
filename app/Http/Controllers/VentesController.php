@@ -1177,18 +1177,18 @@ class VentesController extends Controller
         
         foreach($request->lines as $line){
             $prevente = new Prevente();
-            $prevente->modele_fournisseur_id=implode(',', $line->id)[0];
-            $prevente->prix=$line->prix;
-            $prevente->quantite= $line->quantite;
-            $prevente->reduction= $line->reduction;
-            $prevente->livraison= $line->livraison;
-            $prevente->prixtotal = $line->prix*$line->quantite - $line->reduction;
+            $prevente->modele_fournisseur_id=implode(',', $line["id"])[0];
+            $prevente->prix=$line["prix"];
+            $prevente->quantite= $line["quantite"];
+            $prevente->reduction= $line['reduction'];
+            $prevente->livraison= $line['livraison'];
+            $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
             $prevente->vente_id=$vente->id;
             $prevente->save();
             
-            $livraison = Livraison::where('numero', $line->livraison)->get()->first();
+            $livraison = Livraison::where('numero', $line['livraison'])->get()->first();
             $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
-            $livraison_commande->quantite_vendue += $line->quantite;
+            $livraison_commande->quantite_vendue += $line['quantite'];
             $livraison_commande->save();
         }
 
