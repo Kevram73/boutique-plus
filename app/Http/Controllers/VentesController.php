@@ -113,7 +113,7 @@ class VentesController extends Controller
     //     $historique->save();
     //     return view('vente',compact('vente','modele2','mod','clients','credit','cre'));
     // }
-    
+
     public function liste()
     {
         // Récupération des ventes avec les utilisateurs associés
@@ -121,16 +121,16 @@ class VentesController extends Controller
                        ->where('ventes.boutique_id', '=', Auth::user()->boutique->id)
                        ->orderBy('ventes.created_at', 'DESC')
                        ->get();
-    
+
         // Récupération des modèles de produits disponibles dans la boutique
         $modeles = Modele::join('produits', 'modeles.produit_id', '=', 'produits.id')
                          ->where('modeles.boutique_id', '=', Auth::user()->boutique->id)
                          ->whereColumn('modeles.seuil', '>=', 'modeles.quantite')
                          ->get();
-    
+
         // Comptage des modèles de produits
         $nombreModeles = $modeles->count();
-    
+
         // Récupération des clients avec un crédit restant à payer
         $clients = Client::join('ventes', 'ventes.client_id', '=', 'clients.id')
                          ->join('reglements', 'reglements.vente_id', '=', 'ventes.id')
@@ -139,7 +139,7 @@ class VentesController extends Controller
                          ->select('clients.nom as nom', 'clients.id as id')
                          ->groupBy('id', 'clients.nom')
                          ->get();
-    
+
         // Calcul du crédit pour chaque client
         $creditClients = [];
         foreach ($clients as $client) {
@@ -149,14 +149,14 @@ class VentesController extends Controller
                                     ->sum('reglements.montant_restant');
             $creditClients[$client->id] = $totalCredit;
         }
-    
+
         // Enregistrement de l'action dans l'historique
         $historique = new Historique();
         $historique->actions = "Liste";
         $historique->cible = "Ventes";
         $historique->user_id = Auth::user()->id;
         $historique->save();
-    
+
         // Renvoi de la vue avec les données
         return view('vente', compact('ventes', 'modeles', 'nombreModeles', 'clients', 'creditClients'));
     }
@@ -404,28 +404,28 @@ class VentesController extends Controller
             ->get();
 
         $name = "devis_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
-        
+
             try{
                 $options = new Options();
                 $options->set('isHtml5ParserEnabled', true);
                 $options->set('isRemoteEnabled', TRUE);
                 $options->set('isPhpEnabled', true);
-        
+
                 $dompdf = new Dompdf($options);
-        
+
                 // Chargez la vue dans Dompdf
                 $view = view('facturedevis',compact('devis', 'devislignes', 'client'))->render();
                 $dompdf->loadHtml($view);
-        
+
                 // Définissez la taille du papier
                 $dompdf->setPaper('a4');
-        
+
                 // Rendez le PDF
                 $dompdf->render();
-        
+
                 // Enregistrez le PDF dans un répertoire
                 file_put_contents(public_path("devis/" . $name), $dompdf->output());
-        
+
             }catch(Exception $e)
             {}
 
@@ -468,22 +468,22 @@ class VentesController extends Controller
                 $options->set('isHtml5ParserEnabled', true);
                 $options->set('isRemoteEnabled', TRUE);
                 $options->set('isPhpEnabled', true);
-        
+
                 $dompdf = new Dompdf($options);
-        
+
                 // Chargez la vue dans Dompdf
                 $view = view('facturedevisgros',compact('devis', 'devislignes', 'client'))->render();
                 $dompdf->loadHtml($view);
-        
+
                 // Définissez la taille du papier
                 $dompdf->setPaper('a4');
-        
+
                 // Rendez le PDF
                 $dompdf->render();
-        
+
                 // Enregistrez le PDF dans un répertoire
                 file_put_contents(public_path("devis/" . $name), $dompdf->output());
-        
+
             }catch(Exception $e)
             {}
 
@@ -584,27 +584,27 @@ class VentesController extends Controller
                 $options = new Options();
                 $options->set('isHtml5ParserEnabled', true);
                 $options->set('isPhpEnabled', true);
-        
+
                 $dompdf = new Dompdf($options);
-        
+
                 // Chargez la vue dans Dompdf
                 $view = view('facturecredit', compact('all_vente', 'vente', 'modele2', 'mod', 'total', 'clients', 'credit', 'cre', 'client'))->render();
                 $dompdf->loadHtml($view);
-        
+
                 // Définissez la taille du papier
                 $dompdf->setPaper('a4');
-        
+
                 // Rendez le PDF
                 $dompdf->render();
-        
+
                 // Enregistrez le PDF dans un répertoire
                 file_put_contents(public_path("factures/" . $name), $dompdf->output());
-        
+
                 // Mettez à jour la base de données avec le nom du fichier
                 DB::table('ventes')->where('id', $id)->update(['facture' => $name]);
-        
+
                 return response()->download(public_path("factures/" . $name));
-        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()]);
             }
@@ -766,37 +766,37 @@ class VentesController extends Controller
 
                     //dd($pdf);
             DB::table('ventes')->where('id',$id)->update(['facture' => $name]);
-        }catch(Exception $e) 
+        }catch(Exception $e)
         {}
 
         // return $pdf->stream();
         return $pdf->download($name); */
-        
+
         // Créer une instance Dompdf
         $dompdf = new Dompdf();
-    
+
         // Rendre la vue de facture à l'aide de View
         $html = View::make('facturesimple', compact('all_vente', 'vente', 'modele2', 'mod', 'total', 'clients', 'credit', 'cre', 'client'))->render();
-    
+
         // Charger le HTML dans Dompdf
         $dompdf->loadHtml($html);
-    
+
         // Définir le format du papier et de l'orientation
         $dompdf->setPaper('A4', 'landscape');
-    
+
         // Générer le PDF
         $dompdf->render();
-    
+
         // Nom du fichier PDF
         $name = "facture_" . date('Y-m-d_H-i-s', strtotime(now())) . ".pdf";
-    
+
         // Enregistrez le PDF dans un dossier public
         $output = $dompdf->output();
         file_put_contents(public_path("factures/" . $name), $output);
-    
+
         // Mettez à jour votre modèle de vente avec le nom du fichier PDF si nécessaire
         DB::table('ventes')->where('id', $id)->update(['facture' => $name]);
-    
+
         $pdfPath = public_path("factures/" . $name);
 
         return response()->download($pdfPath);
@@ -1174,10 +1174,10 @@ class VentesController extends Controller
         $vente->save();
         $total = 0;
         $allReduction = 0;
-        
+
         foreach($request->lines as $line){
             $prevente = new Prevente();
-            $prevente->modele_fournisseur_id=implode(',', $line->id)[0];
+            $prevente->modele_fournisseur_id=$line->id;
             $prevente->prix=$line->prix;
             $prevente->quantite= $line->quantite;
             $prevente->reduction= $line->reduction;
@@ -1185,14 +1185,14 @@ class VentesController extends Controller
             $prevente->prixtotal = $line->prix*$line->quantite - $line->reduction;
             $prevente->vente_id=$vente->id;
             $prevente->save();
-            
+
             $livraison = Livraison::where('numero', $line->livraison)->get()->first();
             $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
             $livraison_commande->quantite_vendue += $line->quantite;
             $livraison_commande->save();
         }
 
-     
+
         //DB::commit();
 
        $vente=vente::findOrFail($vente->id);
@@ -2611,7 +2611,7 @@ class VentesController extends Controller
 
         return view('retourventedetail', compact('retourLignes'));
     }
-    
+
     public function bon_de_livraison(Request $request, $id)
     {
 
@@ -2650,7 +2650,7 @@ class VentesController extends Controller
             ->where('ventes.id','=',$id)
             ->SUM('preventes.prixtotal');
         $all_vente = Vente::find($id);
-        
+
         try{
             $options = new Options();
             $options->set('isHtml5ParserEnabled', true);
@@ -2678,21 +2678,21 @@ class VentesController extends Controller
         //return $pdf->download($name);
         return response()->download(public_path("bons/" . $name));
     }
-    
+
     public function getLivraisonsByProduit(Request $request)
     {
         try {
             // Obtenir les paramètres de la requête
             $modele_id = $request->query('modele_id');
             $boutique_id = $request->query('boutique_id');
-    
+
             // Valider que les paramètres sont des nombres
             if (!is_numeric($modele_id) || !is_numeric($boutique_id)) {
                 return response()->json([
                     'error' => 'Les paramètres modele_id et boutique_id doivent être des nombres.',
                 ], 400);
             }
-    
+
             // Récupérer les livraisons associées au modèle et à la boutique
             $livraisons = livraisonCommande::join('livraisons', 'livraison_commandes.livraison_id', '=', 'livraisons.id') // Jointure explicite
                             ->join('commande_modeles', 'livraison_commandes.commande_modele_id', '=', 'commande_modeles.id') // Jointure explicite
@@ -2701,18 +2701,18 @@ class VentesController extends Controller
                             ->with(['livraison', 'commandeModele.modele']) // Charger les relations nécessaires
                             ->get(); // Obtenir les résultats
 
-        
+
             if ($livraisons->isEmpty()) {
                 return response()->json([
                     'message' => 'Aucune livraison trouvée pour ce modèle et cette boutique.',
                     'data' => $livraisons
                 ], 404);
             }
-    
+
             // Mapper les résultats pour obtenir les données requises
             $livraisons_data = $livraisons->map(function ($livraison_commande) {
                 $livraison = $livraison_commande->livraison;
-    
+
                 return [
                     'id' => $livraison->id,
                     'numero' => $livraison->numero,
@@ -2721,11 +2721,11 @@ class VentesController extends Controller
                     'quantite_restante' => $livraison_commande->quantite_livre, // Quantité restante
                 ];
             });
-    
+
             return response()->json([
                 'livraisons' => $livraisons_data,
             ]);
-    
+
         } catch (Exception $e) {
             // Gestion des exceptions inattendues
             return response()->json([
