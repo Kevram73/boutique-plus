@@ -34,6 +34,7 @@
                                 <th class="center hidden-phone">Prix </th>
                                 <th class="center hidden-phone">Quantité </th>
                                 <th class="center hidden-phone">Prix total </th>
+                                <th class="center hidden-phone">Livraison </th>
                             </tr>
                             </thead>
                             <tbody class="center hidden-phone">
@@ -45,6 +46,7 @@
                                     <td class="center hidden-phone prix">{{$ven->prix}} fcfa</td>
                                     <td class="center hidden-phone">{{$ven->quantite}}</td>
                                     <td class="center hidden-phone prix">{{$ven->prixtotal}} fcfa</td>
+                                    <td class="center hidden-phone prix">{{$ven->livraison}} fcfa</td>
                                 </tr>
 
                             @endforeach
