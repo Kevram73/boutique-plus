@@ -1855,6 +1855,7 @@ class VentesController extends Controller
                     'preventes.quantite as quantite',
                     'preventes.prix as prix',
                     'preventes.prixtotal as prixtotal',
+                    'preventes.livraison as livraison',
                     'clients.nom as Nclient',
                     'ventes.created_at as create',
                     'ventes.updated_at as update')
