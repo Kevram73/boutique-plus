@@ -101,7 +101,7 @@
                                 <th class="center hidden-phone">Nom</th>
                                 <th class="center hidden-phone">Prénom(s)</th>
                                 <th class="center hidden-phone">CNI/PP</th>
-                                <th class="center hidden-phone">Tel</th>
+                                <th class="center hidden-phone">Téléphone</th>
                                 <th class="center hidden-phone">Motif</th>
                                 <th class="center hidden-phone">Montant</th>
                                 <th class="center hidden-phone">Fournisseur</th>
