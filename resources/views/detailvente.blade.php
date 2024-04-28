@@ -49,7 +49,7 @@
                                     <td class="center hidden-phone prix">{{$ven->prix}} fcfa</td>
                                     <td class="center hidden-phone">{{$ven->quantite}}</td>
                                     <td class="center hidden-phone prix">{{$ven->prixtotal}} fcfa</td>
-                                    <td class="center hidden-phone prix">{{$ven->livraison}}</td>
+                                    <td class="center hidden-phone">{{$ven->livraison}}</td>
                                 </tr>
 
                             @endforeach
