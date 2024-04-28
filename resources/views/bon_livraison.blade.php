@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bon de livraison</title>
-    
+
     <style>
         @page {
             size: A4;
@@ -21,9 +21,9 @@
             margin: auto;
             position: relative;
             z-index: 1;
-          
+
         }
-        
+
         body::before{
             content: '';
           position: absolute;
@@ -70,13 +70,13 @@
             font-size: 14px;
             text-align: left;
         }
-        
+
         .date{
             font-size: 14px;
             text-align: right;
             margin-top: 100px;
         }
-        
+
         .livraison{
             text-align: right;
             font-size: 14px;
@@ -101,15 +101,15 @@
             text-align: center;
             font-size: 12px;
         }
-        
+
         .footer-info {
             margin-bottom: 5px;
         }
-        
+
         .footer-info span {
             font-weight: bold;
         }
-        
+
         .bottom-space {
             display: flex;
             justify-content: space-between;
@@ -118,7 +118,7 @@
             text-decoration: underline;
             font-weight: bold;
         }
-        
+
         .bottom-space .second{
             text-align: right;
             margin-top: -15px;
@@ -152,40 +152,49 @@
         .header-text-logo p {
             margin: 5px 0;
         }
+
+        .same-line{
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
     <header>
         <img src="https://boutique.mingoube.com/image/top.png" />
     </header>
-    
+
     <h3 class="header-text">BON DE LIVRAISON</h3>
 
     <!-- Head Table -->
-    <table id="head-table" style="width: 60%;">
-        <thead>
-            <tr>
-                <th>Numéro</th>
-                <th>Date</th>
-                <th>Reference</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ $all_vente->numero }}</td>
-                <td>{{ $all_vente->date_vente }}</td>
-                <td>{{ $all_vente->id }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="same-line">
+        <table id="head-table" style="width: 60%;">
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Date</th>
+                    <th>Reference</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ $all_vente->numero }}</td>
+                    <td>{{ $all_vente->date_vente }}</td>
+                    <td>{{ $all_vente->id }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <!-- Inline Elements Section -->
-    <div class="inline-elt">
-        <div>Client: <span>{{ $all_vente->client->nom }}</span></div>
-        <div>Localité: <span>{{ $all_vente->boutique->nom }}</span></div>
-        <div>Contact: <span>{{ $all_vente->boutique->contact }}</span></div>
-        
+        <!-- Inline Elements Section -->
+        <div class="inline-elt">
+            <div>Client: <span>{{ $all_vente->client->nom }}</span></div>
+            <div>Localité: <span>{{ $all_vente->boutique->nom }}</span></div>
+            <div>Contact: <span>{{ $all_vente->boutique->contact }}</span></div>
+            <div>Lieu de livraison: <span>.............................</span></div>
+
+        </div>
     </div>
+
 
     <!-- Main Table -->
     <table>
@@ -201,28 +210,28 @@
             @foreach($vente as $ven)
 
                 <tr class="gradeA">
-                    
+
                     <td class="center hidden-phone">{{$ven->ref}}  </td>
                     <td class="center hidden-phone">{{$ven->produit}} - {{$ven->modele}}  </td>
                     <td class="center hidden-phone">{{$ven->quantite}}</td>
                     <td class="center hidden-phone prix"></td>
                 </tr>
-    
+
             @endforeach
         </tbody>
-        
+
     </table>
-    
+
 
     <!-- Footer Text -->
-    
-    <p class="date">Fait à {{ Auth::user()->boutique->nom }}, ce @php 
+
+    <p class="date">Fait à {{ Auth::user()->boutique->nom }}, ce @php
     setlocale(LC_TIME, 'fr_FR.UTF-8');
     $date = new DateTimeImmutable(now());
     echo strftime('%A %d %B %Y', $date->getTimestamp());
 @endphp</p>
-    <p class="livraison">Lieu de Livraison: <span>...................................</span></p>
-    
+
+
     <div class="bottom-space">
         <p>Receveur/client:</p>
         <p class="second">Le gérant</p>
@@ -235,6 +244,6 @@
         <div class="footer-info">Tél: +228 90 48 40 05 | NIF : 1001178767 | N° R.C.C.M : TG-LOM 2019 B 0001</div>
         <div class="footer-info">E-mail: <span>mingoubek@gmail.com</span> | Site web: <span>www.migoubeetfils.com</span></div>
     </footer>
-    
+
 </body>
 </html>
