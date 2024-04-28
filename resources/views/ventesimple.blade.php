@@ -6,7 +6,7 @@
 @section('contenu')
     <div class="inner-wrapper">
         <section role="main" class="content-body">
-            <header class="page-header"> 
+            <header class="page-header">
                 <h2>Vente simple</h2>
             </header>
 
@@ -51,7 +51,7 @@
                                             </div>
 
                                             <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Produit</label>
+                                                <label class="col-sm-4 control-label">Famille</label>
                                                 <div class="col-md-9 form-group">
                                                     <select  name="produit" id="produit"   class="form-control populate">
                                                         <optgroup label="Choisir un produit">
@@ -65,7 +65,7 @@
                                             </div>
 
                                             <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Modele</label>
+                                                <label class="col-sm-4 control-label">Produit</label>
                                                 <div class="col-md-9 form-group">
                                                     <select  name="modele" id="modele"  class="form-control populate">
                                                         <optgroup label="Choisir le modele">
@@ -77,7 +77,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Livraison</label>
                                                 <div class="col-md-9">
@@ -90,7 +90,7 @@
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Quantité</label>
-                                                <div class="col-sm-9"> 
+                                                <div class="col-sm-9">
                                                     <input type="number" name="quantite"  id="quantite" class="form-control" placeholder="100"  min="1" required/>
                                                 </div>
                                             </div>
@@ -105,8 +105,8 @@
                                             <input type="hidden" value="" id="liv_qte" />
                                         </div>
                                         <div class="row">
-                                            
-                                        
+
+
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Total</label>
                                                 <div class="col-sm-9">
@@ -163,7 +163,7 @@
 
                     </form>
                     </div>
-                    
+
                     <div id="avoircomform">
                         <form  method="POST" class="	form-validate form-horizontal mb-lg" >
                             {{csrf_field()}}
@@ -197,7 +197,7 @@
                         <tbody class="center hidden-phone">
                         </tbody>
                     </table>
-                    
+
                     <div class="col-md-12">
                         <div class="row">
                         <div class="col-md-6"></div>
@@ -208,8 +208,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <a class="btn btn-danger" id="sup" ><i class="fa fa-trash-o" ></i>Supprimer</a>
-                            </div> 
-                            
+                            </div>
+
                             <div class="col-md-6 text-right">
                                 <h3 class="m-0">Total: <strong id="montant_total" class="prix">0</strong></h3>
                             </div>
@@ -313,15 +313,15 @@
     </script>
     <script src="js/ventesimple.js"></script>
     <script>
-    
+
        $('#modele').on('change', function() {
             var modele = $(this).val();
             var boutique_id = $('#boutique').val();
-        
+
             if (modele) {
                 // Réinitialisation du champ de sélection avant la requête
                 $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
-        
+
                 $.ajax({
                     url: '/getLivraisonsByProduit',
                     type: 'GET',
@@ -331,7 +331,7 @@
                         response.livraisons.forEach(function(livraison) {
                             options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
                         });
-        
+
                         $('#livraison').html(options); // Remplir avec les nouvelles options
                     },
                     error: function(xhr, status, error) {

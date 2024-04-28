@@ -169,7 +169,7 @@
 
     <!-- Head Table -->
     <div class="same-line">
-
+        <div class="col" style="flex-grow: 1;">
             <table id="head-table" style="width: 40%">
                 <thead>
                     <tr>
@@ -186,11 +186,12 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
 
 
 
         <!-- Inline Elements Section -->
-        <div class="inline-elt" style="width: 40%;">
+        <div class="inline-elt col" style="flex-grow: 1;">">
             <div>Client: <span>{{ $all_vente->client->nom }}</span></div>
             <div>Localité: <span>{{ $all_vente->boutique->nom }}</span></div>
             <div>Contact: <span>{{ $all_vente->boutique->contact }}</span></div>
