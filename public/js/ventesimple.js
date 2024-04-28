@@ -9,16 +9,16 @@ function sweetToast(type,text){
         icon: type,
         title: text,
         showConfirmButton: false,
-        timer: 2000, 
+        timer: 2000,
         animation : true,
-    }); 
+    });
 }
 
 $("#client").select2( {
     placeholder: "Choisir un client",
     //allowClear: true
 } );
- 
+
 $("#produit").select2( {
     placeholder: "Choisir un produit",
     //allowClear: true
@@ -203,7 +203,7 @@ $(function( ) {
 
 $('#ajout').on('click',function () {
     let message;
-        
+
         if($('#modele').val() ==null   ||   $('#prix').val() <= 0
             || $('#prix').val()  ==''   || $('#quantite').val()==''  || $('#quantite').val()<=0 ){
             message='Veuillez bien remplir tous les champs svp...'
@@ -227,7 +227,7 @@ $('#ajout').on('click',function () {
                     var modele=b.options[b.selectedIndex].text;
                     var livraison=l.options[l.selectedIndex].text;
                     $table2.row.add({
-                        "id":$('#mod').val()+","+$('#client').val(),
+                        "id":$('#mod').val(),
                         "produit": produit,
                         "modele":modele,
                         "livraison": l.value,
@@ -239,7 +239,7 @@ $('#ajout').on('click',function () {
 
 
 
- 
+
                     $('#quantite').val(null);
                     $('#reduction').val(null);
                     $('#prixQte').val(null);
@@ -258,7 +258,7 @@ $('#ajout').on('click',function () {
                 }
 
             }
-            
+
 
 })
 
@@ -308,7 +308,7 @@ $('#valider').on('click',function (e) {
 
             url = '/storevente'
 
- 
+
             e.preventDefault()
 
             if ($table2.data().length <= 0 ){
@@ -325,7 +325,7 @@ $('#valider').on('click',function (e) {
                         "reduction": $table2.data()[i].reduction * 1,
                         "livraison": $table2.data()[i].livraison
                     };
-                
+
                     jsonData.push(dataObj);
                 }
 
@@ -342,7 +342,7 @@ $('#valider').on('click',function (e) {
                         url :url,
                         type : "post",
                         data: dataToSend,
-                       
+
                         success : function(data) {
                             window.location='/reglements-'+data.id;
                         },
