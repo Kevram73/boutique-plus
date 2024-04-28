@@ -170,7 +170,7 @@
     <!-- Head Table -->
     <div class="same-line">
 
-            <table id="head-table" >
+            <table id="head-table" style="width: 40%">
                 <thead>
                     <tr>
                         <th>Numéro</th>
@@ -190,7 +190,7 @@
 
 
         <!-- Inline Elements Section -->
-        <div class="inline-elt">
+        <div class="inline-elt" style="width: 40%;">
             <div>Client: <span>{{ $all_vente->client->nom }}</span></div>
             <div>Localité: <span>{{ $all_vente->boutique->nom }}</span></div>
             <div>Contact: <span>{{ $all_vente->boutique->contact }}</span></div>
