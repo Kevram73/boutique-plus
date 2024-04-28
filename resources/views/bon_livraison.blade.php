@@ -172,25 +172,28 @@
 
     <!-- Head Table -->
     <div class="same-line">
-        <table id="head-table" style="width: 60%;">
-            <thead>
-                <tr>
-                    <th>Numéro</th>
-                    <th>Date</th>
-                    <th>Reference</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ $all_vente->numero }}</td>
-                    <td>{{ $all_vente->date_vente }}</td>
-                    <td>{{ $all_vente->id }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="col">
+            <table id="head-table" style="width: 60%;">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Date</th>
+                        <th>Reference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $all_vente->numero }}</td>
+                        <td>{{ $all_vente->date_vente }}</td>
+                        <td>{{ $all_vente->id }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
 
         <!-- Inline Elements Section -->
-        <div class="inline-elt">
+        <div class="inline-elt col">
             <div>Client: <span>{{ $all_vente->client->nom }}</span></div>
             <div>Localité: <span>{{ $all_vente->boutique->nom }}</span></div>
             <div>Contact: <span>{{ $all_vente->boutique->contact }}</span></div>
