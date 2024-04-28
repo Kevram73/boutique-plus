@@ -155,11 +155,11 @@
 
         .same-line{
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
         }
 
-        .head-table{
-            width: 60%;
+        .col{
+            flex: 1;
         }
     </style>
 </head>
