@@ -157,6 +157,10 @@
             display: flex;
             justify-content: space-between;
         }
+
+        .head-table{
+            width: 60%;
+        }
     </style>
 </head>
 <body>
