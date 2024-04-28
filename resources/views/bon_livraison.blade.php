@@ -155,7 +155,7 @@
 
         .same-line{
             display: flex;
-            justify-content: space-between;
+            flex-direction: row;
         }
 
     </style>
