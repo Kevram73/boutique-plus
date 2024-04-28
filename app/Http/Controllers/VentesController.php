@@ -1190,6 +1190,8 @@ class VentesController extends Controller
             $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
             $livraison_commande->quantite_vendue += $line['quantite'];
             $livraison_commande->save();
+
+            $total+= $prevente->prixtotal;
         }
 
 
