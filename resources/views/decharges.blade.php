@@ -49,6 +49,12 @@
                                                     <input type="text" name="cni" id="cni" class="form-control" placeholder="0**2-520*-***" required/>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Tel</label>
+                                                <div class="col-sm-9">
+                                                    <input type="tel" name="tel" id="tel" class="form-control" placeholder="228*******" required/>
+                                                </div>
+                                            </div>
                                             <div class="form-group mt-lg">
                                                 <label class="col-sm-3 control-label">Motif</label>
                                                 <div class="col-sm-9">
@@ -141,7 +147,7 @@
                                             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal-{{ $decharge->id }}">
                                                 <i class="fa fa-edit"></i>
                                             </button>
-                                            
+
                                             <div class="modal fade" id="editModal-{{ $decharge->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
@@ -169,6 +175,12 @@
                                                                     <label class="col-sm-3 control-label">CNI/PP</label>
                                                                     <div class="col-sm-9">
                                                                         <input type="text" name="cni" id="cni" class="form-control" value="{{ $decharge->cni }}" required/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-3 control-label">Tel</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" name="tel" id="tel" class="form-control" value="{{ $decharge->tel }}" required/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group mt-lg">
@@ -215,12 +227,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Delete Button -->
                                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal-{{ $decharge->id }}">
                                                 <i class="fa fa-trash-o"></i>
                                             </button>
-                                            
+
                                             <!-- Delete Modal -->
                                             <div class="modal fade" id="deleteModal-{{ $decharge->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -238,16 +250,16 @@
                                                                 @method('DELETE')
                                                                 <button type="submit" class="btn btn-danger" id="confirmDelete">Supprimer</button>
                                                             </form>
-                                                            
+
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                         </td>
-                                        
-                                        
-                                        
+
+
+
                                         <script type="text/javascript">
                                         $(document).ready(function() {
                                             $('#previewButton').on('click', function() {
@@ -269,7 +281,7 @@
     </section>
     </div>
 
-   
+
 @endsection
 @section('js')
 

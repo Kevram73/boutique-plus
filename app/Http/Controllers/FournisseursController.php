@@ -277,17 +277,17 @@ class FournisseursController extends Controller
             ->select('cm.modele') // Extraction du champ 'modele'
             ->groupBy('cm.modele')
             ->get();
-        
+
         // Obtenir les IDs des modèles
         $modeles_ids = $result->pluck('modele'); // Pluck 'modele' from $result
-        
+
         // Filtrer $modele en utilisant whereIn()
         $modele = DB::table('modeles')
             ->where('produit_id', $id)
             ->whereIn('modeles.id', $modeles_ids)
             ->get(); // Obtenir les données
 
-        
+
         return $modele;
     }
 
@@ -312,7 +312,7 @@ class FournisseursController extends Controller
             $data3['stock'] = $data1->quantite;
             $data3['modele'] = $data1->id;
             $data3['prix_vente'] = $data1->prix;
-            
+
             $result = [];
             $result[] = $data3;
             return $result;
@@ -347,14 +347,14 @@ class FournisseursController extends Controller
                 $data3['stock'] = $data1->quantite;
                 $data3['modele'] = $modele;
                 $data3['prix_vente'] = $data1->prix;
-                
+
                 $result = [];
                 $result[] = $data3;
             }
             return $result;
         }
     }
-    
+
     public function fournisseurmodeleOld($modele, $fournisseur)
     {
         $result = DB::table('modele_fournisseurs')
@@ -385,7 +385,7 @@ class FournisseursController extends Controller
             $data3['stock'] = $data1->quantite;
             $data3['modele'] = $modele;
             $data3['prix_vente'] = $data1->prix;
-            
+
             $result = [];
             $result[] = $data3;
         }
@@ -438,13 +438,13 @@ class FournisseursController extends Controller
         //     ->get();
         // return $produit;
     }
-    
+
     public function decharge_liste(Request $request){
         $decharges = Decharge::all();
         $fournisseurs = Fournisseur::all();
         return view("decharges", compact('decharges', 'fournisseurs'));
     }
-    
+
     public function generate_decharge(Request $request){
 
         $name = "decharge_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
@@ -476,17 +476,18 @@ class FournisseursController extends Controller
             //return $pdf->download($name);
             return response()->download(public_path("decharges/" . $name));
     }
-    
+
     public function save_decharge(Request $request){
         $request->validate([
             'nom' => 'required|max:255',
             'prenoms' => 'required|max:255',
             'motif' => 'required',
+            'tel' => 'required',
             'montant' => 'required',
             'cni' => 'required',
             'document' => 'required'
         ]);
-        
+
         if ($request->hasFile('document')) {
             $file = $request->file('document');
             $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -499,9 +500,10 @@ class FournisseursController extends Controller
         $decharge->prenoms = $request->prenoms;
         $decharge->motif = $request->motif;
         $decharge->montant = $request->montant;
+        $decharge->tel = $request->tel;
         $decharge->cni = $request->cni;
         if($request->fournisseur_id){
-            $decharge->fournisseur_id = $request->fournisseur_id;   
+            $decharge->fournisseur_id = $request->fournisseur_id;
         }
         $decharge->filename = $filename;
         $decharge->save();
@@ -509,14 +511,14 @@ class FournisseursController extends Controller
         // Redirect to a specified route with a success message
         return back()->with('success', 'Décharge créée avec succès!');
     }
-    
+
     public function delete_decharge(int $id){
         $decharge = Decharge::findOrFail($id);
         $decharge->delete();
-        
+
         return back()->with('success', 'Décharge supprimée avec succès!');
     }
-    
+
     public function edit_decharge(Request $request, $id)
     {
         $request->validate([
@@ -525,27 +527,29 @@ class FournisseursController extends Controller
             'motif' => 'required',
             'montant' => 'required',
             'cni' => 'required',
+            'tel' => 'required',
             'document' => 'required'
         ]);
-        
+
         if ($request->hasFile('document')) {
             $file = $request->file('document');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('decharge', $filename, 'public');
         }
-        
+
         $decharge = Decharge::findOrfail($id);
         $decharge->nom = $request->nom;
         $decharge->prenoms = $request->prenoms;
         $decharge->motif = $request->motif;
         $decharge->montant = $request->montant;
+        $decharge->tel = $request->tel;
         $decharge->cni = $request->cni;
         if($request->fournisseur_id){
-            $decharge->fournisseur_id = $request->fournisseur_id;   
+            $decharge->fournisseur_id = $request->fournisseur_id;
         }
         $decharge->filename = $filename;
         $decharge->save();
-        
+
         return back()->with('success', 'Décharge modifiée avec succès!');
     }
 
