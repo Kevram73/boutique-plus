@@ -1820,6 +1820,7 @@ class VentesController extends Controller
                 'preventes.prix as prix',
                 'preventes.prixtotal as prixtotal',
                 'ventes.created_at as create',
+                'preventes.livraison as livraison',
                 'ventes.updated_at as update')
             ->get();
         $total = DB::table('ventes')
