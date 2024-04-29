@@ -89,7 +89,7 @@
                                     </div>
                                      <div id="debiteurs" class="tab-pane">
                             <div class="row">
-                             
+
                                 <div class="">
                                     <section class="panel">
                                         <div class="panel-body">
@@ -104,8 +104,8 @@
                                                            @foreach ($fournisseurs as $fournisseur)
                                                            <option value="{{ $fournisseur->id }}"> {{ $fournisseur->nom }} </option>
                                                            @endforeach
-                                                           
-                                                        </select>   
+
+                                                        </select>
                                                         </div>                                                 </div>
                                                 </div>
                                                  <div class="col-md-4 form-group">
@@ -155,12 +155,12 @@
                                                         <div class="col-md-9 form-group">
                                                         <select id="production" name="production" class="form-control populate" >
                                                             <option value="0">   </option>
-                                                            
+
                                                             @foreach ($modele2 as $produits)
                                                             <option value="{{ $produits->id }}"> {{ $produits->libelle }}  </option>
                                                             @endforeach
-                                                        </select>                         
-                                                        </div>   
+                                                        </select>
+                                                        </div>
                                                                             </div>
                                                 </div>
                                                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -181,7 +181,7 @@
                                                 </div></div>
                                             </div>
                                             <br>
-                                            
+
                                             <div class="row">
                                                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                     <div class="form-group">
@@ -209,8 +209,8 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody class="center hidden-phone">
-                
-                
+
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -440,7 +440,7 @@
 
 @endsection
 @section('js')
- 
+
     <script src="octopus/assets/vendor/jquery/jquery.js"></script>
     <script src="octopus/assets/vendor/bootstrap/js/bootstrap.js"></script>
     <script src="octopus/assets/vendor/nanoscroller/nanoscroller.js"></script>

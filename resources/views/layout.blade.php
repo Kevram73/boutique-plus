@@ -221,15 +221,15 @@
                                                     FOURNISSEURS
                                                 </a>
                                             </li>
-                                            
+
 
                                             @endif
 
                                         </ul>
                                     </li>
                                     @endif
-                                    
-                                    
+
+
                                     @endif
                                     @if (Auth::user()->boutique->is_stock == 0)
                                     <li class="nav-parent">
@@ -251,6 +251,11 @@
                                             <li>
                                                 <a href="{{route('transferts')}}">
                                                     TRANSFERTS
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('transferts')}}">
+                                                    LIVRAISONS
                                                 </a>
                                             </li>
                                         </ul>
@@ -310,7 +315,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    
+
                                     @if (Auth::user()->boutique->is_central == 1)
                                     <li>
                                         <a href="{{route('reglementlistallshoop')}}">
@@ -319,7 +324,7 @@
                                         </a>
                                     </li>
                                     @endif
-                                    
+
                                     @endif
                                     <li class="nav-parent">
                                         <a>
@@ -380,8 +385,8 @@
                                         </a>
                                     </li>
                                     @endif
-                                    
-                                    
+
+
 
 
 
@@ -474,9 +479,9 @@
                                                 </a>
                                             </li>
                                             @endif
-                                            
-                                    
-                                    
+
+
+
                                         </ul>
                                     </li>
 

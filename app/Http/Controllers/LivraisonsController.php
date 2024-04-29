@@ -103,9 +103,9 @@ class LivraisonsController extends Controller
         $historique->actions = "Liste";
         $historique->cible = "Livraisons";
         $historique->user_id =Auth::user()->id;
-        $historique->save(); 
+        $historique->save();
         return view('livraison',compact('mod','modele2','produits','categorie','clients','credit','cre','fournisseurs'));
-    } 
+    }
 
     public function produit($id)
     {
@@ -117,12 +117,12 @@ class LivraisonsController extends Controller
 
     public function alllivraisonBoutiqhistorique(Request $request)
     {
-       
+
          $modele=Modele::with(['produit','boutique'])
             ->join('commande_modeles', function ($join) {
                 $join->on('commande_modeles.modele', '=', 'modeles.id');
             })
-            
+
            ->join('livraison_commandes', function ($join) {
                 $join->on('livraison_commandes.commande_modele_id', '=', 'commande_modeles.id');
             })
@@ -132,7 +132,7 @@ class LivraisonsController extends Controller
             ->join('boutiques', function ($join) {
                     $join->on('livraisons.boutique_id', '=', 'boutiques.id');
                 });
-        
+
 
 
         //dd($modele);
@@ -141,33 +141,33 @@ class LivraisonsController extends Controller
             //dd(intval($request->production));
             $modele
              ->where ('modeles.id', '=', intval($request->production));
-        } 
+        }
         if($request->fournisseur > 0)
-         {   
+         {
             $modele
              ->where ('livraisons.boutique_id', '=', $request->fournisseur);
-         } 
-        
+         }
+
          if(!empty($request->debut))
          {
              $modele
              ->where ('livraisons.created_at', '>=', $request->debut);
          }
- 
+
          if(!empty($request->fin))
          {
              $modele
              ->where ('livraisons.created_at', '<=', $request->fin);
          }
-       
+
         $modele=$modele
         ->selectRaw('livraisons.date_livraison as date,boutiques.nom as nom,modeles.libelle as libelle, livraison_commandes.quantite_livre as quantite,modeles.prix as price_unit, livraison_commandes.quantite_livre * modeles.prix as montant')
         ->orderBy('livraisons.created_at', 'Desc')
         ->get();
         //dd($modele);
          return datatables()->of($modele)
-       
-        ->make(true) ;   
+
+        ->make(true) ;
     }
 
      public function allLivraisonBoutiqhistoriquesum(Request $request)
@@ -176,7 +176,7 @@ class LivraisonsController extends Controller
             ->join('commande_modeles', function ($join) {
                 $join->on('commande_modeles.modele', '=', 'modeles.id');
             })
-            
+
            ->join('livraison_commandes', function ($join) {
                 $join->on('livraison_commandes.commande_modele_id', '=', 'commande_modeles.id');
             })
@@ -193,7 +193,7 @@ class LivraisonsController extends Controller
             ->where ('modeles.id', '=', $request->production);
         }
 
-       
+
 
         if($request->fournisseur > 0)
         {
@@ -981,7 +981,7 @@ class LivraisonsController extends Controller
 
                 return '
                                         <a class="btn btn-info" href="/livraison-'. $clt->id .'"> <i class="fa fa-info"></i></a>
-                                        
+
                                         ';
                 })
                 ->make(true) ;
@@ -1079,23 +1079,23 @@ public function indexNew($id)
             $livraison = new Livraison();
             $livraison ->numero="LIV".now()->format('Y')."-".$ed;
             $livraison ->date_livraison= now();
-            $livraison ->boutique_id=$alllivraison[0]; 
+            $livraison ->boutique_id=$alllivraison[0];
             $livraison->save();
 
             for ($i =0 ;$i<count($alllivraison);$i+=4) {
                  $commande_modele = DB::table('commande_modeles')->find($alllivraison[$i+2]);
                 $quantite_livre= DB::table('livraison_commandes')
                         ->where('commande_modele_id',$alllivraison[$i+2])
-                        ->sum('quantite_livre'); 
+                        ->sum('quantite_livre');
 
                 $livraisoncommande = new livraisonCommande();
                 $livraisoncommande ->livraison_id=$livraison ->id;
                 $livraisoncommande  ->commande_modele_id=$alllivraison[$i+2];
                  $livraisoncommande ->quantite_livre =$alllivraison[$i+3];
-                $livraisoncommande->quantite_restante =$commande_modele->quantite - $quantite_livre - $alllivraison[$i+3]; 
-                $livraisoncommande->save(); 
+                $livraisoncommande->quantite_restante =$commande_modele->quantite - $quantite_livre - $alllivraison[$i+3];
+                $livraisoncommande->save();
 
-               
+
                 $modele= DB::table('modeles')->find($alllivraison[$i+1]);
                 //$modele->quantite = $modele->quantite + $alllivraison[$i+3];
                  DB::table('modeles')
@@ -1108,7 +1108,7 @@ public function indexNew($id)
                     DB::table('commande_modeles')
                         ->where('id',$alllivraison[$i+2])
                         ->update(['etat' => true]);
-                } 
+                }
             }
 
             $historique=new Historique();
@@ -1197,7 +1197,7 @@ public function indexNew($id)
         $historique->actions = "Detail";
         $historique->cible = "Livraisons";
         $historique->user_id =Auth::user()->id;
-        $historique->save(); 
+        $historique->save();
         return view('detaillivraisonNewOne',compact('livraison','mod','modele2','cre','credit','clients'));
     }
 
@@ -1408,6 +1408,12 @@ public function indexNew($id)
             ->where('livraisons.id','=',$id)
             ->get();
         return $livraison;
+    }
+
+    public function livraisonsShop(Request $request){
+        $livraisons = Livraison::where('boutique_id', $request->boutique_id)->get();
+
+        return view('livraisonsShop', compact('livraisons'));
     }
 
 }
