@@ -1084,6 +1084,7 @@ public function indexNew($id)
             $livraison->save();
 
             for ($i =0 ;$i<count($alllivraison);$i+=4) {
+                $commande_modele = DB::table('commande_modeles')->find($alllivraison[$i+2]);
                 $quantite_livre= DB::table('livraison_commandes')
                         ->where('commande_modele_id',$alllivraison[$i+2])
                         ->sum('quantite_livre');
