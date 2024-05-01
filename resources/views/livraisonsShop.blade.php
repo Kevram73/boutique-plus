@@ -6,7 +6,7 @@
     <div class="inner-wrapper">
         <section role="main" class="content-body">
             <header class="page-header">
-                <h2>Décharge</h2>
+                <h2>Livraisons</h2>
             </header>
 
             <div class="row">
@@ -44,16 +44,6 @@
                                         <td class="center hidden-phone">{{ $livraison->qte_liv() }}</td>
                                         <td class="center hidden-phone">{{ $livraison->qte_sell() }}</td>
                                         <td class="center hidden-phone">{{ $livraison->statut() }}</td>
-                                        <script type="text/javascript">
-                                        $(document).ready(function() {
-                                            $('#previewButton').on('click', function() {
-                                                $('#filePreviewModal .modal-body').html(content);
-                                                $('#filePreviewModal').modal('show');
-                                            });
-                                        });
-                                    </script>
-
-
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -75,5 +65,11 @@
     <script src="{{ asset('octopus/assets/vendor/jquery-datatables/media/js/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js') }}"></script>
     <script src="{{ asset('octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js') }}"></script>
-
+    <script>
+        $(document).ready(function() {
+            $('#employeTable').DataTable({
+                "paging": true // Activer la pagination
+            });
+        });
+    </script>
 @endsection
