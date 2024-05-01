@@ -81,6 +81,29 @@
                         @else
                         <a class=" btn btn-default mb-xs mt-xs mr-xs btn btn-warning"  href="{{ '/reglements-'.$all_vente->id }}"><i class="fa  fa-money"></i>Valider et Imprimer</a>
                         @endif
+                        @if ($vente[0]->delivered != "delivered")
+                        <a class=" btn btn-default mb-xs mt-xs mr-xs btn btn-info" data-toggle="modal" data-target="#exampleModal" ><i class="fa  fa-print"></i>Effectuer la livraison</a>
+                        @endif
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Faire une livraison</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  Voulez vous vraiment effectué la livraison complète de cette vente?
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                  <button type="button" onclick="valider('{{ $vente[0]->id }}')" class="btn btn-primary">Procéder</button>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
                         @if (Auth::user()->boutique->settings->where('tag', 'vente_fictive')->first() && Auth::user()->boutique->settings->where('tag', 'vente_fictive')->first()->pivot->is_active)
                             <a class=" btn btn-default mb-xs mt-xs mr-xs btn btn-warning"  href="{{ '/fictive-'.$all_vente->id }}"><i class="fa fa-file"></i>Vente Fictive</a>
@@ -169,4 +192,23 @@
         setNumeralHtml("prix", "0,0", "FCFA");
         setNumeralHtml("prix-2", "0,0");
     </script>
+
+
+<script>
+    function valider(id){
+
+
+        $.ajax({
+            type: "GET", // HTTP method
+            url: "/delivered-vente/"+id,
+            dataType: "json", // Type of data expected from the server
+            success: function(response) {
+                window.location.href = "/ventes";
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+</script>
 @endsection
