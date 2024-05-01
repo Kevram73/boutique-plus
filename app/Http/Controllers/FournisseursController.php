@@ -270,12 +270,11 @@ class FournisseursController extends Controller
     public function modele($id)
     {
         // Récupération du $result
-        $result = livraisonCommande::join('commande_modeles AS cm', 'livraison_commandes.commande_modele_id', '=', 'cm.id')
-            ->join('livraisons AS l', 'livraison_commandes.livraison_id', '=', 'l.id')
+        $result = livraisonCommande::join('livraisons AS l', 'livraison_commandes.livraison_id', '=', 'l.id')
             ->where('l.boutique_id', Auth::user()->boutique_id)
             ->whereColumn('livraison_commandes.quantite_vendue', '<', 'livraison_commandes.quantite_livre')
-            ->select('cm.modele') // Extraction du champ 'modele'
-            ->groupBy('cm.modele')
+            ->select('livraison_modeles.modele') // Extraction du champ 'modele'
+            ->groupBy('livraison_modeles.modele')
             ->get();
 
         // Obtenir les IDs des modèles
