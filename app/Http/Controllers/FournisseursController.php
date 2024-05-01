@@ -273,8 +273,8 @@ class FournisseursController extends Controller
         $result = livraisonCommande::join('livraisons AS l', 'livraison_commandes.livraison_id', '=', 'l.id')
             ->where('l.boutique_id', Auth::user()->boutique_id)
             ->whereColumn('livraison_commandes.quantite_vendue', '<', 'livraison_commandes.quantite_livre')
-            ->select('livraison_modeles.modele_id') // Extraction du champ 'modele'
-            ->groupBy('livraison_modeles.modele_id')
+            ->select('livraison_commandes.modele_id') // Extraction du champ 'modele'
+            ->groupBy('livraison_commandes.modele_id')
             ->get();
 
         // Obtenir les IDs des modèles
