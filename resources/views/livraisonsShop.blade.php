@@ -43,7 +43,7 @@
                                         <td class="center hidden-phone">{{ $livraison->date_livraison }}</td>
                                         <td class="center hidden-phone">{{ $livraison->qte_liv() }}</td>
                                         <td class="center hidden-phone">{{ $livraison->qte_sell() }}</td>
-                                        <td class="center hidden-phone">{{ $livraison->statut() }}</td>
+                                        <td class="center hidden-phone">{!! $livraison->statut() !!}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
