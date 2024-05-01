@@ -1435,7 +1435,7 @@ public function indexNew($id)
         $livraisons = [];
         foreach($commandes as $commande){
             $livraison_commande = LivraisonCommande::where('commande_modele_id', $commande->id)->get();
-            $livraison_commandes = array_push($livraison_commandes, $livraison_commande);
+            array_push($livraison_commandes, $livraison_commande);
         }
 
         foreach($livraison_commandes as $livraison_commande){
