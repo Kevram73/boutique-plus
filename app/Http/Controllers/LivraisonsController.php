@@ -1411,7 +1411,7 @@ public function indexNew($id)
     }
 
     public function livraisonsShop(Request $request){
-        $livraisons = Livraison::where('boutique_id', $request->boutique_id)->get();
+        $livraisons = Livraison::where('boutique_id', Auth::user()->boutique_id)->get();
 
         return view('livraisonsShop', compact('livraisons'));
     }

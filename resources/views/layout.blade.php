@@ -254,7 +254,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="{{route('transferts')}}">
+                                                <a href="{{route('livraisons.shop')}}">
                                                     LIVRAISONS
                                                 </a>
                                             </li>

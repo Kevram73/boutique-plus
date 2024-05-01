@@ -604,3 +604,4 @@ Route::get('/livraison/bon/{id}', 'VentesController@bon_de_livraison')->name('bo
 
 Route::get('/getLivraisonsByProduit', 'VentesController@getLivraisonsByProduit');
 
+Route::get('/livraison/shop', 'LivraisonsController@livraisonsShop')->name('livraisons.shop');
