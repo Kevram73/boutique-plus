@@ -381,8 +381,8 @@ $('#valider').on('click',function (e) {
                     processData: false,
                     success : function(data) {
                     let message='Livraison enregistrée';
-                        // sweetToast('success',message);
-                        // window.location='/livraison'
+                        sweetToast('success',message);
+                        window.location='/livraison'
 
                     },
                     error : function(data){

@@ -1085,15 +1085,15 @@ public function indexNew($id)
             $livraison->save();
 
             for ($i =0 ;$i<count($alllivraison);$i+=4) {
-                 $commande_modele = DB::table('commande_modeles')->find($alllivraison[$i+2]);
                 $quantite_livre= DB::table('livraison_commandes')
                         ->where('commande_modele_id',$alllivraison[$i+2])
                         ->sum('quantite_livre');
 
                 $livraisoncommande = new livraisonCommande();
-                $livraisoncommande ->livraison_id=$livraison ->id;
-                $livraisoncommande  ->commande_modele_id=$alllivraison[$i+2];
-                 $livraisoncommande ->quantite_livre =$alllivraison[$i+3];
+                $livraisoncommande->livraison_id=$livraison ->id;
+                $livraisoncommande->commande_modele_id=$alllivraison[$i+2];
+                $livraisoncommande->modele_id=$alllivraison[$i+1];
+                 $livraisoncommande->quantite_livre =$alllivraison[$i+3];
                 $livraisoncommande->quantite_restante =$commande_modele->quantite - $quantite_livre - $alllivraison[$i+3];
                 $livraisoncommande->save();
 
