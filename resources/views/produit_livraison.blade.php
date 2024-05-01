@@ -50,7 +50,7 @@
 
                                 <tr class="gradeA">
                                     <td class="center hidden-phone">{{$ven->livraison->numero}}  </td>
-                                    <td class="center hidden-phone prix">{{$ven->quantite_livre}} fcfa</td>
+                                    <td class="center hidden-phone">{{$ven->quantite_livre}}</td>
                                     <td class="center hidden-phone">{{$ven->quantite_vendue}}</td>
                                 </tr>
 
