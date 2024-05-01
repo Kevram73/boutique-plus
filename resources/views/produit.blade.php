@@ -53,10 +53,10 @@
 
                                                         </optgroup>
                                                     </select>
-                                                </div>
+                                                </div>modeles
                                             </div>
                                             <div class="form-group mt-lg">
-                                                <label class="col-sm-3 control-label">Modele</label>
+                                                Rapport           <label class="col-sm-3 control-label">Modele</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" name="modele"  id="modele" class="form-control" placeholder="400g" required/>
                                                     <input type="hidden" name="idmodele" id="idmodele"/>
@@ -74,7 +74,7 @@
                                                 <div class="col-sm-9">
                                                     <input type="integer" name="prix" id="prix" class="form-control" placeholder="100" required/>
                                                 </div>
-                                            </div>
+                                                Rapport</div>
                                             <div class="form-group mt-lg">
                                                 <label class="col-sm-3 control-label">Prix (de gros)</label>
                                                 <div class="col-sm-9">
@@ -223,7 +223,7 @@
         </div>
 
     </div>
-@endsection 
+@endsection
 @section('js')
 
     <script src="octopus/assets/vendor/jquery/jquery.js"></script>
@@ -232,6 +232,6 @@
     <script src="octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
     <script src="js/modele.js"></script>
-    <script src="js/seuil.js"></script> 
+    <script src="js/seuil.js"></script>
 
 @endsection

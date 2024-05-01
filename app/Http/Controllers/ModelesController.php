@@ -38,7 +38,8 @@ class ModelesController extends Controller
 
                 return ' <a class="btn btn-info " onclick="showmodele('.$clt->id.')" ><i class="fa  fa-info"></i></a>
                                     <a class="btn btn-success" onclick="editmodele('.$clt->id.')"> <i class="fa fa-pencil"></i></a>
-                                    <a class="btn btn-danger" onclick="deletemodele('.$clt->id.')"><i class="fa fa-trash-o"></i></a> ';
+                                    <a class="btn btn-danger" onclick="deletemodele('.$clt->id.')"><i class="fa fa-trash-o"></i></a>
+                                    <a class="btn btn-primary" onclick="showmodele('.$clt->id.')"><i class="fa fa-eye"></i></a> ';
             })
             ->make(true) ;
     }
@@ -72,7 +73,7 @@ class ModelesController extends Controller
         ->make(true) ;
     }
 
-    public function invent() 
+    public function invent()
     {  $historique=new Historique();
         $historique->actions = "Liste";
         $historique->cible = "Inventaire";
@@ -87,7 +88,7 @@ class ModelesController extends Controller
         $historique->cible = "Modeles";
         $historique->user_id =Auth::user()->id;
         $historique->save();
-        $categorie=Categorie::all(); 
+        $categorie=Categorie::all();
 
         return view('produit',compact('categorie'));
     }

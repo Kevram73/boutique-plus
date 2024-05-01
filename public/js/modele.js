@@ -215,8 +215,8 @@ let message;
                         }
                     },
 
-                    ajax: '/allmodelevente-'+id, 
-                    "columns": [ 
+                    ajax: '/allmodelevente-'+id,
+                    "columns": [
                         {data: "user",name : 'user'},
                         {data: "date",name : 'date'},
                         {data: "quantite",name : 'quantite'},
@@ -279,6 +279,13 @@ function editmodele(id){
         error : function(data){
             alert('erreur')
         }
+    });
+}
+
+function showmodele(id){
+    $.ajax({
+        url : '/modelelivraisons-'+id,
+        type : "get"
     });
 }
 
