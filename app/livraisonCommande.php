@@ -15,9 +15,9 @@ class livraisonCommande extends Model
     {
         return $this->belongsTo(commandeModele::class, 'commande_modele_id');
     }
-    
+
     public function modele_produit()
     {
-        return Modele::find($this->modele);
+        return Modele::find($this->modele_id);
     }
 }

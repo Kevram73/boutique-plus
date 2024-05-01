@@ -2699,10 +2699,9 @@ class VentesController extends Controller
 
             // Récupérer les livraisons associées au modèle et à la boutique
             $livraisons = livraisonCommande::join('livraisons', 'livraison_commandes.livraison_id', '=', 'livraisons.id') // Jointure explicite
-                            ->join('commande_modeles', 'livraison_commandes.commande_modele_id', '=', 'commande_modeles.id') // Jointure explicite
                             ->where('livraisons.boutique_id', $boutique_id) // Filtrage par boutique_id
-                            ->where('commande_modeles.modele', $modele_id) // Filtrage par modele_id
-                            ->with(['livraison', 'commandeModele.modele']) // Charger les relations nécessaires
+                            ->where('livraison_commandes.modele_id', $modele_id) // Filtrage par modele_id
+                            ->with('livraison') // Charger les relations nécessaires
                             ->get(); // Obtenir les résultats
 
 
