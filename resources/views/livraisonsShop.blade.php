@@ -20,7 +20,7 @@
                     </header>
 
                     <div class="panel-body">
-                        
+
                         <table class="table table-bordered table-striped mb-none" id="employeTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                             <thead>
                             <tr>
@@ -29,7 +29,6 @@
                                 <th class="center hidden-phone">Quantité livrée</th>
                                 <th class="center hidden-phone">Quantité vendue</th>
                                 <th class="center hidden-phone">Statut</th>
-                                <th class="center hidden-phone">Action</th>
                             </tr>
                             </thead>
                             <tbody class="center hidden-phone">
@@ -45,14 +44,6 @@
                                         <td class="center hidden-phone">{{ $livraison->qte_liv() }}</td>
                                         <td class="center hidden-phone">{{ $livraison->qte_sell() }}</td>
                                         <td class="center hidden-phone">{{ $livraison->statut() }}</td>
-                                        <td class="center hidden-phone">
-
-
-
-                                        </td>
-
-
-
                                         <script type="text/javascript">
                                         $(document).ready(function() {
                                             $('#previewButton').on('click', function() {
