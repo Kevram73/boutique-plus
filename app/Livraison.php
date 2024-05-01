@@ -19,7 +19,7 @@ class Livraison extends Model
 
     public function total_vendu(){
         $preventes = Prevente::where('livraison', $this->id)->get();
-
+        $total_vendu = 0;
         foreach($preventes as $prevente){
             $total_vendu += $prevente->prixtotal;
         }
