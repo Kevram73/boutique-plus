@@ -12,7 +12,8 @@
                 <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">
-                            <a href="#" class="fa fa-caret-down"></a>
+                            <a href= $modeleF = modeleFournisseur::find($this->modele_fournisseur_id);
+                                "#" class="fa fa-caret-down"></a>
                         </div>
 
                         <h1 class="panel-title">LISTES DES VENTES SUR LA LIVRAISON    :     N*  {{$livraison->numero}}</h1>
@@ -50,7 +51,7 @@
                                     <td class="center hidden-phone prix">{{$ven->prix}} fcfa</td>
                                     <td class="center hidden-phone">{{$ven->quantite}}</td>
                                     <td class="center hidden-phone prix">{{$ven->prixtotal}} fcfa</td>
-                                    <td class="center hidden-phone">{{$ven->numero}}</td>
+                                    <td class="center hidden-phone">{{$ven->vente()->numero}}</td>
                                 </tr>
 
                             @endforeach
@@ -58,7 +59,7 @@
                             </tbody>
                         </table>
 
-                       
+
                     </div>
 
                 </section>
