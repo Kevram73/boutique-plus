@@ -41,7 +41,11 @@
                             </tr>
                             </thead>
                             <tbody class="center hidden-phone">
-
+                                @if (count($livraisons) == 0)
+                                <tr>
+                                    <td colspan="3" class="text-center">Aucune livraison</td>
+                                </tr>
+                                @endif
                             @foreach($livraisons as $ven)
 
                                 <tr class="gradeA">
