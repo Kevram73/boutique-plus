@@ -26,8 +26,8 @@
                             <li class="list-group-item">Livraison N*:<b> <span class="text-danger" >{{$livraison->numero}}</span> </b></li>
                             <li class="list-group-item">Date de livraison :<b> <span class="text-danger" >{{$livraison->date_livraison}}</span> </b></li>
                             <li class="list-group-item">Boutique :<b> <span class="text-danger" >{{$livraison->boutique->nom}}</span> </b></li>
-                                <li class="list-group-item">Quantité livré :<b> <span class="text-danger prix"  >{{ $livraison->qte_liv() }}</span></b></li>
-                                <li class="list-group-item">Quantité vendue :<b> <span class="text-danger prix"  >{{ $livraison->qte_sell() }}</span></b></li>
+                                <li class="list-group-item">Quantité livré :<b> <span class="text-danger"  >{{ $livraison->qte_liv() }}</span></b></li>
+                                <li class="list-group-item">Quantité vendue :<b> <span class="text-danger"  >{{ $livraison->qte_sell() }}</span></b></li>
                         </ul>
 
 
@@ -51,7 +51,7 @@
                                     <td class="center hidden-phone">{{$ven->modele()->libelle}}  </td>
                                     <td class="center hidden-phone prix">{{$ven->prix}} fcfa</td>
                                     <td class="center hidden-phone">{{$ven->quantite}}</td>
-                                    <td class="center hidden-phone">{{$ven->reduction}}</td>
+                                    <td class="center hidden-phone prix">{{$ven->reduction}}</td>
                                     <td class="center hidden-phone prix">{{$ven->prixtotal}} fcfa</td>
                                     <td class="center hidden-phone">{{$ven->vente()->numero}}</td>
                                 </tr>
