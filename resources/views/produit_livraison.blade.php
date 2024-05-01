@@ -15,7 +15,7 @@
 
                         </div>
 
-                        <h1 class="panel-title">LISTES DES LIVRAISONS SUR LE MODELE : N*  {{$modele->libelle}}</h1>
+                        <h1 class="panel-title">LISTES DES LIVRAISONS SUR LE MODELE : N°  {{$modele->libelle}}</h1>
                     </header>
 
 
@@ -25,6 +25,7 @@
                             <li class="list-group-item">Modele N°:<b> <span class="text-danger" >{{$modele->numero}}</span> </b></li>
                             <li class="list-group-item">Ref Modele :<b> <span class="text-danger" >{{$modele->ref_modele}}</span> </b></li>
                             <li class="list-group-item">Conditionnement:<b> <span class="text-danger" >{{$modele->condi_modele}}</span> </b></li>
+                            <li class="list-group-item">Quantité:<b> <span class="text-danger" >{{$modele->quantite}}</span> </b></li>
                                 <li class="list-group-item">Prix :<b> <span class="text-danger prix"  >{{ $modele->prix }}</span></b></li>
                                 <li class="list-group-item">Prix de gros :<b> <span class="text-danger prix"  >{{ $modele->prix_de_gros }}</span></b></li>
                         </ul>
