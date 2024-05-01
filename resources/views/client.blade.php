@@ -16,7 +16,7 @@
                             <a href="#" class="fa fa-caret-down"></a>
                         </div>
 
-                        <h1 class="panel-title">LISTES DES  CLIENTS bb</h1>
+                        <h1 class="panel-title">LISTES DES  CLIENTS </h1>
                     </header>
 
                     <div class="panel-body">
