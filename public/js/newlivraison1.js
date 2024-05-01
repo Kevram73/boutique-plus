@@ -17,7 +17,7 @@ function sweetToast(type,text){
         position: 'top-end',
         icon: type,
         title: text,
-        showConfirmButton: false, 
+        showConfirmButton: false,
         timer: 1500,
         animation : true,
     });
@@ -168,7 +168,7 @@ $(function( ) {
             },
             data : [],
             columns: [
-           
+
                 { data: 'boutique' },
                 { data: 'prod' },
                 { data: 'quantite' },
@@ -214,10 +214,10 @@ $(function( ) {
                             $table2.row.add({
                                 "id":$('#prod').val(),
                                 "prod": produit,
-                                
 
-                            /*     "produit": produit, 
-                                
+
+                            /*     "produit": produit,
+
                                 "quantite": $('#quantite').val(),
                                 // "action": '<a  class="btn btn-primary"><i class="fa fa-pencil"  id="edit"></i></a>' +
                                 //     '  <a class="btn btn-danger" ><i class="fa fa-trash-o" id="sup"></i></a>'
@@ -256,7 +256,7 @@ $('#ajout1').on('click',function () {
     let message,quantite;
         $.ajax({
             url: '/verificationNew-' + $('#prod').val(),
-           
+
             type: "get",
             success: function (data) {
                                 console.log(data)
@@ -274,13 +274,13 @@ $('#ajout1').on('click',function () {
                         if (data.id == $('#prod').val()) {
                             trouveEmporte = true;
                             position = i;
- 
+
                         }
                     }
                     if ( trouveEmporte === false) {
                         var b=document.getElementById('boutique')
                         var d=document.getElementById('prod')
-                       
+
                         var c=document.getElementById('produit')
                         var nom=b.options[b.selectedIndex].text;
                         var prod=d.options[d.selectedIndex].text;
@@ -304,11 +304,11 @@ $('#ajout1').on('click',function () {
                         $('#quantite').val(null);
 
 
-                    }else{ 
+                    }else{
                         $table2.data()[position].boutique =parseInt( $('#boutique').val()) ;
                         $table2.data()[position].prod =parseInt( $('#prod').val()) ;
                         $table2.data()[position].quantite = parseInt( $table2.data()[position].quantite) + parseInt( $('#quantite').val()) ;
-                       
+
                         $table2 .row().data($table2.data()[position]).draw();
 
                         trouveEmporte = true;
@@ -381,8 +381,8 @@ $('#valider').on('click',function (e) {
                     processData: false,
                     success : function(data) {
                     let message='Livraison enregistrée';
-                        sweetToast('success',message);
-                        window.location='/livraison'
+                        // sweetToast('success',message);
+                        // window.location='/livraison'
 
                     },
                     error : function(data){
