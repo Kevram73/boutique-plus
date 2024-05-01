@@ -1435,15 +1435,15 @@ public function indexNew($id)
         $livraisons = [];
         foreach($commandes as $commande){
             $livraison_commande = LivraisonCommande::where('commande_modele_id', $commande->id)->get();
-            array_push($livraison_commandes, $livraison_commande);
+            array_push($livraisons, $livraison_commande);
         }
 
-        foreach($livraison_commandes as $livraison_commande){
-            if($livraison_commande->livraison->boutique_id == Auth::user()->boutique_id){
-                array_push($livraisons, $livraison_commande);
-            }
+        // foreach($livraison_commandes as $livraison_commande){
+        //     if($livraison_commande->livraison->boutique_id == Auth::user()->boutique_id){
+        //         array_push($livraisons, $livraison_commande);
+        //     }
 
-        }
+        // }
 
         return view("produit_livraison", compact('livraisons', 'modele'));
 
