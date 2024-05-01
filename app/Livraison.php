@@ -43,11 +43,11 @@ class Livraison extends Model
 
     public function statut(){
         if($this->qte_sell() == 0){
-            return '<span class="badge" style="background-color: blue; color: white;">Pas encore vendue</span>';
+            return <span class="badge" style="background-color: blue; color: white;">Pas encore vendue</span>;
         } else if($this->qte_liv() > $this->qte_sell()){
-            return '<span class="badge" style="background-color: orange; color: white;">En partie vendue</span>';
+            return <span class="badge" style="background-color: orange; color: white;">En partie vendue</span>;
         } else if($this->qte_liv() == $this->qte_sell()){
-            return '<span class="badge" style="background-color: green; color: white;">Total vendue</span>';
+            return <span class="badge" style="background-color: green; color: white;">Total vendue</span>;
         }
 
     }
