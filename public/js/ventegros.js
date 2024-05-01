@@ -210,7 +210,7 @@ $(function( ) {
 })
 $('#ajout').on('click',function () {
     let message;
-    
+
         if( $('#modele').val() ==null   ||   $('#prix').val() <= 0
             || $('#prix').val()  ==''   || $('#quantite').val()==''  || $('#quantite').val()<=0 ){
             message='Veuillez bien remplir tous les champs svp...'
@@ -262,7 +262,7 @@ $('#ajout').on('click',function () {
             trouveEmporte = true;
         }
 
-    } 
+    }
 })
 function calTotal(table)
 {
@@ -316,33 +316,39 @@ $('#valider').on('click',function (e) {
             e.preventDefault()
 
             if ($table2.data().length <= 0 ){
-                let message;
-                message='Impossible ... Tableau vide!!!'
+                let message='Impossible ... Tableau vide!!!';
                 sweetToast('warning',message);
             }else{
-                let content =''
-                for(let i = 0; i <  $table2.data().length; i++){
-                    if (i!=$table2.data().length-1){
-                        content +=   $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite+"," + ($table2.data()[i].reduction * 1)+","
+                let jsonData = [];
 
-                    }else{
-                        content +=  $table2.data()[i].id+","+ $table2.data()[i].prix+","+ $table2.data()[i].quantite +","+ ($table2.data()[i].reduction * 1)
-                    }
+                for (let i = 0; i < $table2.data().length; i++) {
+                    let dataObj = {
+                        "id": $table2.data()[i].id,
+                        "prix": $table2.data()[i].prix,
+                        "quantite": $table2.data()[i].quantite,
+                        "reduction": $table2.data()[i].reduction * 1,
+                        "livraison": $table2.data()[i].livraison
+                    };
+
+                    jsonData.push(dataObj);
                 }
-                $('#venTable').val(content)
-                 $('#avoirvenTable').val(content)
+
+                dataToSend = {
+                    "client": $('#client').val(),
+                    "lines": jsonData,
+                }
+
+                console.log(dataToSend)
+
                 e.preventDefault();
                 if (e.isDefaultPrevented()){
                     $.ajax({
                         url :url,
                         type : "post",
-                        // data : $('#modal-form-user').serialize(),
-                        data: new FormData($("#comform form")[0]),
-                        //data: new FormData($("#modal-form-user")[0]),
-                        contentType: false,
-                        processData: false,
+                        data: dataToSend,
+
                         success : function(data) {
-                            window.location='/reglementgros-'+data.id;
+                            window.location='/reglements-'+data.id;
                         },
                         error : function(data){
                             let message='Erreur ';

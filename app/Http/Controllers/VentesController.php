@@ -1343,7 +1343,6 @@ class VentesController extends Controller
 
     public function store2(Request $request)
     {
-        $allcommande= explode( ',', $request->input('venTable') );
         $i=DB::table('journals')->max('id');
         $id=DB::table('ventes')->max('id');
         $ed=1+$id;
@@ -1351,7 +1350,7 @@ class VentesController extends Controller
         $vente = new vente();
         $vente ->numero="VENT".now()->format('Y')."-".$ed;
         $vente ->date_vente= now();
-        $vente ->client_id= $allcommande[1];
+        $vente ->client_id= $request->client;
         $vente ->user_id= Auth::user()->id;
         $vente ->journal_id= $i;
         $vente ->type_vente= 2;
@@ -1361,26 +1360,23 @@ class VentesController extends Controller
         $total = 0;
         $allReduction = 0;
 
-        for ($i =0 ;$i<count($allcommande);$i+=5) {
+        foreach($request->lines as $line){
             $prevente = new Prevente();
-            $prevente ->modele_fournisseur_id=$allcommande[$i];
-            $prevente ->prix =$allcommande[$i+2];
-            $prevente ->quantite= $allcommande[$i+3];
-            $prevente ->reduction= $allcommande[$i+4];
-            $prevente ->prixtotal =$prevente ->prix *$prevente ->quantite - $prevente->reduction;
-            $prevente ->vente_id=$vente->id;
+            $prevente->modele_fournisseur_id=$line["id"];
+            $prevente->prix=$line["prix"];
+            $prevente->quantite= $line["quantite"];
+            $prevente->reduction= $line["reduction"];
+            $prevente->livraison= $line["livraison"];
+            $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
+            $prevente->vente_id=$vente->id;
             $prevente->save();
-            //$modele= Modele::findOrFail($allcommande[$i]);
-            // if($modele->quantite < $prevente ->quantite)
-            // {
-            //     DB::rollback();
-            //     return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
-            // }
-            //$modele->quantite=$modele->quantite -$prevente ->quantite;
-            //$modele->update();
 
-            $total = $total + $prevente->prixtotal;
-            $allReduction = $allReduction + $prevente->reduction;
+            $livraison = Livraison::where('numero', $line["livraison"])->get()->first();
+            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
+            $livraison_commande->quantite_vendue += $line['quantite'];
+            $livraison_commande->save();
+
+            $total+= $prevente->prixtotal;
         }
 
         $vente=vente::findOrFail($vente->id);
@@ -1511,14 +1507,13 @@ class VentesController extends Controller
     }
     public function store3(Request $request)
     {
-        $allcommande= explode( ',', $request->input('venTable') );
         $i=DB::table('journals')->max('id');
         $id=DB::table('ventes')->max('id');
         $ed=1+$id;
         $vente = new vente();
         $vente ->numero="VENT".now()->format('Y')."-".$ed;
         $vente ->date_vente= now();
-        $vente ->client_id= $allcommande[1];
+        $vente ->client_id= $request->client;
         $vente ->user_id= Auth::user()->id;
         $vente ->journal_id= $i;
         $vente ->type_vente= 3;
@@ -1528,19 +1523,23 @@ class VentesController extends Controller
         $total = 0;
         $allReduction = 0;
 
-        for ($i =0 ;$i<count($allcommande);$i+=5) {
+        foreach($request->lines as $line){
             $prevente = new Prevente();
-            $prevente ->modele_fournisseur_id=$allcommande[$i];
-            $prevente ->prix =$allcommande[$i+2];
-            $prevente ->quantite= $allcommande[$i+3];
-            $prevente ->reduction= $allcommande[$i+4];
-            $prevente ->prixtotal =$prevente ->prix *$prevente ->quantite - $prevente->reduction;
-            $prevente ->vente_id=$vente->id;
-            $prevente ->etat=true;
+            $prevente->modele_fournisseur_id=$line["id"];
+            $prevente->prix=$line["prix"];
+            $prevente->quantite= $line["quantite"];
+            $prevente->reduction= $line["reduction"];
+            $prevente->livraison= $line["livraison"];
+            $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
+            $prevente->vente_id=$vente->id;
             $prevente->save();
 
-            $total = $total + $prevente->prixtotal;
-            $allReduction = $allReduction + $prevente->reduction;
+            $livraison = Livraison::where('numero', $line["livraison"])->get()->first();
+            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
+            $livraison_commande->quantite_vendue += $line['quantite'];
+            $livraison_commande->save();
+
+            $total+= $prevente->prixtotal;
         }
 
         $vente=vente::findOrFail($vente->id);
@@ -1640,7 +1639,6 @@ class VentesController extends Controller
 
     public function store4(Request $request)
     {
-        $allcommande= explode( ',', $request->input('venTable') );
         $i=DB::table('journals')->max('id');
         $id=DB::table('ventes')->max('id');
         $ed=1+$id;
@@ -1648,7 +1646,7 @@ class VentesController extends Controller
         $vente = new vente();
         $vente ->numero="VENT".now()->format('Y')."-".$ed;
         $vente ->date_vente= now();
-        $vente ->client_id= $allcommande[1];
+        $vente ->client_id= $request->client;
         $vente ->user_id= Auth::user()->id;
         $vente ->journal_id= $i;
         $vente ->type_vente= 4;
@@ -1658,26 +1656,23 @@ class VentesController extends Controller
         $total = 0;
         $allReduction = 0;
 
-        for ($i =0 ;$i<count($allcommande);$i+=5) {
+        foreach($request->lines as $line){
             $prevente = new Prevente();
-            $prevente ->modele_fournisseur_id=$allcommande[$i];
-            $prevente ->prix =$allcommande[$i+2];
-            $prevente ->quantite= $allcommande[$i+3];
-            $prevente ->reduction= $allcommande[$i+4];
-            $prevente ->prixtotal =$prevente ->prix *$prevente ->quantite - $prevente->reduction;
-            $prevente ->vente_id=$vente->id;
+            $prevente->modele_fournisseur_id=$line["id"];
+            $prevente->prix=$line["prix"];
+            $prevente->quantite= $line["quantite"];
+            $prevente->reduction= $line["reduction"];
+            $prevente->livraison= $line["livraison"];
+            $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
+            $prevente->vente_id=$vente->id;
             $prevente->save();
-            //$modele= Modele::findOrFail($allcommande[$i]);
-            // if($modele->quantite < $prevente ->quantite)
-            // {
-            //     DB::rollback();
-            //     return response()->json(["msg" => "Attention quantité stock inferieure à la quantité vente"], 500);
-            // }
-            //$modele->quantite=$modele->quantite -$prevente ->quantite;
-            //$modele->update();
 
-            $total = $total + $prevente->prixtotal;
-            $allReduction = $allReduction + $prevente->reduction;
+            $livraison = Livraison::where('numero', $line["livraison"])->get()->first();
+            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
+            $livraison_commande->quantite_vendue += $line['quantite'];
+            $livraison_commande->save();
+
+            $total+= $prevente->prixtotal;
         }
         $vente=vente::findOrFail($vente->id);
         $vente->montant_reduction = $allReduction;

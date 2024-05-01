@@ -23,108 +23,111 @@
                     <div class="panel-body">
 
                         <div class="row">
-
-                                <div class="col-md-4 form-group">
-                                                <label class="col-md-4 control-label">Client</label>
-                                                <div class="col-md-9 form-group">
-                                                    <select  name="client" id="client"  class=" form-control populate">
-                                                        <optgroup label="Choisir le client">
-                                                            <option value=""></option>
-                                                            @foreach($client as $clt)
-                                                                <option value="{{$clt->id}}">{{$clt->nom}}</option>
-                                                            @endforeach
-                                                        </optgroup>
-                                                    </select>
-                                                </div>
-                                    <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-primary" id="btnclient"><i class="fa fa-plus"></i></a>
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                                  <label class="col-md-4 control-label">Categorie</label>
+                            <div class="col-md-4 form-group">
+                                                    <label class="col-md-4 control-label">Client</label>
                                                     <div class="col-md-9 form-group">
-                                                        <select  name="categorie" id="categorie"   class="form-control populate">
-                                                                 <optgroup label="Choisir la categorie">
-                                                                     <option value=""></option>
-                                                                    @foreach($categorie as $cat)
-                                                                          <option value="{{$cat->id}}">{{$cat->nom}}</option>
-                                                                     @endforeach
-                                                                  </optgroup>
-                                                         </select>
-                                                        </div>
-                                             </div>
-                                
-                                            <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Produit</label>
-                                                <div class="col-md-9 form-group">
-                                                    <select  name="produit" id="produit"  class="form-control populate">
-                                                        <optgroup label="Choisir un produit">
-                                                            <option value=""></option>
-                                                            @foreach($produits as $cat)
-                                                                <option value="{{$cat->id}}">{{$cat->nom}}</option>
-                                                            @endforeach
-                                                        </optgroup>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Modele</label>
-                                                <div class="col-md-9 form-group">
-                                                    <select  name="modele" id="modele"   class="form-control populate">
-                                                        <optgroup label="Choisir le modele">
-                                                            <option value=""></option>
-                                                            @foreach($modeles as $cat)
-                                                                <option value="{{$cat->id}}">{{$cat->libelle}}</option>
-                                                            @endforeach
-                                                        </optgroup>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Quantité</label>
-                                                <div class="col-sm-9">
-                                                    <input type="number" name="quantite"  id="quantite" class="form-control" placeholder="100"  min="1" required/>
-                                                </div>
-                                            </div>
-                                            
-                                             <div class="col-md-4 form-group">
-                                                  <label class="col-sm-4 control-label">Prix (de gros)</label>
-                                                   <div class="col-sm-9">
-                                                         <input type="integer" name="prix"  id="prix" class="form-control" placeholder="15000" required readonly/>
-                                                       <input type="hidden" name="mod" id="mod"/>
-                                                       <input type="hidden" name="stock" id="stock"/>
-                                                   </div>
-                                           </div>
-                                            
-                                            <div class="col-md-4 form-group"></div>
-                                            <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Stock</label>
-                                                <div class="col-sm-9">
-                                                    <input type="number" id="qteStock" class="form-control" placeholder="100"  min="1" readonly/>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Total</label>
-                                                <div class="col-sm-9">
-                                                    <input type="number" id="prixQte" class="form-control" placeholder="0"  min="1" readonly/>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-4 form-group"></div>
-                                            <div class="col-md-4 form-group"></div>
-                                            <div class="col-md-4 form-group">
-                                                <label class="col-sm-4 control-label">Réduction</label>
-                                                <div class="col-sm-9">
-                                                    <input type="number" id="reduction" name="reduction" class="form-control" placeholder="0"  min="1" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                                <div class="col-md-12 text-right" style="margin-top: 25px;">
-                                                    <button type="button" class="btn btn-primary" id="ajout"><i class="fa fa-check"></i> Ajouter</button>
-                                                    <button type="button" class="mb-xs mt-xs mr-xs btn btn-default  "  id="annuler"><i class="fa fa-times"></i> Annuler</button>
+                                                        <select  name="client" id="client"  class=" form-control populate">
+                                                            <optgroup label="Choisir le client">
+                                                                <option value=""></option>
+                                                                @foreach($client as $clt)
+                                                                    <option value="{{$clt->id}}">{{$clt->nom}}</option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        </select>
+                                                    </div>
+                                                    <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-primary" id="btnclient"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                                    <label class="col-md-4 control-label">Categorie</label>
+                                                    <div class="col-md-9 form-group">
+                                                        <select  name="categorie" id="categorie"  class="form-control populate">
+                                                            <optgroup label="Choisir la categorie">
+                                                                <option value=""></option>
+                                                                @foreach($categorie as $cat)
+                                                                    <option value="{{$cat->id}}">{{$cat->nom}}</option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        </select>
+                                                    </div>
                                                 </div>
 
+                                                <div class="col-md-4 form-group">
+                                                    <label class="col-sm-4 control-label">Famille</label>
+                                                    <div class="col-md-9 form-group">
+                                                        <select  name="produit" id="produit"   class="form-control populate">
+                                                            <optgroup label="Choisir un produit">
+                                                                <option value="" ></option>
+                                                                @foreach($produits as $cat)
+                                                                    <option value="{{$cat->id}}">{{$cat->nom}}</option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 form-group">
+                                                    <label class="col-sm-4 control-label">Produit</label>
+                                                    <div class="col-md-9 form-group">
+                                                        <select  name="modele" id="modele"  class="form-control populate">
+                                                            <optgroup label="Choisir le modele">
+                                                                <option value=""></option>
+                                                                @foreach($modeles as $cat)
+                                                                    <option value="{{$cat->id}}">{{$cat->libelle}}</option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 form-group">
+                                                    <label class="col-sm-4 control-label">Livraison</label>
+                                                    <div class="col-md-9">
+                                                        <select name="livraison" id="livraison" class="form-control" required>
+                                                            <optgroup label="Choisir une livraison">
+                                                                <!-- Les options seront ajoutées via JavaScript -->
+                                                            </optgroup>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 form-group">
+                                                    <label class="col-sm-4 control-label">Quantité</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="number" name="quantite"  id="quantite" class="form-control" placeholder="100"  min="1" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 form-group">
+                                                       <label class="col-sm-4 control-label">Prix</label>
+                                                         <div class="col-sm-9">
+                                                             <input type="number" name="prix"  id="prix" class="form-control" placeholder="15000" required readonly/>
+                                                             <input type="hidden" name="mod" id="mod"/>
+                                                             <input type="hidden" name="stock" id="stock"/>
+                                                           </div>
+                                                </div>
+                                                <input type="hidden" value="" id="liv_qte" />
+                                            </div>
+                                            <div class="row">
+
+
+                                                <div class="col-md-4 form-group">
+                                                    <label class="col-sm-4 control-label">Total</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="number" id="prixQte" class="form-control" placeholder="0"  min="1" readonly/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 form-group">
+                                                    <label class="col-sm-4 control-label">Réduction</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="number" id="reduction" name="reduction" class="form-control" placeholder="0"  min="1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                                    <div class="col-md-12 text-right">
+                                                        <button type="button" class="btn btn-primary" id="ajout"><i class="fa fa-check"></i> Ajouter</button>
+                                                        <button type="button" class="mb-xs mt-xs mr-xs btn btn-default  "  id="annuler"><i class="fa fa-times"></i> Annuler</button>
+                                                    </div>
+                                                    <input type="hidden" id="boutique" name="boutique" value="{{ Auth::user()->boutique_id }}" />
                     <div id="comform">
                         <form  method="POST" class="	form-validate form-horizontal mb-lg" >
                             {{csrf_field()}}
@@ -144,7 +147,7 @@
                         @endif
                         </form>
                     </div>
-                    
+
                     <div id="avoircomform">
                                 <form  method="POST" class="	form-validate form-horizontal mb-lg" >
                                     {{csrf_field()}}
@@ -280,7 +283,7 @@
     <script src="octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
     <script src="/vendor/select/js/select2.full.min.js"></script>
-    
+
     <script>
 
         function setNumeralHtml(element, format, surfix="", type="html")
