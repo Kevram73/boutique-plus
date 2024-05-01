@@ -101,7 +101,7 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                  <button type="button" onclick="valider($vente[0]->status)" class="btn btn-primary">Procéder</button>
+                                  <button type="button" onclick="valider($vente[0]->id)" class="btn btn-primary">Procéder</button>
                                 </div>
                               </div>
                             </div>
@@ -174,7 +174,7 @@
                 url: "/delivered-vente/"+id,
                 dataType: "json", // Type of data expected from the server
                 success: function(response) {
-                    window.location.href = "/success-page";
+                    window.location.href = "/ventes";
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr.responseText);
