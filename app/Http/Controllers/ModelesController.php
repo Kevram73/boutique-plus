@@ -39,7 +39,7 @@ class ModelesController extends Controller
                 return ' <a class="btn btn-info " onclick="showmodele('.$clt->id.')" ><i class="fa  fa-info"></i></a>
                                     <a class="btn btn-success" onclick="editmodele('.$clt->id.')"> <i class="fa fa-pencil"></i></a>
                                     <a class="btn btn-danger" onclick="deletemodele('.$clt->id.')"><i class="fa fa-trash-o"></i></a>
-                                    <a class="btn btn-primary" onclick="showmodele('.$clt->id.')"><i class="fa fa-eye"></i></a> ';
+                                    <a class="btn btn-primary" onclick="modelelivraisons('.$clt->id.')"><i class="fa fa-eye"></i></a> ';
             })
             ->make(true) ;
     }

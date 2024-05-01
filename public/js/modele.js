@@ -282,7 +282,7 @@ function editmodele(id){
     });
 }
 
-function showmodele(id){
+function modelelivraisons(id){
     $.ajax({
         url : '/modelelivraisons-'+id,
         type : "get"

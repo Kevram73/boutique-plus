@@ -606,3 +606,4 @@ Route::get('/getLivraisonsByProduit', 'VentesController@getLivraisonsByProduit')
 
 Route::get('/livraison/shop', 'LivraisonsController@livraisonsShop')->name('livraisons.shop');
 Route::get('/livraison/shop/{id}', 'LivraisonsController@show_livraison')->name('show_livraison');
+Route::get('/modelelivraisons-{id}', 'LivraisonsController@show_modele_livraison')->name('show_modele_livraison');
