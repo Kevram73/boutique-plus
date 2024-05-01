@@ -20,8 +20,7 @@
                     </header>
 
                     <div class="panel-body">
-                        <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" id="btnemploye" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Ajouter une décharge</a>
-
+                        
                         <table class="table table-bordered table-striped mb-none" id="employeTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                             <thead>
                             <tr>
@@ -48,7 +47,7 @@
                                         <td class="center hidden-phone">{{ $livraison->statut() }}</td>
                                         <td class="center hidden-phone">
 
-                                            
+
 
                                         </td>
 
