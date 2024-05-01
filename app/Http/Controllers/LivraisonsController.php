@@ -1367,7 +1367,8 @@ public function indexNew($id)
                 'modeles.libelle as modele',
                 'commande_modeles.etat as etat',
                 'produits.nom as produit',
-                'commande_modeles.id as id')
+                'command
+                                {{-- @if (count($factures) == 1) --}}e_modeles.id as id')
             ->get();
         return $commande;
     }*/
@@ -1414,6 +1415,16 @@ public function indexNew($id)
         $livraisons = Livraison::where('boutique_id', Auth::user()->boutique_id)->get();
 
         return view('livraisonsShop', compact('livraisons'));
+    }
+
+    public function show_livraison(Request $request, int $id){
+        $livraison = Livraison::find($id);
+        $num_livraison = $livraison->numero;
+
+        $preventes = Prevente::where('livraison', $num_livraison)->get();
+
+        return view("detailLivraisonShop", compact('preventes', 'livraison'));
+
     }
 
 }

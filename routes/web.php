@@ -145,7 +145,7 @@ Route::get('/showcategorie-{id}', 'CategoriesController@show');
 
 
 //Route::get('/allinventaire', 'ModelesController@inventaire');
-Route::get('/inventaire', 'InventairesController@liste')->name('inventaire'); 
+Route::get('/inventaire', 'InventairesController@liste')->name('inventaire');
 Route::get('/inventairesuper', 'InventairesController@listesuper')->name('inventairesuper');
 Route::get('/inventaireglobal', 'InventairesController@listeglobal')->name('inventaireglobal');
 
@@ -605,3 +605,4 @@ Route::get('/livraison/bon/{id}', 'VentesController@bon_de_livraison')->name('bo
 Route::get('/getLivraisonsByProduit', 'VentesController@getLivraisonsByProduit');
 
 Route::get('/livraison/shop', 'LivraisonsController@livraisonsShop')->name('livraisons.shop');
+Route::get('/livraison/shop/{id}', 'LivraisonsController@show_livraison')->name('show_livraison');
