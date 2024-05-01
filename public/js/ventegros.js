@@ -192,6 +192,7 @@ $(function( ) {
                 { data: 'id' },
                 { data: 'produit' },
                 { data: 'modele' },
+                { data: 'livraison' },
                 { data: 'quantite' },
                 { data: 'prix' },
                 { data: 'reduction' },
