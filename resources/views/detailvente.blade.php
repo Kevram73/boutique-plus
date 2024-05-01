@@ -101,7 +101,8 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                  <button type="button" onclick="valider($vente[0]->id)" class="btn btn-primary">Procéder</button>
+                                  <button type="button" onclick="valider('{{ $vente[0]->id }}')" class="btn btn-primary">Procéder</button>
+
                                 </div>
                               </div>
                             </div>
