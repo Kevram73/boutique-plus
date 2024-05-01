@@ -118,7 +118,7 @@ $('#produit').on('change',function ( ) {
 
 $('#modele').on('change',function ( ) {
     $.ajax({
-        url: '/recupefournisseurgros-' + $('#modele').val(),
+        url: '/recupefournisseur-' + $('#modele').val(),
         type: "get",
         success: function (data) {
             if (data == ""){
@@ -126,12 +126,13 @@ $('#modele').on('change',function ( ) {
             }
             else {
                 $('#prix').val(null);
-                for (var i = 0; i < data.length; i++)
-                {
+
+                for (var i = 0; i < data.length; i++) {
                     $('#prix').val(data[i].prix_vente);
                     $('#mod').val(data[i].modele);
                     $('#stock').val(data[i].stock);
                     $('#qteStock').val(data[i].stock);
+
                 }
             }
 
