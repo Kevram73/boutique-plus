@@ -2741,4 +2741,16 @@ class VentesController extends Controller
     }
 
 
+    public function delivered_vente($id){
+        $vente = vente::find($id);
+        $vente->delivered = "delivered";
+        $vente->save();
+
+        return response()->json([
+            'message' => 'Vente marquée comme livrée avec succès.',
+            'data' => $vente
+        ]);
+    }
+
+
 }
