@@ -312,5 +312,40 @@
         setNumeralHtml("prix", "0,0");
     </script>
     <script src="js/ventenonlivre.js"></script>
+    <script>
+
+        $('#modele').on('change', function() {
+             var modele = $(this).val();
+             var boutique_id = $('#boutique').val();
+
+             if (modele) {
+                 // Réinitialisation du champ de sélection avant la requête
+                 $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
+
+                 $.ajax({
+                     url: '/getLivraisonsByProduit',
+                     type: 'GET',
+                     data: { modele_id: modele, boutique_id: boutique_id },
+                     success: function(response) {
+                         var options = '<option value="">Choisissez une livraison</option>'; // Valeur par défaut
+                         response.livraisons.forEach(function(livraison) {
+                             options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
+                         });
+
+                         $('#livraison').html(options); // Remplir avec les nouvelles options
+                     },
+                     error: function(xhr, status, error) {
+                         console.error("Erreur lors du chargement des livraisons :", error);
+                         // Réinitialiser le champ de sélection en cas d'erreur
+                         $('#livraison').empty().append('<option value="">Erreur de chargement</option>');
+                     }
+                 });
+             } else {
+                 // Réinitialisation si aucun modèle n'est sélectionné
+                 $('#livraison').empty().append('<option value="">Choisissez une livraison</option>');
+             }
+         });
+
+ </script>
 
 @endsection
