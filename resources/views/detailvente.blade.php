@@ -84,7 +84,7 @@
                         @else
                         <a class=" btn btn-default mb-xs mt-xs mr-xs btn btn-warning"  href="{{ '/reglementcredit-'.$all_vente->id }}"><i class="fa fa-money"></i>Valider et Imprimer</a>
                         @endif
-                        @if ($vente[0]->delivered != "delivered")
+                        @if ($vente[0]->delivered != "delivered" && !isset($vente[0]->facture))
                         <a class=" btn btn-default mb-xs mt-xs mr-xs btn btn-info" data-toggle="modal" data-target="#exampleModal" ><i class="fa  fa-print"></i>Effectuer la livraison</a>
                         @endif
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
