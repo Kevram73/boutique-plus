@@ -58,9 +58,17 @@ class VentesController extends Controller
 
         return datatables()->of($vente)
             ->addColumn('action', function ($clt) {
-                return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
+                if($clt->delivered != "delivered")
+                {
+                    return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
+                                     <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>'
+                                      ;
+                } else {
+                    return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
                                      <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a> <a class="btn btn-warning" href="/livraison/bon/'. $clt->id .'"><i class="fa fa-file"></i></a>'
                                       ;
+                }
+
             })
             ->make(true);
     }
