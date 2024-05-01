@@ -12,8 +12,7 @@
                 <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">
-                            <a href= $modeleF = modeleFournisseur::find($this->modele_fournisseur_id);
-                                "#" class="fa fa-caret-down"></a>
+
                         </div>
 
                         <h1 class="panel-title">LISTES DES VENTES SUR LA LIVRAISON    :     N*  {{$livraison->numero}}</h1>
@@ -28,6 +27,7 @@
                             <li class="list-group-item">Boutique :<b> <span class="text-danger" >{{$livraison->boutique->nom}}</span> </b></li>
                                 <li class="list-group-item">Quantité livré :<b> <span class="text-danger"  >{{ $livraison->qte_liv() }}</span></b></li>
                                 <li class="list-group-item">Quantité vendue :<b> <span class="text-danger"  >{{ $livraison->qte_sell() }}</span></b></li>
+                                <li class="list-group-item">Total vendue :<b> <span class="text-danger prix"  >{{ $livraison->total_vendu() }}</span></b></li>
                         </ul>
 
 

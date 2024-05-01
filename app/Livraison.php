@@ -17,6 +17,16 @@ class Livraison extends Model
         return $this->hasMany(livraisonCommande::class, 'livraison_id');
     }
 
+    public function total_vendu(){
+        $preventes = Prevente::where('livraison_id', $this->id)->get();
+
+        foreach($preventes as $prevente){
+            $total_vendu += $prevente->prixtotal;
+        }
+
+        return $total_vendu;
+    }
+
     public function livraison_lines(){
         return livraisonCommande::where('livraison_id', $this->id)->get();
     }
