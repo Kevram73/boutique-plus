@@ -1075,6 +1075,7 @@ public function indexNew($id)
             DB::beginTransaction();
 
             $alllivraison= explode( ',', $request->input('livTable') );
+            return $alllivraison;
             $id=DB::table('livraisons')->max('id');
             $ed=1+$id;
             $livraison = new Livraison();
