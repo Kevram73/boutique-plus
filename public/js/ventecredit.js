@@ -229,12 +229,15 @@ $('#ajout').on('click',function () {
         if ( trouveEmporte === false) {
             var d=document.getElementById('produit')
             var b=document.getElementById('modele')
+            var l=document.getElementById('livraison')
             var produit=d.options[d.selectedIndex].text;
             var modele=b.options[b.selectedIndex].text;
+            var livraison=l.options[l.selectedIndex].text;
             $table2.row.add({
-                "id":$('#mod').val()+","+$('#client').val(),
+                "id":$('#mod').val(),
                 "produit": produit,
                 "modele":modele,
+                "livraison": l.value,
                 "prix": $('#prix').val(),
                 "quantite": $('#quantite').val(),
                 "reduction": $('#reduction').val(),
