@@ -11,8 +11,7 @@ class Prevente extends Model
     }
 
     public function modele(){
-        $modeleF = modeleFournisseur::find($this->modele_fournisseur_id);
-        $modele = Modele::find($modeleF->modele_id);
+        $modele = Modele::find($this->modele_fournisseur_id);
         return $modele;
     }
 
