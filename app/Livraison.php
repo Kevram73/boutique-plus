@@ -42,10 +42,12 @@ class Livraison extends Model
     }
 
     public function statut(){
-        if($this->qte_liv() == $this->qte_sell()){
-            return 'Livrée';
-        } else {
-            return 'En partie livrée';
+        if($this->qte_sell() == 0){
+            return 'Pas encore vendue';
+        } else if($this->qte_liv() > $this->qte_sell()){
+            return 'En partie vendue';
+        } else if($this->qte_liv() == $this->qte_sell()){
+            return 'Total vendue';
         }
 
     }
