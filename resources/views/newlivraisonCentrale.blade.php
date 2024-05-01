@@ -68,7 +68,7 @@
 
                          {{--  <div class="border-top border-2"></div>--}}
 
-                         <div class="row" > 
+                         <div class="row" >
 
                             <div class="col-md-4 form-group">
                                 <label class="col-md-4 control-label">Boutiques</label>
@@ -91,7 +91,7 @@
                                         <optgroup label="Choisir le produit">
                                             <option value=""></option>
                                         </optgroup>
-                                     
+
                                     </select>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
 
 
                     <div id="livform">
-                        <form  method="POST" class="	form-validate form-horizontal mb-lg" >
+                        <form  method="POST" class="form-validate form-horizontal mb-lg" >
                             {{csrf_field()}}
                         <input type="hidden"  name="livTable" id="livTable">
                         </form>
@@ -142,6 +142,6 @@
     <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
     <script src="/vendor/select/js/select2.full.min.js"></script>
 
-    <script src="js/newlivraison1.js"></script> 
+    <script src="js/newlivraison1.js"></script>
 
 @endsection

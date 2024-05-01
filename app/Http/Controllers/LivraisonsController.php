@@ -1430,21 +1430,13 @@ public function indexNew($id)
 
     public function show_modele_livraison(Request $request, int $id){
         $modele = Modele::where('id', $id)->where('boutique_id', Auth::user()->boutique_id)->first();
-        $commandes = commandeModele::where('modele', $id)->get();
-        $livraison_commandes = array();
-        $livraisons = [];
-        foreach($commandes as $commande){
-            $livraison_commande = LivraisonCommande::where('commande_modele_id', $commande->id)->get();
-            array_push($livraisons, $livraison_commande);
-        }
-
-        // foreach($livraison_commandes as $livraison_commande){
-        //     if($livraison_commande->livraison->boutique_id == Auth::user()->boutique_id){
-        //         array_push($livraisons, $livraison_commande);
-        //     }
-
+        $livraisons = commandeModele::where('modele', $id)->get();
+        // $livraison_commandes = array();
+        // $livraisons = [];
+        // foreach($commandes as $commande){
+        //     $livraison_commande = LivraisonCommande::where('commande_modele_id', $commande->id)->get();
+        //     array_push($livraisons, $livraison_commande);
         // }
-
         return view("produit_livraison", compact('livraisons', 'modele'));
 
     }
