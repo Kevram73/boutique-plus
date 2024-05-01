@@ -1429,7 +1429,7 @@ public function indexNew($id)
     }
 
     public function show_modele_livraison(Request $request, int $id){
-        $modele = Modele::find($id);
+        $modele = Modele::where('id', $id)->where('boutique_id', Auth::user()->id)->first();
         $commandes = commandeModele::where('modele', $id)->get();
         $livraison_commandes = array();
         $livraisons = [];
