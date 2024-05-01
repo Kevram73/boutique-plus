@@ -1816,6 +1816,7 @@ class VentesController extends Controller
             ->where('ventes.id','=',$id)
             ->select('ventes.numero as numero',
                 'ventes.date_vente as date',
+                'ventes.id as id',
                 'ventes.facture as facture',
                 'ventes.delivered as delivered',
                 'modeles.libelle as modele',
@@ -1854,6 +1855,7 @@ class VentesController extends Controller
                 ->where('ventes.id','=',$id)
                 ->select('ventes.numero as numero',
                     'ventes.date_vente as date',
+                    'ventes.id as id',
                     'ventes.facture as facture',
                     'ventes.delivered as delivered',
                     'modeles.libelle as modele',
