@@ -2750,6 +2750,16 @@ class VentesController extends Controller
         $vente->delivered = "delivered";
         $vente->save();
 
+        $livraison_nums = [];
+        $preventes = Prevente::where('vente_id', $vente->id)->get();
+        foreach($preventes as $prevente){
+            $livraison = Livraison::where('numero', $prevente->livraison)->get()->first();
+            $livraisonCommande = livraisonCommande::where('livraison_id', $livraison->id)->where('modele_id', $prevente->modele_fournisseur_id)->get()->first();
+            $livraisonCommande->quantite_vendue += $prevente->quantite;
+            $livraisonCommande->save();
+        }
+
+
         return response()->json([
             'message' => 'Vente marquée comme livrée avec succès.',
             'data' => $vente

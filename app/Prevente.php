@@ -18,5 +18,9 @@ class Prevente extends Model
     public function vente(){
         return vente::find($this->vente_id);
     }
+
+    public function livraison(){
+        return livraison::where('numero', $this->livraison)->get()->first();
+    }
 }
 
