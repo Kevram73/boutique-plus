@@ -313,7 +313,7 @@
     </script>
     <script src="js/ventesimple.js"></script>
     <script>
-
+    var my_tab = [];
        $('#modele').on('change', function() {
             var modele = $(this).val();
             var boutique_id = $('#boutique').val();
@@ -321,7 +321,7 @@
             if (modele) {
                 // Réinitialisation du champ de sélection avant la requête
                 $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
-                var my_tab = [];
+
                 $.ajax({
                     url: '/getLivraisonsByProduit',
                     type: 'GET',
@@ -363,7 +363,7 @@
                 quantite = getQuantiteRestante(livraison);
                 var quantiteInput = document.getElementById("quantite");
                 quantiteInput.setAttribute("max", quantite);
-            } 
+            }
         })
 
 </script>
