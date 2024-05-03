@@ -373,6 +373,7 @@
     if (enteredQuantity > maxQuantity) {
         alert("Quantité entrée supérieure à la quantité maximale autorisée.");
         $(this).val(0);
+        $('#prixQte').val(0);
         // You can also reset the input value here if needed
     }
 });
