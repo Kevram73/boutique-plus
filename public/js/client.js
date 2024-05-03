@@ -216,14 +216,14 @@ function avoirclt(id){
         type : "get",
         success : function(data) {
 
-            $('#idclient').val(data.id);
-            $('#nom').val(data.nom);
-            $('#btnadd').text('Modifier');
-            $('#btnadd').removeClass('btn-primary');
-            $('#btnadd').addClass('btn-warning');
+            $('#Aidclient').val(data.id);
+            $('#Anom').val(data.nom);
+            $('#Abtnadd').text('Modifier');
+            $('#Abtnadd').removeClass('btn-primary');
+            $('#Abtnadd').addClass('btn-warning');
             $('.modal-title-user').text('Ajouter un avoir');
-            $('#avoir').val(data.avoir);
-            $('#edit_avoir').modal('show');
+            $('#Aavoir').val(data.avoir);
+            $('#Aedit_avoir').modal('show');
 
         },
         error : function(data){
