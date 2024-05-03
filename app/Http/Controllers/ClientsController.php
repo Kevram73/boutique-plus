@@ -81,13 +81,13 @@ class ClientsController extends Controller
 
     public function save_avoir(Request $request){
         $avoir = new Avoir();
-        $avoir->client_id = $request->input('client_id');
+        $avoir->client_id = $request->input('idclient');
         $avoir->amount = $request->input('amount');
         $avoir->date_ajout = now();
         $avoir->user_id = Auth::user()->id;
         $avoir->save();
 
-        $client = Client::find($request->client_id);
+        $client = Client::find($request->idclient);
         $client->avoir += $request->amount;
         $client->save();
 
