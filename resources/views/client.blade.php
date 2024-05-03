@@ -115,6 +115,8 @@
 
                         <li class="list-group-item">
                             mise a jour le :<b> <span class="text-danger" id="sUpdate"></span></b> </li>
+
+                        <li class="list-group-item">Avoir Client :<b> <span class="text-danger " id="sAvoir" ></span></b></li>
                     </ul>
 
 

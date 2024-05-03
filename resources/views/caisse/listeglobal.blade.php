@@ -11,7 +11,7 @@
 
             <div class="row">
                 <section class="panel">
-                    <header class="panel-heading"> 
+                    <header class="panel-heading">
                         <div class="panel-actions">
                             <a href="#" class="fa fa-caret-down"></a>
                         </div>
@@ -40,15 +40,16 @@
                                                 <th class="center hidden-phone">Vente Nette</th>
                                                 <th class="center hidden-phone">Créance</th>
                                                 <th class="center hidden-phone">Recouvrement Intérieur</th>
+                                                <th class="center hidden-phone">Avoir</th>
                                                 <th class="center hidden-phone">Avance
-                                                    Client</th>   <th class="center hidden-phone">DEPENSE 
+                                                    Client</th>   <th class="center hidden-phone">DEPENSE
                                                         Totale</th>
                                                 <th class="center hidden-phone">Recette
                                                     Totale</th>
-                                                 
-                                                        
+
+
                                                             <th class="center hidden-phone">Solde Veille </th>
-                
+
                                                             <th class="center hidden-phone">Montant collecté </th>
                                                             <th class="center hidden-phone">SOLDE MAGASIN
                                                             </th>
@@ -66,17 +67,17 @@
                                                   <td>{{ $globa->venteCredit }}  </td>
                                                    <td>{{ $globa->recouvrementInte }} </td>
                                                      <td>{{ $globa->ventenonlivre }}  </td>
-                                                    <td>{{ $globa->totalDepense }} </td> 
+                                                    <td>{{ $globa->totalDepense }} </td>
                                                       <td> {{ $globa->recetteTotal }} </td>
-                                                    
+
                                                 <td>{{ $globa->solde }} </td>
                                                 <td>{{ $globa->montantcollecte }} </td>
                                                 <td>{{ $globa->soldeMagasin }} </td>
                                                 </tr>
-                                                @endforeach 
+                                                @endforeach
                                                 @endisset
-                                               
-                                           
+
+
                                         </tbody>
 
                                     </table></div>
@@ -143,10 +144,10 @@
                 });
             });
     </script> --}}
-    
-    
-    
-    
+
+
+
+
 
     <script>
         $(function() {
@@ -163,13 +164,13 @@
     </script>
     <script src="js/caisse.js"></script>
     <script>
-  
+
         $(document).ready(function(){
             $('#situationTable').DataTable({
                 "order": [[ 0, "desc" ]],
                 "pageLength":10,
                 "oLanguage": {
-                    
+
                     "sProcessing":     "Traitement en cours...",
                     "sSearch":         "Rechercher&nbsp;:",
                     "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
@@ -186,7 +187,7 @@
                         "sNext":       "Suivant",
                         "sLast":       "Dernier"
                     },
-                    
+
                     "oAria": {
                         "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
                         "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
@@ -194,8 +195,8 @@
                 }
             });
         });
-    
-    
+
+
             $(document).ready(function() {
             $('#situationTable').DataTable();
             } );
@@ -223,7 +224,7 @@
                     window.location='/showdetailcaisse'
 
                 }
-                
+
             });
             });
     </script>
