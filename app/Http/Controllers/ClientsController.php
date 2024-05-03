@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Avoir;
 use App\Boutique;
 
 use App\InventoryDebtor;
@@ -76,6 +77,22 @@ class ClientsController extends Controller
     public function create()
     {
         //
+    }
+
+    public function save_avoir(Request $request){
+        $avoir = new Avoir();
+        $avoir->client_id = $request->input('client_id');
+        $avoir->amount = $request->input('amount');
+        $avoir->date_ajout = now();
+        $avoir->user_id = Auth::user()->id;
+        $avoir->save();
+
+        $client = Client::find($request->client_id);
+        $client->avoir += $request->amount;
+        $client->save();
+
+        return $request->input();
+
     }
 
     /**

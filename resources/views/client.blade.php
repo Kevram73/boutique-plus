@@ -109,7 +109,7 @@
                             <label class="col-sm-3 control-label">Nom/Raison sociale</label>
                             <div class="col-sm-9">
                                 <input type="text" name="nom"  id="nom" class="form-control" placeholder=" ATO Kodjo, BTD Construction" readonly/>
-                                <input type="hidden" name="idclient" id="idclient"/>
+                                <input type="hidden" name="client_id" id="idclient"/>
                             </div>
                         </div>
                         <div class="form-group mt-lg">

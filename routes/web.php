@@ -609,3 +609,5 @@ Route::get('/livraison/shop/{id}', 'LivraisonsController@show_livraison')->name(
 Route::get('/modelelivraisons-{id}', 'LivraisonsController@show_modele_livraison')->name('show_modele_livraison');
 
 Route::get('/delivered-vente/{id}', 'VentesController@delivered_vente')->name('delivered_vente');
+
+Route::post('/save-avoir', 'ClientsController@save_avoir')->name('save_avoir');

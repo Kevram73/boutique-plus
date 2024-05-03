@@ -120,6 +120,37 @@ $('#ajout_client  form').on('submit', function (e) {
     }
 });
 
+$('#edit_avoir form').on('submit', function (e) {
+
+    let url,message;
+
+    url = '/save-avoir'
+    message = 'Avoir mis à jour avec succès'
+
+    e.preventDefault();
+    if (e.isDefaultPrevented()){
+        $.ajax({
+            url : url ,
+            type : "post",
+            // data : $('#modal-form-user').serialize(),
+            data: new FormData($("#edit_avoir form")[0]),
+            //data: new FormData($("#modal-form-user")[0]),
+            contentType: false,
+            processData: false,
+            success : function(data) {
+
+                $('#edit_avoir').modal('hide');
+                sweetToast('success',message);
+
+               clientTable.ajax.reload();
+            },
+            error : function(data){
+              alert('erreur')
+            }
+        });
+    }
+});
+
 
 function showclt(id){
 
@@ -198,6 +229,7 @@ function avoirclt(id){
         error : function(data){
 alert('erreur')
         }
+
     });
 }
 
