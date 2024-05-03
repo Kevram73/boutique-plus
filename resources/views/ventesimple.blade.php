@@ -348,7 +348,7 @@
         });
 
         function getQuantiteRestante(numero){
-            for(var i = 0; i < my_tab; i++){
+            for(var i = 0; i < my_tab.length; i++){
                 if(my_tab[i].numero === numero){
                     return my_tab[i].quantite_restante;
                 }
