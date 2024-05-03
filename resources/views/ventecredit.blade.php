@@ -314,38 +314,70 @@
     </script>
     <script src="js/ventecredit.js"></script>
     <script>
+        var my_tab = [];
+           $('#modele').on('change', function() {
+                var modele = $(this).val();
+                var boutique_id = $('#boutique').val();
 
-        $('#modele').on('change', function() {
-             var modele = $(this).val();
-             var boutique_id = $('#boutique').val();
+                if (modele) {
+                    // Réinitialisation du champ de sélection avant la requête
+                    $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
 
-             if (modele) {
-                 // Réinitialisation du champ de sélection avant la requête
-                 $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
+                    $.ajax({
+                        url: '/getLivraisonsByProduit',
+                        type: 'GET',
+                        data: { modele_id: modele, boutique_id: boutique_id },
+                        success: function(response) {
+                            var options = '<option value="">Choisissez une livraison</option>'; // Valeur par défaut
+                            response.livraisons.forEach(function(livraison) {
+                                my_tab = response.livraisons
+                                options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
+                            });
 
-                 $.ajax({
-                     url: '/getLivraisonsByProduit',
-                     type: 'GET',
-                     data: { modele_id: modele, boutique_id: boutique_id },
-                     success: function(response) {
-                         var options = '<option value="">Choisissez une livraison</option>'; // Valeur par défaut
-                         response.livraisons.forEach(function(livraison) {
-                             options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
-                         });
+                            $('#livraison').html(options); // Remplir avec les nouvelles options
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Erreur lors du chargement des livraisons :", error);
+                            // Réinitialiser le champ de sélection en cas d'erreur
+                            $('#livraison').empty().append('<option value="">Erreur de chargement</option>');
+                        }
+                    });
+                } else {
+                    // Réinitialisation si aucun modèle n'est sélectionné
+                    $('#livraison').empty().append('<option value="">Choisissez une livraison</option>');
+                }
+            });
 
-                         $('#livraison').html(options); // Remplir avec les nouvelles options
-                     },
-                     error: function(xhr, status, error) {
-                         console.error("Erreur lors du chargement des livraisons :", error);
-                         // Réinitialiser le champ de sélection en cas d'erreur
-                         $('#livraison').empty().append('<option value="">Erreur de chargement</option>');
-                     }
-                 });
-             } else {
-                 // Réinitialisation si aucun modèle n'est sélectionné
-                 $('#livraison').empty().append('<option value="">Choisissez une livraison</option>');
-             }
-         });
+            function getQuantiteRestante(numero){
+                for(var i = 0; i < my_tab.length; i++){
+                    if(my_tab[i].numero === numero){
+                        return my_tab[i].quantite_restante;
+                    }
+                }
+                return null;
+            }
 
- </script>
+            $('#livraison').on('change', function(){
+                var livraison = $(this).val();
+
+                if(livraison){
+                    quantite = getQuantiteRestante(livraison);
+                    var quantiteInput = document.getElementById("quantite");
+                    quantiteInput.setAttribute("max", quantite);
+                }
+            })
+
+            $('#quantite').on('change', function() {
+        var enteredQuantity = parseInt($(this).val());
+        var maxQuantity = parseInt($(this).attr("max"));
+
+        if (enteredQuantity > maxQuantity) {
+            alert("Quantité entrée supérieure à la quantité maximale autorisée.");
+            $(this).val(0);
+            $('#prixQte').val(0);
+            // You can also reset the input value here if needed
+        }
+    });
+
+    </script>
 @endsection
