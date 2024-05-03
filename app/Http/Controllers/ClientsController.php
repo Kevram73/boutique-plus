@@ -38,7 +38,7 @@ class ClientsController extends Controller
                 return ' <a class="btn btn-info " onclick="showclt(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
                                     <a class="btn btn-success" onclick="editclt(' . $clt->id . ')"> <i class="fa fa-pencil"></i></a>
                                     <a class="btn btn-danger" onclick="deleteclt(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>
-                                    <a class="btn btn-danger" onclick="avoirclt(' . $clt->id . ')"><i class="fa fa-money"></i></a> ';
+                                    <a class="btn btn-warning" onclick="avoirclt(' . $clt->id . ')"><i class="fa fa-money"></i></a> ';
             })
             ->make(true);
     }
