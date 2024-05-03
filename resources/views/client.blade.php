@@ -108,14 +108,14 @@
                         <div class="form-group mt-lg">
                             <label class="col-sm-3 control-label">Nom/Raison sociale</label>
                             <div class="col-sm-9">
-                                <input type="text" name="nom"  id="nom" class="form-control" placeholder=" ATO Kodjo, BTD Construction" readonly/>
+                                <input type="text" name="nom"  id="nom" class="form-control" readonly/>
                                 <input type="hidden" name="idclient" id="idclient"/>
                             </div>
                         </div>
                         <div class="form-group mt-lg">
                             <label class="col-sm-3 control-label">Avoir Client</label>
                             <div class="col-sm-9">
-                                <input type="integer" name="avoir" id="avoir" class="form-control" placeholder=" 0 " readonly/>
+                                <input type="integer" name="avoir" id="avoir" class="form-control" readonly/>
                             </div>
                         </div>
                         <div class="form-group mt-lg">
