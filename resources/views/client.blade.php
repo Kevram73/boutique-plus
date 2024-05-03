@@ -59,7 +59,7 @@
                                             <div class="form-group mt-lg">
                                                 <label class="col-sm-3 control-label">Avoir Client</label>
                                                 <div class="col-sm-9">
-                                                    <input type="integer" name="avoir" id="avoir" class="form-control" placeholder=" 0 "/>
+                                                    <input type="integer" name="avoir" id="avoir" class="form-control" placeholder=" 0 " readonly/>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
