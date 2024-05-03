@@ -329,7 +329,7 @@
                     success: function(response) {
                         var options = '<option value="">Choisissez une livraison</option>'; // Valeur par défaut
                         response.livraisons.forEach(function(livraison) {
-                            options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_livre - livraison.quantite_vendue + '</option>';
+                            options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
                         });
 
                         $('#livraison').html(options); // Remplir avec les nouvelles options
