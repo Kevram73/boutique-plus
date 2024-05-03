@@ -223,7 +223,7 @@ function avoirclt(id){
             $('#Abtnadd').addClass('btn-warning');
             $('.modal-title-user').text('Ajouter un avoir');
             $('#Aavoir').val(data.avoir);
-            $('#Aedit_avoir').modal('show');
+            $('#edit_avoir').modal('show');
 
         },
         error : function(data){
