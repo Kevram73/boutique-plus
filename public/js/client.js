@@ -179,6 +179,29 @@ alert('erreur')
     });
 }
 
+function avoirclt(id){
+    $.ajax({
+        url : '/showclient-'+id,
+        type : "get",
+        success : function(data) {
+
+            $('#idclient').val(data.id);
+            $('#nom').val(data.nom);
+            $('#btnadd').text('Modifier');
+            $('#btnadd').removeClass('btn-primary');
+            $('#btnadd').addClass('btn-warning');
+            $('.modal-title-user').text('Ajouter un avoir');
+            $('#avoir').val(data.avoir);
+            $('#edit_avoir').modal('show');
+
+        },
+        error : function(data){
+alert('erreur')
+        }
+    });
+}
+
+
 function deleteclt(id){
 
     Swal.fire({
@@ -195,15 +218,15 @@ function deleteclt(id){
             $.ajax({
                 url : '/deleteclient-'+id,
                 type : "get",
-        
+
                 contentType: false,
                 processData: false,
                 success : function(data) {
-        
+
                console.log(data)
-        
+
                     clientTable.ajax.reload();
-        
+
                 },
                 error : function(data){
                     console.log(data)

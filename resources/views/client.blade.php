@@ -95,6 +95,49 @@
     </section>
     </div>
 
+    <div class="modal fade " id="edit_avoir" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header " style="background-color: #0b93d5;border-top-left-radius: inherit;border-top-right-radius: inherit">
+                    <h4 class="modal-title-user" id="myModalLabel" style="color: white"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form" action="" method="POST" class="	form-validate form-horizontal mb-lg" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        <div class="form-group mt-lg">
+                            <label class="col-sm-3 control-label">Nom/Raison sociale</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="nom"  id="nom" class="form-control" placeholder=" ATO Kodjo, BTD Construction" readonly/>
+                                <input type="hidden" name="idclient" id="idclient"/>
+                            </div>
+                        </div>
+                        <div class="form-group mt-lg">
+                            <label class="col-sm-3 control-label">Avoir Client</label>
+                            <div class="col-sm-9">
+                                <input type="integer" name="avoir" id="avoir" class="form-control" placeholder=" 0 " readonly/>
+                            </div>
+                        </div>
+                        <div class="form-group mt-lg">
+                            <label class="col-sm-3 control-label">Montant à ajouter</label>
+                            <div class="col-sm-9">
+                                <input type="integer" name="amount" id="amount" class="form-control" placeholder="0"/>
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" class="btn btn-primary" id="btnadd"><i class="fa fa-check"></i> Valider</button>
+                                <button type="button" class="mb-xs mt-xs mr-xs btn btn-default  " data-dismiss="modal"><i class="fa fa-times"></i> Annuler</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="detailClient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
