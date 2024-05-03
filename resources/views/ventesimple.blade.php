@@ -321,7 +321,7 @@
             if (modele) {
                 // Réinitialisation du champ de sélection avant la requête
                 $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
-
+                var my_tab = [];
                 $.ajax({
                     url: '/getLivraisonsByProduit',
                     type: 'GET',
@@ -329,6 +329,7 @@
                     success: function(response) {
                         var options = '<option value="">Choisissez une livraison</option>'; // Valeur par défaut
                         response.livraisons.forEach(function(livraison) {
+                            my_tab = response.livraisons
                             options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
                         });
 
@@ -345,6 +346,25 @@
                 $('#livraison').empty().append('<option value="">Choisissez une livraison</option>');
             }
         });
+
+        function getQuantiteRestante(numero){
+            for(var i = 0; i < my_tab; i++){
+                if(my_tab[i].numero === numero){
+                    return my_tab[i].quantite_restante;
+                }
+            }
+            return null;
+        }
+
+        $('#livraison').on('change', function(){
+            var livraison = $(this).val();
+
+            if(livraison){
+                quantite = getQuantiteRestante(livraison);
+                var quantiteInput = document.getElementById("quantite");
+                quantiteInput.setAttribute("max", quantite);
+            } 
+        })
 
 </script>
 
