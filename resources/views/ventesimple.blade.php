@@ -366,6 +366,16 @@
             }
         })
 
+        $('#quantite').on('change', function() {
+    var enteredQuantity = parseInt($(this).val());
+    var maxQuantity = parseInt($(this).attr("max"));
+
+    if (enteredQuantity > maxQuantity) {
+        alert("Quantité entrée supérieure à la quantité maximale autorisée.");
+        // You can also reset the input value here if needed
+    }
+});
+
 </script>
 
 @endsection
