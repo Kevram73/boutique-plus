@@ -25,7 +25,7 @@
                         <div class="col-md-4 form-group">
                                                 <label class="col-md-4 control-label">Client</label>
                                                 <div class="col-md-9 form-group">
-                                                    <select  name="client" id="client"  class=" form-control populate">
+                                                    <select  name="client" id="client"  class=" form-control populate" required>
                                                         <optgroup label="Choisir le client">
                                                             <option value=""></option>
                                                             @foreach($client as $clt)
