@@ -170,7 +170,7 @@
     <!-- Head Table -->
     <div class="same-line">
         <div class="col" style="flex-grow: 1;">
-            <table id="head-table" style="width: 40%">
+            <table id="head-table" style="width: 100%">
                 <thead>
                     <tr>
                         <th>Numéro</th>
@@ -191,7 +191,7 @@
 
 
         <!-- Inline Elements Section -->
-        <div class="inline-elt col" style="flex-grow: 1;">">
+        <div class="inline-elt col" style="flex-grow: 1;">
             <div>Client: <span>{{ $all_vente->client->nom }}</span></div>
             <div>Localité: <span>{{ $all_vente->boutique->nom }}</span></div>
             <div>Contact: <span>{{ $all_vente->boutique->contact }}</span></div>
