@@ -102,12 +102,14 @@ class CaisseController extends Controller
 
             if (count($records) > 0) {
                 $caisses = DB::select("
-                                SELECT c.*, b.*, COALESCE(SUM(av.amount), 0) AS total_amount
-                                FROM caisses c
-                                JOIN boutiques b ON c.boutique_id = b.id
-                                LEFT JOIN avoirs av ON c.boutique_id = av.boutique_id AND DATE(av.date_ajout) = c.date
-                                GROUP BY c.date
-                            ");
+                SELECT c.*, b.*, COALESCE(SUM(av.amount), 0) AS total_amount
+                FROM caisses c
+                JOIN boutiques b ON c.boutique_id = b.id
+                LEFT JOIN avoirs av ON c.boutique_id = av.boutique_id AND DATE(av.date_ajout) = c.date
+                WHERE b.id = ?
+                GROUP BY c.date
+            ", [Auth::user()->boutique_id]);
+
                 $global=   DB::table('boutiques')
                 ->join('ventes', function ($join) {
                     $join->on('ventes.boutique_id', '=', 'boutiques.id');
@@ -133,6 +135,7 @@ class CaisseController extends Controller
                   }
 
 
+                  dd($caisses);
 
 
         return view('caisse.listeglobal',compact('global','caisse'));
