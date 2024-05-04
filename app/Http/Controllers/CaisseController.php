@@ -110,8 +110,6 @@ class CaisseController extends Controller
                     ->selectRaw('
                         caisses.id,
                         boutiques.nom AS boutique_nom,
-                        caisses.*,
-                        boutiques.nom AS boutique_nom,
                         SUM(ventes.totaux) AS totalVente,
                         SUM(ventes.totaux - ventes.montant_reduction) AS VenteNette,
                         SUM(ventes.montant_reduction) AS totalReduction,
