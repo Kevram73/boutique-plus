@@ -134,8 +134,9 @@ class CaisseController extends Controller
     ->orderBy('depenses.date_dep', 'desc')
     ->get();
 
+    $caisse = $caisse->merge($global);
 
-                
+
             } else {
                 return view('caisse.listeglobal');
                   }
@@ -144,7 +145,7 @@ class CaisseController extends Controller
         //dd($global);
 
 
-        return view('caisse.listeglobal',compact('global','caisse'));
+        return view('caisse.listeglobal',compact('caisse'));
     }
     public function versements()
 
