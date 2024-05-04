@@ -139,6 +139,8 @@ class CaisseController extends Controller
                     ->orderBy('depenses.date_dep', 'desc', 'boutiques.id', 'desc')
                     ->get();
 
+                    dd($caisse);
+
             } else {
                 return view('caisse.listeglobal');
                   }
