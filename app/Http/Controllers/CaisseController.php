@@ -112,7 +112,7 @@ class CaisseController extends Controller
                     ->where('caisses.boutique_id', Auth::user()->boutique->id)
                     ->select('caisses.libelle', 'caisses.user_id', 'caisses.boutique_id', 'boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'), 'caisses.date', 'caisses.solde', 'caisses.soldeMagasin', 'caisses.montantcollecte', 'caisses.remise', 'caisses.ventenette', 'caisses.date', 'caisses.totalDepense', 'caisses.recouvrementinte', 'caisses.venteCredit', 'caisses.recetteTotal', 'caisses.venteCredit', 'caisses.recetteTotal', 'caisses.ventenonlivre')
                     ->groupBy('caisses.id', 'caisses.date', 'boutiques.id', 'boutiques.nom')
-                    ->orderBy('the_date', 'desc')
+                    ->orderBy('caisses.date', 'desc')
                     ->get();
 
 
