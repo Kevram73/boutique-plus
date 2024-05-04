@@ -119,15 +119,17 @@ class CaisseController extends Controller
                 ->join('depenses', function ($join) {
                     $join->on('depenses.boutique_id', '=', 'boutiques.id');
                 })
+                ->join('avoirs', function ($join) {
+                    $join->on('avoirs.boutique_id', '=', 'boutiques.id');
+                })
 
                 ->selectRaw('sum(ventes.totaux) as totalVente ,sum(ventes.totaux - ventes.montant_reduction ) as VenteNette, sum(ventes.montant_reduction) as totalReduction,
-                sum(reglements.montant_donne) as totalReglement ,depenses.date_dep, sum(depenses.montant) as totalDepense , boutiques.nom as boutique')
+                sum(reglements.montant_donne) as totalReglement ,depenses.date_dep, sum(depenses.montant) as totalDepense , boutiques.nom as boutique, sum(avoirs.amount) as totalAvoirs')
 
                 ->groupBy('depenses.date_dep','boutiques.id','boutiques.nom')
                 ->orderBy('depenses.date_dep', 'desc','boutiques.id', 'desc')
                 ->get();
 
-                dd($caisse);
             } else {
                 return view('caisse.listeglobal');
                   }
