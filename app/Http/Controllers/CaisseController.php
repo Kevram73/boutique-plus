@@ -102,18 +102,16 @@ class CaisseController extends Controller
 
             if (count($records) > 0) {
                 $caisse = DB::table('boutiques')
-                ->join('caisses', function ($join) {
-                    $join->on('caisses.boutique_id', '=', 'boutiques.id');
-                })
-                ->join('avoirs', function ($join) {
-                    $join->on('avoirs.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('caisses.boutique_id',Auth::user()->boutique->id)
-
-                ->select('caisses.*','boutiques.*', 'avoirs.*')
-                ->orderBy('caisses.date','desc')
-
-                ->get();
+                    ->join('caisses', 'caisses.boutique_id', '=', 'boutiques.id')
+                    ->leftJoin('avoirs', function ($join) {
+                        $join->on('avoirs.boutique_id', '=', 'boutiques.id')
+                            ->on('avoirs.date_ajout', '=', 'caisses.date'); // condition pour la même date
+                    })
+                    ->where('caisses.boutique_id', Auth::user()->boutique->id)
+                    ->select('caisses.*', 'boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'))
+                    ->groupBy('caisses.id', 'boutiques.id', 'caisses.date') // group by pour éviter les doublons
+                    ->orderBy('caisses.date', 'desc')
+                    ->get();
                 $global=   DB::table('boutiques')
                 ->join('ventes', function ($join) {
                     $join->on('ventes.boutique_id', '=', 'boutiques.id');
