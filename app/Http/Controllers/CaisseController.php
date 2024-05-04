@@ -109,7 +109,7 @@ class CaisseController extends Controller
                     ->leftJoin('depenses', 'depenses.boutique_id', '=', 'boutiques.id')
                     ->selectRaw('
                         caisses.id,
-                        caisses.date,
+                        caisses.date AS date,
                         boutiques.nom AS boutique_nom,
                         SUM(ventes.totaux) AS totalVente,
                         SUM(ventes.totaux - ventes.montant_reduction) AS VenteNette,
