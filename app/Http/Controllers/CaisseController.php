@@ -33,7 +33,7 @@ class CaisseController extends Controller
 {
     public function liste()
     {
-        
+
         $globalbybousimple=   DB::table('caisse_boutiques')
         ->sum('solde_total');
         $montantverse=   DB::table('versements')
@@ -59,30 +59,30 @@ class CaisseController extends Controller
         ->get();
         //dd($caisse[0]->total_montantcollecte);
          $versements = Versement::select('versements.date' , DB::raw('SUM(montant) as verse'))
-                               
+
                                 ->where('versements.statut',1)
                                 ->groupBy('versements.date')
                                 ->get();
 
         $collectesvents = Caisse::select('caisses.date' , DB::raw('SUM(montantcollecte) as total_montantcollecte'))
-                               
+
                                 ->groupBy('caisses.date')
                                 ->get();
         //dd($versements);
             $boutique=DB::table('boutiques')
             ->get();
-            
-            
-            
+
+
+
             $lastVersement = Versement::latest()->first();
         $historique = new Historique();
         $historique->actions = "liste";
         $historique->cible = "Caisse Achat";
         $historique->user_id = Auth::user()->id;
-        $historique->save();   
-        
+        $historique->save();
+
         $collecteVers = CollecteVers::all();
-        
+
         $lastInDB = CollecteVers::latest()->first();
         $lastReste = number_format($lastInDB->reste, 2, ",", ".");
         $collecteTotal = 0;
@@ -105,7 +105,11 @@ class CaisseController extends Controller
                 ->join('caisses', function ($join) {
                     $join->on('caisses.boutique_id', '=', 'boutiques.id');
                 })
+                ->join('avoirs', function($join){
+                    $join->on('avoirs.boutique_id', '=', 'boutiques.id');
+                })
                 ->where('caisses.boutique_id',Auth::user()->boutique->id)
+                ->where('avoirs.boutique_id',Auth::user()->boutique->id)
                 ->select('caisses.*','boutiques.*')
                 ->orderBy('caisses.date','desc')
                 ->get();
@@ -121,7 +125,7 @@ class CaisseController extends Controller
                 })
 
                 ->selectRaw('sum(ventes.totaux) as totalVente ,sum(ventes.totaux - ventes.montant_reduction ) as VenteNette, sum(ventes.montant_reduction) as totalReduction,
-                sum(reglements.montant_donne) as totalReglement ,depenses.date_dep, sum(depenses.montant) as totalDepense , boutiques.nom as boutique')
+                sum(reglements.montant_donne) as totalReglement ,depenses.date_dep, sum(depenses.montant) as totalDepense , boutiques.nom as boutique, sum(avoirs.amount) as totalAvoirs')
 
                 ->groupBy('depenses.date_dep','boutiques.id','boutiques.nom')
                 ->orderBy('depenses.date_dep', 'desc','boutiques.id', 'desc')
@@ -138,8 +142,8 @@ class CaisseController extends Controller
     }
     public function versements()
 
-    {  
-         $date = Carbon::now()->format('Y-m-d');  
+    {
+         $date = Carbon::now()->format('Y-m-d');
          $globalbybousimple=   DB::table('caisse_boutiques')
                  ->where('created_at',$date)
                 ->sum('solde_total');
@@ -189,7 +193,7 @@ class CaisseController extends Controller
                 $file = request()->file('file');
 
                 $record->justificatif_versement = $file->store('storage/fichiers');
-                
+
                 $file->store('public/storage/fichiers/');
             }
 
@@ -354,7 +358,7 @@ class CaisseController extends Controller
         $historique->save();
         return view('versement/add_depot',compact('comptes','solde'));
     }
-    
+
     public function addMontant(Request $request) {
 
         $today = Carbon::today();
@@ -435,7 +439,7 @@ class CaisseController extends Controller
         $historique->save();
         return view('caisse.addbullingshow',compact('billings'));
     }
-    
+
     public function addMontantCollecte(Request $request) {
 
         $today = Carbon::today();
@@ -479,7 +483,7 @@ class CaisseController extends Controller
 
 
         $reglement->save();
-        
+
         $this->addMontantCollecte($request);
         DB::commit();
         //return [];
@@ -631,12 +635,12 @@ class CaisseController extends Controller
                 })
                 ->where('boutiques.id',Auth::user()->boutique->id)
                 //->where('ventes.date_vente',now())
-                
+
                 ->whereDate('ventes.date_vente', '=', $date)
 
                 ->sum('ventes.montant_reduction');
                 $venteNette = $globalbybouventeglobal;
-                  $globalbyboutiqAvoir =  DB::table('clients')                
+                  $globalbyboutiqAvoir =  DB::table('clients')
                 ->where('boutique_id',Auth::user()->boutique->id)
                 ->whereDate('updated_at', '=', $date)
                 ->where('with_avoir',1)
@@ -758,14 +762,14 @@ class CaisseController extends Controller
                 ->whereDate('ventes.date_vente', '<', $date)
 
                 ->sum('ventes.montant_reduction');
-                $globalbyboutiqAvoir =  DB::table('clients')                
+                $globalbyboutiqAvoir =  DB::table('clients')
                 ->where('boutique_id',Auth::user()->boutique->id)
-              
+
                 ->whereDate('updated_at', '>=', $date_carbon->addDay())
                 ->whereDate('updated_at', '<', $date)
                 ->where('with_avoir',1)
                 ->sum('avoir');
-              
+
                 $venteNette = $globalbybouventeglobal;
                 $recouvrementInterieur = Vente::join('reglements', 'reglements.vente_id', '=', 'ventes.id')
                         ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
