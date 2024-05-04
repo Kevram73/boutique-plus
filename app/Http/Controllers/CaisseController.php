@@ -110,7 +110,7 @@ class CaisseController extends Controller
                     })
                     ->where('caisses.boutique_id', Auth::user()->boutique->id)
                     ->where('avoirs.boutique_id', Auth::user()->boutique->id)
-                    ->select('caisses.*', 'boutiques.*')
+                    ->select('caisses.*', 'boutiques.*', 'avoirs.*')
                     ->orderBy('caisses.date', 'desc')
                     ->get();
 
