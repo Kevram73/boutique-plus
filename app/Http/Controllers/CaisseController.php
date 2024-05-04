@@ -135,11 +135,11 @@ class CaisseController extends Controller
                                 sum(depenses.montant) as totalDepense,
                                 boutiques.nom as boutique,
                                 sum(avoirs.amount) as totalAvoirs')
-                    ->groupBy('depenses.date_dep', 'boutiques.id', 'boutiques.nom')
+                    ->groupBy('depenses.date_dep', 'boutiques.id', 'boutiques.nom', )
                     ->orderBy('depenses.date_dep', 'desc', 'boutiques.id', 'desc')
                     ->get();
 
-                    dd($caisse);
+                    dd($global);
 
             } else {
                 return view('caisse.listeglobal');
