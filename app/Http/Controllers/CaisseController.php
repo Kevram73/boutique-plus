@@ -106,11 +106,8 @@ class CaisseController extends Controller
                     $join->on('caisses.boutique_id', '=', 'boutiques.id');
                 })
                 ->where('caisses.boutique_id',Auth::user()->boutique->id)
-                ->join('avoirs', function ($join) {
-                    $join->on('avoirs.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('avoirs.boutique_id',Auth::user()->boutique->id)
-                ->select('caisses.*','boutiques.*', 'avoirs.*')
+
+                ->select('caisses.*','boutiques.*')
                 ->orderBy('caisses.date','desc')
                 ->get();
                 $global=   DB::table('boutiques')
@@ -119,6 +116,9 @@ class CaisseController extends Controller
                 })
                 ->join('reglements', function ($join) {
                     $join->on('reglements.vente_id', '=', 'ventes.id');
+                })
+                ->join('avoirs', function ($join) {
+                    $join->on('avoirs.boutique_id', '=', 'boutiques.id');
                 })
                 ->join('depenses', function ($join) {
                     $join->on('depenses.boutique_id', '=', 'boutiques.id');
