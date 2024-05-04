@@ -56,30 +56,25 @@
                                             </tr>
                                             </thead>
                                             <tbody class="center hidden-phone">
-                                                @isset($caisse)
-                                                      @foreach ($caisse as $globa)
-                                                <tr>
-                                                     <td>{{ $globa->date }} </td>
-                                                <td>{{ $globa->nom }} </td>
-                                                <td>{{ $globa->totalVente }} </td>
-                                                 <td>{{ $globa->remise }} </td>
-                                                  <td>{{ $globa->ventenette }} </td>
-                                                  <td>{{ $globa->venteCredit }}  </td>
-                                                   <td>{{ $globa->recouvrementInte }} </td>
-                                                   <td>{{ $globa->totalAvoirs }} </td>
-                                                     <td>{{ $globa->ventenonlivre }}  </td>
-                                                    <td>{{ $globa->totalDepense }} </td>
-                                                      <td> {{ $globa->recetteTotal }} </td>
-
-                                                <td>{{ $globa->solde }} </td>
-                                                <td>{{ $globa->montantcollecte }} </td>
-                                                <td>{{ $globa->soldeMagasin }} </td>
-                                                </tr>
-                                                @endforeach
+                                                @isset($data)
+                                                    @foreach ($data as $item)
+                                                        <tr>
+                                                            <td>{{ $item->date }}</td>
+                                                            <td>{{ $item->boutique_nom }}</td>
+                                                            <td>{{ $item->totalVente }}</td>
+                                                            <td>{{ $item->totalReduction }}</td>
+                                                            <td>{{ $item->VenteNette }}</td>
+                                                            <td>{{ $item->totalReglement }}</td>
+                                                            <td>{{ $item->totalAvoirs }}</td>
+                                                            <td>{{ $item->totalDepense }}</td>
+                                                            <td>{{ $item->solde }}</td>
+                                                            <td>{{ $item->montantcollecte }}</td>
+                                                            <td>{{ $item->soldeMagasin }}</td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endisset
+                                            </tbody>
 
-
-                                        </tbody>
 
                                     </table></div>
                                 </div>
