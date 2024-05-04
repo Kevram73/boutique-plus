@@ -108,6 +108,8 @@ class CaisseController extends Controller
                     ->leftJoin('avoirs', 'avoirs.boutique_id', '=', 'boutiques.id')
                     ->leftJoin('depenses', 'depenses.boutique_id', '=', 'boutiques.id')
                     ->selectRaw('
+                        caisses.id,
+                        boutiques.nom AS boutique_nom,
                         caisses.*,
                         boutiques.nom AS boutique_nom,
                         SUM(ventes.totaux) AS totalVente,
