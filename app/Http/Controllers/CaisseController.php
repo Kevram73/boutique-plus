@@ -109,27 +109,33 @@ class CaisseController extends Controller
                 ->select('caisses.*','boutiques.*')
                 ->orderBy('caisses.date','desc')
                 ->get();
-                $global=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-                ->join('reglements', function ($join) {
-                    $join->on('reglements.vente_id', '=', 'ventes.id');
-                })
-                ->join('depenses', function ($join) {
-                    $join->on('depenses.boutique_id', '=', 'boutiques.id');
-                })
-                ->join('avoirs', function ($join) {
-                    $join->on('avoirs.boutique_id', '=', 'boutiques.id');
-                })
+                $global = DB::table('boutiques')
+    ->join('ventes', function ($join) {
+        $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    })
+    ->join('reglements', function ($join) {
+        $join->on('reglements.vente_id', '=', 'ventes.id');
+    })
+    ->join('depenses', function ($join) {
+        $join->on('depenses.boutique_id', '=', 'boutiques.id');
+    })
+    ->leftJoin('avoirs', function ($join) {
+        $join->on('avoirs.boutique_id', '=', 'boutiques.id');
+    })
+    ->selectRaw('sum(ventes.totaux) as totalVente,
+                 sum(ventes.totaux - ventes.montant_reduction) as VenteNette,
+                 sum(ventes.montant_reduction) as totalReduction,
+                 sum(reglements.montant_donne) as totalReglement,
+                 depenses.date_dep,
+                 sum(depenses.montant) as totalDepense,
+                 boutiques.nom as boutique,
+                 sum(avoirs.amount) as totalAvoirs')
+    ->groupBy('depenses.date_dep', 'boutiques.id', 'boutiques.nom')
+    ->orderBy('depenses.date_dep', 'desc')
+    ->get();
 
-                ->selectRaw('sum(ventes.totaux) as totalVente ,sum(ventes.totaux - ventes.montant_reduction ) as VenteNette, sum(ventes.montant_reduction) as totalReduction,
-                sum(reglements.montant_donne) as totalReglement ,depenses.date_dep, sum(depenses.montant) as totalDepense , boutiques.nom as boutique, sum(avoirs.amount) as totalAvoirs')
 
-                ->groupBy('depenses.date_dep','boutiques.id','boutiques.nom', 'avoirs.date_ajout')
-                ->orderBy('depenses.date_dep', 'desc','boutiques.id', 'desc')
-                ->get();
-
+                
             } else {
                 return view('caisse.listeglobal');
                   }
