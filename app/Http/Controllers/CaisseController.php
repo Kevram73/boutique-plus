@@ -110,9 +110,9 @@ class CaisseController extends Controller
                             ->on('avoirs.date_ajout', '=', 'caisses.date');
                     })
                     ->where('caisses.boutique_id', Auth::user()->boutique->id)
-                    ->select('caisses.*', 'boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'))
+                    ->select('caisses.*', 'boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'), 'caisses.date AS the_date')
                     ->groupBy('caisses.id', 'caisses.date', 'boutiques.id', 'boutiques.nom')
-                    ->orderBy('caisses.date', 'desc')
+                    ->orderBy('the_date', 'desc')
                     ->get();
 
 
