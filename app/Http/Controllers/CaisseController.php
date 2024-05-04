@@ -109,7 +109,7 @@ class CaisseController extends Controller
                     })
                     ->where('caisses.boutique_id', Auth::user()->boutique->id)
                     ->select('caisses.*', 'boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'))
-                    ->groupBy('caisses.id', 'boutiques.id', 'caisses.date') // group by pour éviter les doublons
+                    ->groupBy('caisses.id', 'caisses.libelle', 'boutiques.id', 'caisses.date') // inclure 'libelle' dans la clause GROUP BY
                     ->orderBy('caisses.date', 'desc')
                     ->get();
                 $global=   DB::table('boutiques')
