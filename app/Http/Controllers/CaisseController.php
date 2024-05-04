@@ -108,7 +108,8 @@ class CaisseController extends Controller
     ->join('reglements', 'reglements.vente_id', '=', 'ventes.id')
     ->join('depenses', 'depenses.boutique_id', '=', 'boutiques.id')
     ->selectRaw('
-        caisses.*,
+        caisses.id as caisse_id,
+        caisses.date as caisse_date,
         boutiques.*,
         sum(ventes.totaux) as totalVente,
         sum(ventes.totaux - ventes.montant_reduction) as VenteNette,
@@ -119,9 +120,10 @@ class CaisseController extends Controller
         sum(avoirs.amount) as totalAvoirs'
     )
     ->where('caisses.boutique_id', Auth::user()->boutique->id)
-    ->groupBy('depenses.date_dep', 'boutiques.id', 'boutiques.nom')
+    ->groupBy('depenses.date_dep', 'boutiques.id', 'boutiques.nom', 'caisses.id', 'caisses.date')
     ->orderBy('depenses.date_dep', 'desc')
     ->get();
+
 
 
    dd($caisse);
