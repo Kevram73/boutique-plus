@@ -101,7 +101,7 @@ class CaisseController extends Controller
         $records = DB::table('caisses')->where('boutique_id',Auth::user()->boutique->id)->get();
 
             if (count($records) > 0) {
-                $caisses = Caisse::with('boutique')
+                $caisses = Caisse::with('boutiques')
                             ->leftJoin('avoirs', function ($join) {
                                 $join->on('caisses.boutique_id', '=', 'avoirs.boutique_id')
                                     ->whereDate('avoirs.date_ajout', '=', DB::raw('caisses.date'));
