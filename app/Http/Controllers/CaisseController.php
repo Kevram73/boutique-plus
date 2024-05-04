@@ -102,20 +102,19 @@ class CaisseController extends Controller
 
             if (count($records) > 0) {
                 $caisse = DB::table('boutiques')
-                ->join('caisses', function ($join) {
-                    $join->on('caisses.boutique_id', '=', 'boutiques.id');
-                })
-                ->join('avoirs', function ($join) {
-                    $join->on('avoirs.boutique_id', '=', 'boutiques.id')
-                    ->on('avoirs.date_ajout', '=', 'caisses.date');
-                })
-                ->where('caisses.boutique_id',Auth::user()->boutique->id)
+                    ->join('caisses', function ($join) {
+                        $join->on('caisses.boutique_id', '=', 'boutiques.id');
+                    })
+                    ->join('avoirs', function ($join) {
+                        $join->on('avoirs.boutique_id', '=', 'boutiques.id')
+                            ->on('avoirs.date_ajout', '=', 'caisses.date');
+                    })
+                    ->where('caisses.boutique_id', Auth::user()->boutique->id)
+                    ->select('caisses.*', 'boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'))
+                    ->groupBy('caisses.id', 'caisses.date', 'boutiques.id', 'boutiques.nom')
+                    ->orderBy('caisses.date', 'desc')
+                    ->get();
 
-                ->select('caisses.*','boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'))
-                ->groupBy('caisses.date')
-                ->orderBy('caisses.date','desc')
-
-                ->get();
 
 
                 $global=   DB::table('boutiques')
