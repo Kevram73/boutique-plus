@@ -102,39 +102,29 @@ class CaisseController extends Controller
 
             if (count($records) > 0) {
                 $caisse = DB::table('boutiques')
-                ->join('caisses', function ($join) {
-                    $join->on('caisses.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('caisses.boutique_id',Auth::user()->boutique->id)
-                ->select('caisses.*','boutiques.*')
-                ->orderBy('caisses.date','desc')
-                ->get();
-                $global = DB::table('boutiques')
-    ->join('ventes', function ($join) {
-        $join->on('ventes.boutique_id', '=', 'boutiques.id');
-    })
-    ->join('reglements', function ($join) {
-        $join->on('reglements.vente_id', '=', 'ventes.id');
-    })
-    ->join('depenses', function ($join) {
-        $join->on('depenses.boutique_id', '=', 'boutiques.id');
-    })
-    ->leftJoin('avoirs', function ($join) {
-        $join->on('avoirs.boutique_id', '=', 'boutiques.id');
-    })
-    ->selectRaw('sum(ventes.totaux) as totalVente,
-                 sum(ventes.totaux - ventes.montant_reduction) as VenteNette,
-                 sum(ventes.montant_reduction) as totalReduction,
-                 sum(reglements.montant_donne) as totalReglement,
-                 depenses.date_dep,
-                 sum(depenses.montant) as totalDepense,
-                 boutiques.nom as boutique,
-                 sum(avoirs.amount) as totalAvoirs')
+    ->join('caisses', 'caisses.boutique_id', '=', 'boutiques.id')
+    ->leftJoin('avoirs', 'avoirs.boutique_id', '=', 'boutiques.id')
+    ->join('ventes', 'ventes.boutique_id', '=', 'boutiques.id')
+    ->join('reglements', 'reglements.vente_id', '=', 'ventes.id')
+    ->join('depenses', 'depenses.boutique_id', '=', 'boutiques.id')
+    ->selectRaw('
+        caisses.*,
+        boutiques.*,
+        sum(ventes.totaux) as totalVente,
+        sum(ventes.totaux - ventes.montant_reduction) as VenteNette,
+        sum(ventes.montant_reduction) as totalReduction,
+        sum(reglements.montant_donne) as totalReglement,
+        depenses.date_dep,
+        sum(depenses.montant) as totalDepense,
+        sum(avoirs.amount) as totalAvoirs'
+    )
+    ->where('caisses.boutique_id', Auth::user()->boutique->id)
     ->groupBy('depenses.date_dep', 'boutiques.id', 'boutiques.nom')
     ->orderBy('depenses.date_dep', 'desc')
     ->get();
 
-    $caisse = $caisse->merge($global);
+
+   dd($caisse);
 
 
             } else {
