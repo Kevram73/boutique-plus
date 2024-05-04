@@ -135,7 +135,6 @@ class CaisseController extends Controller
                   }
 
 
-        dd($global);
 
 
         return view('caisse.listeglobal',compact('global','caisse'));
