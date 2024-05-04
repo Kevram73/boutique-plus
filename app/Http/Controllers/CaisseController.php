@@ -120,7 +120,7 @@ class CaisseController extends Controller
                         SUM(avoirs.amount) AS totalAvoirs'
                     )
                     ->where('caisses.boutique_id', Auth::user()->boutique->id)
-                    ->groupBy('caisses.id', 'boutiques.nom')
+                    ->groupBy('caisses.id', 'boutiques.nom', 'caisses.date')
                     ->orderByDesc('date_dep')
                     ->get();
 
