@@ -66,7 +66,7 @@
                                                   <td>{{ $globa->ventenette }} </td>
                                                   <td>{{ $globa->venteCredit }}  </td>
                                                    <td>{{ $globa->recouvrementInte }} </td>
-                                                   <td>{{ $globa->totalAvoirs }} </td>
+                                                   <td>{{ $globa->total_amount }} </td>
                                                      <td>{{ $globa->ventenonlivre }}  </td>
                                                     <td>{{ $globa->totalDepense }} </td>
                                                       <td> {{ $globa->recetteTotal }} </td>

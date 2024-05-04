@@ -101,22 +101,14 @@ class CaisseController extends Controller
         $records = DB::table('caisses')->where('boutique_id',Auth::user()->boutique->id)->get();
 
             if (count($records) > 0) {
-                $caisse = DB::table('boutiques')
-                    ->join('caisses', function ($join) {
-                        $join->on('caisses.boutique_id', '=', 'boutiques.id');
-                    })
-                    ->join('avoirs', function ($join) {
-                        $join->on('avoirs.boutique_id', '=', 'boutiques.id')
-                            ->on('avoirs.date_ajout', '=', 'caisses.date');
-                    })
-                    ->where('caisses.boutique_id', Auth::user()->boutique->id)
-                    ->select('caisses.libelle', 'caisses.user_id', 'caisses.boutique_id', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS totalAvoirs'), 'caisses.date', 'caisses.solde', 'caisses.soldeMagasin', 'caisses.montantcollecte', 'caisses.remise', 'caisses.ventenette', 'caisses.date', 'caisses.totalDepense', 'caisses.recouvrementinte', 'caisses.venteCredit', 'caisses.recetteTotal', 'caisses.venteCredit', 'caisses.recetteTotal', 'caisses.ventenonlivre', 'boutiques.id', 'boutiques.nom', 'boutiques.adresse', 'boutiques.adresse', 'boutiques.telephone', 'boutiques.contact')
-                    ->groupBy('caisses.id', 'caisses.date', 'boutiques.id', 'boutiques.nom')
-                    ->orderBy('caisses.date', 'desc')
-                    ->get();
-
-
-
+                $caisses = Caisse::with('boutique')
+                            ->leftJoin('avoirs', function ($join) {
+                                $join->on('caisses.boutique_id', '=', 'avoirs.boutique_id')
+                                    ->whereDate('avoirs.date_ajout', '=', DB::raw('caisses.date'));
+                            })
+                            ->groupBy('caisses.date')
+                            ->select('caisses.*', 'boutiques.*', DB::raw('COALESCE(SUM(avoirs.amount), 0) AS total_amount'))
+                            ->get();
                 $global=   DB::table('boutiques')
                 ->join('ventes', function ($join) {
                     $join->on('ventes.boutique_id', '=', 'boutiques.id');
