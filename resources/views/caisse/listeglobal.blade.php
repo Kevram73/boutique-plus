@@ -40,6 +40,7 @@
                                                 <th class="center hidden-phone">Vente Nette</th>
                                                 <th class="center hidden-phone">Créance</th>
                                                 <th class="center hidden-phone">Recouvrement Intérieur</th>
+                                                <th class="center hidden-phone">Avoir</th>
                                                 <th class="center hidden-phone">Avance
                                                     Client</th>   <th class="center hidden-phone">DEPENSE
                                                         Totale</th>
@@ -65,6 +66,7 @@
                                                   <td>{{ $globa->ventenette }} </td>
                                                   <td>{{ $globa->venteCredit }}  </td>
                                                    <td>{{ $globa->recouvrementInte }} </td>
+                                                   <td>{{ $globa->avoir }} </td>
                                                      <td>{{ $globa->ventenonlivre }}  </td>
                                                     <td>{{ $globa->totalDepense }} </td>
                                                       <td> {{ $globa->recetteTotal }} </td>
