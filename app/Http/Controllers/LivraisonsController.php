@@ -1429,6 +1429,13 @@ public function indexNew($id)
 
     }
 
+    public function detail_livraison(Request $request, $id){
+        $livraison = Livraison::find($id);
+        $livraison_commandes = LivraisonCommande::where('livraison_id', $id)->get();
+
+        return view('detail_livraison', compact('livraison', 'livraison_commandes'));
+    }
+
     public function show_modele_livraison(Request $request, int $id){
         $modele = Modele::where('id', $id)->where('boutique_id', Auth::user()->boutique_id)->first();
         $livraisons = LivraisonCommande::where('modele_id', $id)->get();
