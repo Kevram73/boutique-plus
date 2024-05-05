@@ -26,7 +26,7 @@ class LivFictifSeeder extends Seeder
             $livraison ->numero="LIV".now()->format('Y')."-".$ed;
             $livraison ->date_livraison= now();
             $livraison ->boutique_id=$boutique->id;
-            $livraison->statut = 1;
+            $livraison->status = 1;
             $livraison->save();
 
             foreach($modeles as $modele){
@@ -48,7 +48,7 @@ class LivFictifSeeder extends Seeder
                 }
             }
         }
-        
+
 
     }
 }
