@@ -2746,17 +2746,22 @@ class VentesController extends Controller
 
 
     public function delivered_vente($id){
-        $vente = vente::find($id);
-        $vente->delivered = "delivered";
-        $vente->save();
 
-        $livraison_nums = [];
-        $preventes = Prevente::where('vente_id', $vente->id)->get();
-        foreach($preventes as $prevente){
-            $livraison = Livraison::where('numero', $prevente->livraison)->get()->first();
-            $livraisonCommande = livraisonCommande::where('livraison_id', $livraison->id)->where('modele_id', $prevente->modele_fournisseur_id)->get()->first();
-            $livraisonCommande->quantite_vendue += $prevente->quantite;
-            $livraisonCommande->save();
+        $vente = vente::find($id);
+        if($vente->type_vente != 3){
+            $vente->delivered = "delivered";
+            $vente->save();
+
+            $livraison_nums = [];
+            $preventes = Prevente::where('vente_id', $vente->id)->get();
+            foreach($preventes as $prevente){
+
+                $livraison = Livraison::where('numero', $prevente->livraison)->get()->first();
+                $livraisonCommande = livraisonCommande::where('livraison_id', $livraison->id)->where('modele_id', $prevente->modele_fournisseur_id)->get()->first();
+                $livraisonCommande->quantite_vendue += $prevente->quantite;
+                $livraisonCommande->save();
+            }
+
         }
 
 
