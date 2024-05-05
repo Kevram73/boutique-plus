@@ -50,7 +50,7 @@
                                     <td class="center hidden-phone">{{$livcom->modele_produit()->libelle}}  </td>
                                     <td class="center hidden-phone prix">{{$livcom->modele_produit()->prix}} fcfa</td>
                                     <td class="center hidden-phone">{{$livcom->quantite_livre}}</td>
-                                    <td class="center hidden-phone prix">{{$livcom->quantite_vendue}}</td>
+                                    <td class="center hidden-phone">{{$livcom->quantite_vendue}}</td>
                                     <td class="center hidden-phone prix">{{$livcom->modele_produit()->prix * $livcom->quantite_vendue}} fcfa</td>
                                 </tr>
 
