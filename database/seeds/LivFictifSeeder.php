@@ -17,6 +17,7 @@ class LivFictifSeeder extends Seeder
     {
         $modeles = Modele::all();
         foreach($modeles as $modele){
+            
             $id=DB::table('livraisons')->max('id');
             $ed=1+$id;
             $livraison = new Livraison();

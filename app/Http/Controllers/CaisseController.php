@@ -100,42 +100,37 @@ class CaisseController extends Controller
     {
         $records = DB::table('caisses')->where('boutique_id',Auth::user()->boutique->id)->get();
 
-            if (count($records) > 0) {
-                $caisses = DB::select("
-                SELECT c.*, b.*, COALESCE(SUM(av.amount), 0) AS total_amount
-                FROM caisses c
-                JOIN boutiques b ON c.boutique_id = b.id
-                LEFT JOIN avoirs av ON c.boutique_id = av.boutique_id AND DATE(av.date_ajout) = c.date
-                WHERE b.id = ?
-                GROUP BY c.date
-            ", [Auth::user()->boutique_id]);
+        if (count($records) > 0) {
+            $caisse = DB::table('boutiques')
+            ->join('caisses', function ($join) {
+                $join->on('caisses.boutique_id', '=', 'boutiques.id');
+            })
+            ->where('caisses.boutique_id',Auth::user()->boutique->id)
+            ->select('caisses.*','boutiques.*')
+            ->orderBy('caisses.date','desc')
+            ->get();
+            $global=   DB::table('boutiques')
+            ->join('ventes', function ($join) {
+                $join->on('ventes.boutique_id', '=', 'boutiques.id');
+            })
+            ->join('reglements', function ($join) {
+                $join->on('reglements.vente_id', '=', 'ventes.id');
+            })
+            ->join('depenses', function ($join) {
+                $join->on('depenses.boutique_id', '=', 'boutiques.id');
+            })
 
-                $global=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-                ->join('reglements', function ($join) {
-                    $join->on('reglements.vente_id', '=', 'ventes.id');
-                })
-                ->join('avoirs', function ($join) {
-                    $join->on('avoirs.boutique_id', '=', 'boutiques.id');
-                })
-                ->join('depenses', function ($join) {
-                    $join->on('depenses.boutique_id', '=', 'boutiques.id');
-                })
+            ->selectRaw('sum(ventes.totaux) as totalVente ,sum(ventes.totaux - ventes.montant_reduction ) as VenteNette, sum(ventes.montant_reduction) as totalReduction,
+            sum(reglements.montant_donne) as totalReglement ,depenses.date_dep, sum(depenses.montant) as totalDepense , boutiques.nom as boutique')
 
-                ->selectRaw('sum(ventes.totaux) as totalVente ,sum(ventes.totaux - ventes.montant_reduction ) as VenteNette, sum(ventes.montant_reduction) as totalReduction,
-                sum(reglements.montant_donne) as totalReglement ,depenses.date_dep, sum(depenses.montant) as totalDepense , boutiques.nom as boutique, sum(avoirs.amount) as totalAvoirs')
-
-                ->groupBy('depenses.date_dep','boutiques.id','boutiques.nom', 'avoirs.date_ajout')
-                ->orderBy('depenses.date_dep', 'desc','boutiques.id', 'desc')
-                ->get();
-            } else {
-                return view('caisse.listeglobal');
-                  }
+            ->groupBy('depenses.date_dep','boutiques.id','boutiques.nom')
+            ->orderBy('depenses.date_dep', 'desc','boutiques.id', 'desc')
+            ->get();
+        } else {
+            return view('caisse.listeglobal');
+              }
 
 
-                  dd($caisses);
 
 
         return view('caisse.listeglobal',compact('global','caisse'));
