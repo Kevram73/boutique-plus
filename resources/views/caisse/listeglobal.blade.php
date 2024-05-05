@@ -40,7 +40,6 @@
                                                 <th class="center hidden-phone">Vente Nette</th>
                                                 <th class="center hidden-phone">Créance</th>
                                                 <th class="center hidden-phone">Recouvrement Intérieur</th>
-                                                <th class="center hidden-phone">Avoir</th>
                                                 <th class="center hidden-phone">Avance
                                                     Client</th>   <th class="center hidden-phone">DEPENSE
                                                         Totale</th>
@@ -51,6 +50,8 @@
                                                             <th class="center hidden-phone">Solde Veille </th>
 
                                                             <th class="center hidden-phone">Montant collecté </th>
+                                                            <th class="center hidden-phone">SOLDE MAGASIN
+                                                            </th>
                                             </tr>
                                             </thead>
                                             <tbody class="center hidden-phone">
