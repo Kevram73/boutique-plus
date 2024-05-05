@@ -45,8 +45,7 @@
                                         <td class="center hidden-phone">{{ $livraison->qte_liv() }}</td>
                                         <td class="center hidden-phone">{{ $livraison->qte_sell() }}</td>
                                         <td class="center hidden-phone">{!! $livraison->statut() !!}</td>
-                                        <td class="center hidden-phone"><a href="{{ route('show_livraison', $livraison->id) }}" class="btn btn-primary"><i class="fa fa-eye"></i></a></td>
-                                        <td class="center hidden-phone"><a href="{{ route('detail_livraison', $livraison->id) }}" class="btn btn-success"><i class="fa fa-file"></i></a></td>
+                                        <td class="center hidden-phone"><a href="{{ route('show_livraison', $livraison->id) }}" class="btn btn-primary"><i class="fa fa-eye"></i></a> <a href="{{ route('detail_livraison', $livraison->id) }}" class="btn btn-success"><i class="fa fa-file"></i></a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
