@@ -51,8 +51,6 @@
                                                             <th class="center hidden-phone">Solde Veille </th>
 
                                                             <th class="center hidden-phone">Montant collecté </th>
-                                                            <th class="center hidden-phone">SOLDE MAGASIN
-                                                            </th>
                                             </tr>
                                             </thead>
                                             <tbody class="center hidden-phone">
