@@ -50,9 +50,10 @@
                                                        <th class="center hidden-phone">Vente Nette</th>
                                                        <th class="center hidden-phone">Créance</th>
                                                        <th class="center hidden-phone">Recouvrement Intérieur</th>
+                                                       <th class="center hidden-phone">Avoir</th>
                                                        <th class="center hidden-phone">Avance
                                                            Client</th>
-                                                      
+
                                                            <th class="center hidden-phone">DEPENSE
                                                                Totale</th>
                                                         <th class="center hidden-phone">Recette
@@ -74,10 +75,11 @@
                                                        <td>{{ $globa->ventenette }} </td>
                                                        <td>{{ $globa->venteCredit }}  </td>
                                                        <td>{{ $globa->recouvrementInte }} </td>
+                                                       <td>{{ $globa->avoir }} </td>
                                                            <td>{{ $globa->ventenonlivre }}  </td>
                                                            <td>{{ $globa->totalDepense }} </td>
                                                            <td> {{ $globa->recetteTotal }} </td>
-                                                    
+
                                                          <td>{{ $globa->solde }} </td>
                                                        <td>{{ $globa->montantcollecte }} </td>
                                                        <td>{{ $globa->soldeMagasin }} </td>
@@ -106,12 +108,13 @@
                                                         <th class="center hidden-phone">Vente Nette</th>
                                                         <th class="center hidden-phone">Créance</th>
                                                         <th class="center hidden-phone">Recouvrement Intérieur</th>
+                                                        <th class="center hidden-phone">Avoir</th>
                                                         <th class="center hidden-phone">Avance
                                                             Client</th>  <th class="center hidden-phone">DEPENSE
                                                                 Totale</th>
                                                         <th class="center hidden-phone">Recette
                                                             Totale</th>
-                                                          
+
 
                                                                     <th class="center hidden-phone">Solde Veille </th>
 
@@ -129,6 +132,7 @@
                                                         <td>{{ $globa->ventenette }} </td>
                                                         <td>{{ $globa->venteCredit }}  </td>
                                                         <td>{{ $globa->recouvrementInte }} </td>
+                                                        <td>{{ $globa->avoir }} </td>
                                                             <td>{{ $globa->ventenonlivre }}  </td>
                                                             <td>{{ $globa->totalDepense }} </td>
                                                             <td> {{ $globa->recetteTotal }} </td>
@@ -149,19 +153,19 @@
                                   <div id="versements" class="tab-pane">
                                     <div class="row">
                                                 <div class="col-md-4">
-                                                    
+
                                                     <h4 >Montant Collecté : <strong class="prix" id="sold">{{ $collecteTotal }}</strong></h4>
-                                                  
-                                                </div> 
+
+                                                </div>
                                                 <div class="col-md-4 text-center">
                                                     <h4 >Montant Versé : <strong class="prix" id="sold">{{ $versementTotal }}</strong></h4>
-                                              
-                 
+
+
                                                  </div>
                                                 <div class="col-md-4 text-center">
                                                    <h4 >Montant à Verser : <strong class="prix" id="sold">{{ $lastReste }}</strong></h4>
-                                             
-                
+
+
                                                 </div>
                                             </div>
                                      {{--                                   <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" id="btnreglement" href="/showdetailcaisse"><i class="fa fa-plus"></i>Faire une caisse</a>
@@ -314,7 +318,7 @@
                     modal.show();
                 });
     </script>
-    
+
      <script>
 
         $(document).ready(function(){

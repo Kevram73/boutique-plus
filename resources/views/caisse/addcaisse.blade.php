@@ -11,7 +11,7 @@
 
             <div class="row">
                 <section class="panel">
-                    <header class="panel-heading"> 
+                    <header class="panel-heading">
                         <div class="panel-actions">
                             <a href="#" class="fa fa-caret-down"></a>
                         </div>
@@ -24,8 +24,8 @@
 
                             <div class="tab-content">
                                 <div id="reglements" class="tab-pane active">
-                                  
-                                
+
+
                                                 <div class="modal-header " style="background-color: #0b93d5;border-top-left-radius: inherit;border-top-right-radius: inherit">
                                                     <h4 class="modal-title-user" id="myModalLabel" style="color: white"></h4>
                                                 </div>    @if (\Session::has('success'))
@@ -42,7 +42,7 @@
                                                             <label class="col-sm-3 control-label">Boutique</label>
                                                             <div class="col-sm-9">
 {{--                                                                 <input type="text" name="boutique_id" readonly id="boutique_id" value="{{ $boutiques[0]->nom }}" class="form-control"  required/>
- --}}                                    
+ --}}
                                                                     <select class="form-group">
                                                                         <optgroup>
                                                                             <option></option>
@@ -51,8 +51,8 @@
                                                                     </select>
                                                             </div>
                                                         </div>
-                                                     
-                                                      
+
+
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Ventes  </label>
                                                             <div class="col-sm-9">
@@ -62,10 +62,10 @@
                                                           <div class="form-group">
                                                             <label class="col-sm-3 control-label">Avoirs  </label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="totalAvoir" id="totalAvoir" value="{{ $globalbyboutiqAvoir }}" readonly class="form-control"  required/>
+                                                                <input type="number" name="totalAvoir" id="totalAvoir" value="{{ $totalAvoirs }}" readonly class="form-control"  required/>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Remise  </label>
                                                             <div class="col-sm-9">
@@ -78,7 +78,7 @@
                                                                 <input type="number" name="ventenette" id="ventenette" readonly class="form-control"  value="{{ $venteNette }}"  required/>
                                                             </div>
                                                         </div>
-                                    
+
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Créance  </label>
                                                             <div class="col-sm-9">
@@ -133,15 +133,15 @@
                                                             <label class="col-sm-3 control-label">Date * </label>
                                                             <div class="col-sm-9">
                                                                 <input type="text" name="date"  id="date" readonly class="form-control date" placeholder=""  value="{{ $date }}"  required/>
-                                    
+
                                                             </div>
                                                         </div>
-                                                       
+
                                                      {{--    <div class="form-group mt-lg">
                                                             <label class="col-sm-3 control-label">solde Magasin * </label>
                                                             <div class="col-sm-9">
                                                                 <input type="text" name="soldeMagasin"  id="soldeMagasin" readonly class="form-control" placeholder="" required/>
-                                    
+
                                                             </div>
                                                         </div> --}}
                                                         <div class="modal-footer">
@@ -152,15 +152,15 @@
                                                         </div>
                                                     </form>
                                                 </div>
-                                         
 
-                                    
+
+
                                 </div>
                                 </div>
                             </div>
                         </div>
 
-                       
+
 
                     </div>
             </div>
@@ -189,16 +189,16 @@
         animation : true,
     });
 }
-      
+
     </script>
     <script>
-  
+
         $(document).ready(function(){
             $('#situationTable').DataTable({
                 "order": [[ 0, "desc" ]],
                 "pageLength":10,
                 "oLanguage": {
-                    
+
                     "sProcessing":     "Traitement en cours...",
                     "sSearch":         "Rechercher&nbsp;:",
                     "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
@@ -215,7 +215,7 @@
                         "sNext":       "Suivant",
                         "sLast":       "Dernier"
                     },
-                    
+
                     "oAria": {
                         "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
                         "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
@@ -223,8 +223,8 @@
                 }
             });
         });
-    
-    
+
+
             $(document).ready(function() {
             $('#situationTable').DataTable();
             } );

@@ -11,6 +11,8 @@ use App\SoldDepot;
 use App\Versement;
 use App\User;
 
+use App\Avoir;
+
 use App\Depense;
 
 use Carbon\Carbon;
@@ -51,7 +53,7 @@ class CaisseController extends Controller
         ->join('boutiques','boutiques.id','caisses.boutique_id')
         ->select('caisses.*','boutiques.nom as boutique','users.nom as user')
         ->get();
-         $caisse = Caisse::select('date', DB::raw('SUM(solde) as solde'), DB::raw('SUM(montantcollecte) as total_montantcollecte'),
+         $caisse = Caisse::select('date', DB::raw('SUM(avoir) as avoir'), DB::raw('SUM(solde) as solde'), DB::raw('SUM(montantcollecte) as total_montantcollecte'),
          DB::raw('SUM(soldeMagasin) as soldeMagasin'),DB::raw('SUM(remise) as remise'),DB::raw('SUM(ventenette) as ventenette')
          ,DB::raw('SUM(totalVente) as totalVente'),DB::raw('SUM(totalDepense) as totalDepense'),DB::raw('SUM(recouvrementInte) as recouvrementInte')
          ,DB::raw('SUM(venteCredit) as venteCredit'),DB::raw('SUM(ventenonlivre) as ventenonlivre'),DB::raw('SUM(recetteTotal) as recetteTotal'))
@@ -788,13 +790,19 @@ class CaisseController extends Controller
                     //->where('caisses.date', '<', now())
                     ->whereDate('caisses.date', '<', $date)
                     ->select('soldeMagasin');
-        $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret;
+                $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
+                if(count($avoirs) == 0){
+                    $totalAvoirs = 0;
+                } else {
+                    $totalAvoirs = $avoirs->sum('amount');
+                }
+        $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret+$totalAvoirs;
         $soldemagasin =$recetteTotale - $totalmontant +$dernieresolde;
         //$soldeMagasin =$recetteTotale + $dernieresolde - $TOTALdepense-;
                 //dd($globalbyboucredit);
             }
             return view('caisse.addcaisse', compact('boutiques','soldemagasin','globalbyboutiqAvoir','dernieresolde','date','recetteTotale','TOTALdepense','recouvrementInterieur','venteNette',
-            'globalbybouremiseglobal','totalmontant','montant','globalbybouventeglobal','globalbybounonlivret','globalbyboucredit','globalbybousimple'));
+            'globalbybouremiseglobal','totalmontant','montant','globalbybouventeglobal','globalbybounonlivret','globalbyboucredit','globalbybousimple', 'totalAvoirs'));
     }
 
 }
