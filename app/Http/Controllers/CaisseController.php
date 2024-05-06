@@ -791,6 +791,7 @@ class CaisseController extends Controller
                     ->whereDate('caisses.date', '<', $date)
                     ->select('soldeMagasin');
                 $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
+                $totalAvoirs = 0;
                 if(count($avoirs) == 0){
                     $totalAvoirs = 0;
                 } else {
