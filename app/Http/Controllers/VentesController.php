@@ -1194,11 +1194,7 @@ class VentesController extends Controller
             $prevente->vente_id=$vente->id;
             $prevente->save();
 
-            $livraison = Livraison::where('numero', $line["livraison"])->get()->first();
-            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
-            $livraison_commande->quantite_vendue += $line['quantite'];
-            $livraison_commande->save();
-
+           
             $total+= $prevente->prixtotal;
         }
 
@@ -1379,11 +1375,6 @@ class VentesController extends Controller
             $prevente->vente_id=$vente->id;
             $prevente->save();
 
-            $livraison = Livraison::where('numero', $line["livraison"])->get()->first();
-            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
-            $livraison_commande->quantite_vendue += $line['quantite'];
-            $livraison_commande->save();
-
             $total+= $prevente->prixtotal;
         }
 
@@ -1541,12 +1532,6 @@ class VentesController extends Controller
             $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
             $prevente->vente_id=$vente->id;
             $prevente->save();
-
-            $livraison = Livraison::where('numero', $line["livraison"])->get()->first();
-            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
-            $livraison_commande->quantite_vendue += $line['quantite'];
-            $livraison_commande->save();
-
             $total+= $prevente->prixtotal;
         }
 
@@ -1674,11 +1659,6 @@ class VentesController extends Controller
             $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
             $prevente->vente_id=$vente->id;
             $prevente->save();
-
-            $livraison = Livraison::where('numero', $line["livraison"])->get()->first();
-            $livraison_commande = livraisonCommande::where('livraison_id', $livraison->id)->get()->first();
-            $livraison_commande->quantite_vendue += $line['quantite'];
-            $livraison_commande->save();
 
             $total+= $prevente->prixtotal;
         }
