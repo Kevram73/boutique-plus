@@ -549,6 +549,7 @@ class CaisseController extends Controller
     public function showdetailcaisse()
     {
         $date = Carbon::now()->format('Y-m-d');
+        $totalAvoirs = 0;
         $existe = DB::table('caisses')
                         ->where('date', '=', $date)
                         ->where ('boutique_id', '=',Auth::user()->boutique->id )
@@ -791,6 +792,7 @@ class CaisseController extends Controller
                     ->whereDate('caisses.date', '<', $date)
                     ->select('soldeMagasin');
                 $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
+                
                 if(count($avoirs) == 0){
                     $totalAvoirs = 0;
                 } else {
