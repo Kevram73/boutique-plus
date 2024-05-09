@@ -2760,6 +2760,11 @@ class VentesController extends Controller
                 $livraisonCommande = livraisonCommande::where('livraison_id', $livraison->id)->where('modele_id', $prevente->modele_fournisseur_id)->get()->first();
                 $livraisonCommande->quantite_vendue += $prevente->quantite;
                 $livraisonCommande->save();
+
+                $modele = Modele::find($prevente->modele_fournisseur_id);
+                $modele->quantite -= $prevente->quantite;
+                $modele->save();
+
             }
 
         }
