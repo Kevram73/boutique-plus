@@ -670,10 +670,19 @@ class CaisseController extends Controller
 
                     }
 
+                    $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
+
+                if(count($avoirs) == 0){
+                    $totalAvoirs = 0;
+                } else {
+                    $totalAvoirs = $avoirs->sum('amount');
+                }
 
 
-                 $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret;
+
+                 $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret+$totalAvoirs;
                  $soldemagasin =$recetteTotale - $totalmontant +$dernieresolde;
+
                 //dd($globalbyboucredit);
             } else{
         // récupérer la dernière date enregistrée dans la table
@@ -792,7 +801,7 @@ class CaisseController extends Controller
                     ->whereDate('caisses.date', '<', $date)
                     ->select('soldeMagasin');
                 $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
-                
+
                 if(count($avoirs) == 0){
                     $totalAvoirs = 0;
                 } else {
