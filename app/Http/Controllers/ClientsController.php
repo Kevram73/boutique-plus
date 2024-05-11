@@ -85,7 +85,7 @@ class ClientsController extends Controller
         $avoir->amount = $request->input('amount');
         $avoir->date_ajout = now();
         $avoir->user_id = Auth::user()->id;
-        $avoir->user_id = Auth::user()->boutique_id;
+        $avoir->boutique_id = Auth::user()->boutique_id;
         $avoir->save();
 
         $client = Client::find($request->idclient);
