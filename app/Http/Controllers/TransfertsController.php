@@ -6,6 +6,8 @@ use App\Transfert;
 use App\Categorie;
 use App\Modele;
 use App\Historique;
+use App\Livraison;
+use App\livraisonCommande;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
@@ -97,7 +99,8 @@ class TransfertsController extends Controller
     public function store(Request $request)
     {
         $id=DB::table('transferts')->max('id');
-        
+        $id_liv = DB::table('livraisons')->max('id');
+
         DB::beginTransaction();
         $transfert = new Transfert();
         $transfert->code = "TSF".now()->format('Y')."-".($id+1);
@@ -105,7 +108,17 @@ class TransfertsController extends Controller
         $transfert->magasin_transfert_id = Auth::user()->boutique->id;
         $transfert->magasin_reception_id = $request->input('idmagasin');
         $transfert->save();
-        
+
+        $ed=1+$id_liv;
+        $livraison = new Livraison();
+        $livraison->numero="LIV".now()->format('Y')."-".$ed;
+        $livraison->date_livraison = now();
+        $livraison->boutique_id = $request->input('idmagasin');
+        $livraison->transfert_id = $transfert->id;
+        $livraison->save();
+
+
+
         $formdata= explode('|', $request->input('produitTransfertData') );
         for ($i =0 ;$i<count($formdata);$i+=4) {
             $modele= DB::table('modeles')->find($formdata[$i]);
@@ -132,6 +145,15 @@ class TransfertsController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+
+            $livraisoncommande = new livraisonCommande();
+
+            $livraisoncommande->commande_modele_id=$formdata[$i];
+            $livraisoncommande->livraison_id=$livraison ->id;
+            $livraisoncommande->modele_id=null;
+            $livraisoncommande->quantite_livre =$formdata[$i+3];
+            $livraisoncommande->quantite_restante =0;
+            $livraisoncommande->save();
 
             DB::table('modeles')->where('id', $formdata[$i])->decrement('quantite', $formdata[$i+3]);
         }
@@ -172,12 +194,18 @@ class TransfertsController extends Controller
         $data = json_decode($request->data);
         try {
             $transfertId = $data[0]->transfert_id;
+            $livraison = Livraison::where('transfert_id', $transfertId)->get()->first();
             DB::beginTransaction();
-            for ($i=0; $i < count($data); $i++) { 
+            for ($i=0; $i < count($data); $i++) {
                 DB::table('transfert_lignes')
                 ->where('id',$data[$i]->id)
                 ->update([
                     'modele_reception_id' => $data[$i]->modele_reception_id
+                ]);
+                DB::table('livraison_commandes')
+                ->where('livraison_id',$livraison->id)
+                ->update([
+                    'modele_id' => $data[$i]->modele_reception_id
                 ]);
                 DB::table('modeles')
                 ->where('id', $data[$i]->modele_reception_id)
@@ -240,7 +268,7 @@ class TransfertsController extends Controller
                                 for (var i = 0; i < data.length; i++) {
                                     $("#modele'.$tl->id.'").append("<option value="+data[i].id+">"+data[i].libelle+"</option>");
                                 }
-                    
+
                             },
                             error: function (data) {
                                 console.log("erreur")

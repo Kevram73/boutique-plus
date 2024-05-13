@@ -1194,7 +1194,7 @@ class VentesController extends Controller
             $prevente->vente_id=$vente->id;
             $prevente->save();
 
-           
+
             $total+= $prevente->prixtotal;
         }
 
@@ -1213,7 +1213,7 @@ class VentesController extends Controller
             $vente->montant_ht = $montant_ht;
             $vente->montant_tva = $montant_tva;
             $vente->totaux= $montant_ht + $montant_tva;
-             if($request->input('checkavoir') == "on")
+            if($request->input('checkavoir') == "on")
             {
                  $client = Client::find($vente->client_id);
                   $vente->with_avoir = true;
