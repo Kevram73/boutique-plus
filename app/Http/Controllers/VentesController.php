@@ -1181,11 +1181,7 @@ class VentesController extends Controller
         $vente ->type_vente= 1;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        if($request->input('checkavoir', 0)){
-            $vente->with_avoir = 1;
-        } else {
-            $vente->with_avoir = 0;
-        }
+        $vente->with_avoir = $request->input('checkavoir', 0) ? 1 : 0;
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1336,11 +1332,7 @@ class VentesController extends Controller
         $vente ->type_vente= 2;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        if($request->input('checkavoir', 0)){
-            $vente->with_avoir = 1;
-        } else {
-            $vente->with_avoir = 0;
-        }
+        $vente->with_avoir = $request->input('checkavoir', 0) ? 1 : 0;
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1471,11 +1463,7 @@ class VentesController extends Controller
         $vente ->type_vente= 3;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        if($request->input('checkavoir', 0)){
-            $vente->with_avoir = 1;
-        } else {
-            $vente->with_avoir = 0;
-        }
+        $vente->with_avoir = $request->input('checkavoir', 0) ? 1 : 0;
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1591,12 +1579,7 @@ class VentesController extends Controller
         $vente ->type_vente= 4;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        if($request->input('checkavoir', 0)){
-            $vente->with_avoir = 1;
-        } else {
-            $vente->with_avoir = 0;
-        }
-
+        $vente->with_avoir = $request->input('checkavoir', 0) ? 1 : 0;
         $vente->save();
         $total = 0;
         $allReduction = 0;
