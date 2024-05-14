@@ -238,7 +238,10 @@ class VentesController extends Controller
             ->where('ventes.id','=',$id)
             ->SUM('preventes.reduction');
         $all_vente = Vente::find($id);
-        return view('reglement',compact('total_reduction','all_vente', 'vente','modele2','mod','total','clients','cre','credit'));
+
+        $client = Client::find($all_vente->client_id);
+        $avoir = $client->avoir;
+        return view('reglement',compact('total_reduction','all_vente', 'vente','modele2','mod','total','clients','cre','credit', 'avoir'));
     }
 
     public function reglementcredit($id)
@@ -876,7 +879,7 @@ class VentesController extends Controller
             $total = $total + $prixtotal;
         }
 
-        if($request->input('setTva') == "on")
+        if($request->input('setTva') == true)
         {
 
             $montant_ht = $total;
@@ -1137,7 +1140,7 @@ class VentesController extends Controller
         $devis=DevisVente::findOrFail($devis->id);
         $devis->montant_reduction = $allReduction;
 
-        if($request->input('setTva') == "on")
+        if($request->input('setTva') == true)
         {
             $montant_ht = $total;
             $montant_tva = ($total * $request->input('tva'))/100;
@@ -1179,6 +1182,7 @@ class VentesController extends Controller
         $vente ->type_vente= 1;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
+        $vente->with_avoir = true;
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1201,10 +1205,10 @@ class VentesController extends Controller
 
         //DB::commit();
 
-       $vente=vente::findOrFail($vente->id);
+        $vente=vente::findOrFail($vente->id);
         $vente->montant_reduction = $allReduction;
 
-        if($request->input('setTva') == "on")
+        if($request->input('setTva') == true)
         {
             $montant_ht = $total;
             $montant_tva = ($total * $request->input('tva'))/100;
@@ -1213,55 +1217,10 @@ class VentesController extends Controller
             $vente->montant_ht = $montant_ht;
             $vente->montant_tva = $montant_tva;
             $vente->totaux= $montant_ht + $montant_tva;
-            if($request->input('checkavoir') == "on")
-            {
-                 $client = Client::find($vente->client_id);
-                  $vente->with_avoir = true;
-                    if($client->avoir > $vente->totaux)
-                    {
 
-                    $client->avoir = $client->avoir - $vente->totaux;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
-
-                    }
-                    elseif($client->avoir < $vente->totaux)
-                    {
-
-                    $client->avoir = 0;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
-
-                    }
-                    // Sauvegarde des modifications
-                    $client->save();
-            }
         }else{
             $vente->with_tva = false;
             $vente->totaux = $total;
-             if($request->input('checkavoir') == "on")
-            {
-                 $client = Client::find($vente->client_id);
-                  $vente->with_avoir = true;
-                    if($client->avoir > $vente->totaux)
-                    {
-
-                    $client->avoir = $client->avoir - $vente->totaux;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
-
-                    }
-                    elseif($client->avoir < $vente->totaux)
-                    {
-
-                    $client->avoir = 0;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
-
-                    }
-                    // Sauvegarde des modifications
-                    $client->save();
-            }
         }
 
         $vente->update();
@@ -1360,6 +1319,7 @@ class VentesController extends Controller
         $vente ->type_vente= 2;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
+        $vente->with_avoir = true;
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1381,7 +1341,7 @@ class VentesController extends Controller
         $vente=vente::findOrFail($vente->id);
         $vente->montant_reduction = $allReduction;
 
-        if($request->input('setTva') == "on")
+        if($request->input('setTva') == true)
         {
             $montant_ht = $total;
             $montant_tva = ($total * $request->input('tva'))/100;
@@ -1394,23 +1354,6 @@ class VentesController extends Controller
              // Récupération de l'utilisateur à mettre à jour
              $client = Client::find($vente->client_id);
               $vente->with_avoir = true;
-            if($client->avoir > $vente->totaux)
-            {
-
-             $client->avoir = $client->avoir - $vente->totaux;
-             // Mise à jour des informations de l'utilisateur
-             $client->solde = $client->avoir - $vente->totaux + $client->solde;
-
-            }
-            elseif($client->avoir < $vente->totaux)
-            {
-
-             $client->avoir = 0;
-             // Mise à jour des informations de l'utilisateur
-             $client->solde =$vente->totaux - $client->avoir  + $client->solde;
-
-            }
-             // Sauvegarde des modifications
              $client->save();
 
 
@@ -1428,28 +1371,6 @@ class VentesController extends Controller
         }
 
         $vente->update();
-             if($request->input('checkavoir') == "on")
-            {
-                 $client = Client::find($vente->client_id);
-                    if($client->avoir > $vente->totaux)
-                    {
-
-                    $client->avoir = $client->avoir - $vente->totaux;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
-
-                    }
-                    elseif($client->avoir < $vente->totaux)
-                    {
-
-                    $client->avoir = 0;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
-
-                    }
-                    // Sauvegarde des modifications
-                    $client->save();
-            }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
@@ -1518,6 +1439,7 @@ class VentesController extends Controller
         $vente ->type_vente= 3;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
+        $vente->with_avoir = true;
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1538,7 +1460,7 @@ class VentesController extends Controller
         $vente=vente::findOrFail($vente->id);
         $vente->montant_reduction = $allReduction;
 
-        if($request->input('setTva') == "on")
+        if($request->input('setTva') == true)
         {
             $montant_ht = $total;
             $montant_tva = ($total * $request->input('tva'))/100;
@@ -1554,29 +1476,6 @@ class VentesController extends Controller
 
         $vente->update();
 
-            if($request->input('checkavoir') == "on")
-            {
-                 $client = Client::find($vente->client_id);
-                  $vente->with_avoir = true;
-                    if($client->avoir > $vente->totaux)
-                    {
-
-                    $client->avoir = $client->avoir - $vente->totaux;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
-
-                    }
-                    elseif($client->avoir < $vente->totaux)
-                    {
-
-                    $client->avoir = 0;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
-
-                    }
-                    // Sauvegarde des modifications
-                    $client->save();
-            }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
@@ -1645,6 +1544,7 @@ class VentesController extends Controller
         $vente ->type_vente= 4;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
+        $vente->with_avoir = true;
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1665,7 +1565,7 @@ class VentesController extends Controller
         $vente=vente::findOrFail($vente->id);
         $vente->montant_reduction = $allReduction;
 
-        if($request->input('setTva') == "on")
+        if($request->input('setTva') == true)
         {
             $montant_ht = $total;
             $montant_tva = ($total * $request->input('tva'))/100;
@@ -1680,29 +1580,7 @@ class VentesController extends Controller
         }
 
         $vente->update();
-         if($request->input('checkavoir') == "on")
-            {
-                 $client = Client::find($vente->client_id);
-                  $vente->with_avoir = true;
-                    if($client->avoir > $vente->totaux)
-                    {
 
-                    $client->avoir = $client->avoir - $vente->totaux;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde = $client->avoir - $vente->totaux + $client->solde;
-
-                    }
-                    elseif($client->avoir < $vente->totaux)
-                    {
-
-                    $client->avoir = 0;
-                    // Mise à jour des informations de l'utilisateur
-                    $client->solde =$vente->totaux - $client->avoir  + $client->solde;
-
-                    }
-                    // Sauvegarde des modifications
-                    $client->save();
-            }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');

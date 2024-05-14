@@ -16,12 +16,22 @@
                             <input type="text" name="total"  id="total" class="form-control"  value="{{$all_vente->totaux}}"  readonly="readonly" required/>
                         </div>
                     </div>
+                    @if($all_vente->totaux > $avoir)
                     <div class="col-md-4 form-group">
                         <label class="col-sm-3 control-label">Montant donné</label>
                         <div class="col-sm-9">
-                            <input type="number" name="donne"  id="donne" class="form-control" required/>
+                            <input type="number" name="donne"  id="donne" class="form-control" value="{{ $avoir }}" required/>
                         </div>
                     </div>
+                    @else
+                    <div class="col-md-4 form-group">
+                        <label class="col-sm-3 control-label">Montant donné</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="donne"  id="donne" class="form-control" value="{{ $all_vente->totaux }}" required/>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="col-md-4 form-group">
                         <label class="col-sm-3 control-label" id="te"></label>
                         <div class="col-sm-9">
@@ -35,7 +45,7 @@
                 <input type="hidden" name="typeVente" id="typeVente" value="{{$all_vente->type_vente}}"/>
                 <input type="hidden" name="urlFacture" id="urlFacture" value="{{'/facturesimple-'.$all_vente->id}}"/>
                 <spann class=" btn btn-default mb-xs mt-xs mr-xs btn btn-primary" id="valider"><i class="fa fa-check"></i> Valider et imprimer la facture <i class="fa  fa-file-pdf-o"></i></spann>
-                
+
                 <section class="panel">
                     <header class="panel-heading">
                         <div class="panel-actions">
