@@ -237,7 +237,7 @@ class VentesController extends Controller
             })
             ->where('ventes.id','=',$id)
             ->SUM('preventes.reduction');
-        $all_vente = Vente::find($id);
+        $all_vente = vente::find($id);
 
         $client = Client::find($all_vente->client_id);
         $avoir = $client->avoir;
@@ -1167,7 +1167,6 @@ class VentesController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
 
         //error_log($allcommande);
         $i=DB::table('journals')->max('id');
