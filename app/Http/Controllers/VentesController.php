@@ -1167,7 +1167,7 @@ class VentesController extends Controller
 
     public function store(Request $request)
     {
-
+        dd($request);
         //error_log($allcommande);
         $i=DB::table('journals')->max('id');
         $id=DB::table('ventes')->max('id');
