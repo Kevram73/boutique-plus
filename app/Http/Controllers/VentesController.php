@@ -1171,7 +1171,7 @@ class VentesController extends Controller
         $i=DB::table('journals')->max('id');
         $id=DB::table('ventes')->max('id');
         $ed=1+$id;
-       //DB::beginTransaction();
+       //DB::beginTransaction();ve
         $vente = new vente();
         $vente ->numero="VENT".now()->format('Y')."-".$ed;
         $vente ->date_vente= now();
@@ -1181,7 +1181,7 @@ class VentesController extends Controller
         $vente ->type_vente= 1;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        $vente->with_avoir = $request->input('checkavoir', 0) ? 1 : 0;
+        $vente->with_avoir = $request->avoir_checked != "0";
         $vente->save();
         $total = 0;
         $allReduction = 0;
