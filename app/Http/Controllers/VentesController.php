@@ -1182,10 +1182,11 @@ class VentesController extends Controller
         $vente ->type_vente= 1;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        $vente->with_avoir = true;
+        $vente->with_avoir = $request->checkavoir;
         $vente->save();
         $total = 0;
         $allReduction = 0;
+
 
         foreach($request->lines as $line){
             $prevente = new Prevente();
@@ -1223,7 +1224,20 @@ class VentesController extends Controller
             $vente->totaux = $total;
         }
 
+
         $vente->update();
+        if($request->checkavoir){
+            $client = Client::find($request->client);
+            $avoir = $client->avoir;
+            if($vente->totaux > $avoir){
+                $client->avoir = 0;
+                $client->save();
+            } else {
+                $client->avoir -= $vente->totaux;
+                $client->save();
+            }
+        }
+
 
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
