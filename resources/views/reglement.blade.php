@@ -16,6 +16,7 @@
                             <input type="text" name="total"  id="total" class="form-control"  value="{{$all_vente->totaux}}"  readonly="readonly" required/>
                         </div>
                     </div>
+                    @if($all_vente->with_avoir)
                     @if($all_vente->totaux > $avoir)
                     <div class="col-md-4 form-group">
                         <label class="col-sm-3 control-label">Montant donné</label>
@@ -32,14 +33,39 @@
                     </div>
                     @endif
 
+                    @if($all_vente->totaux > $avoir)
                     <div class="col-md-4 form-group">
                         <label class="col-sm-3 control-label" id="te"></label>
                         <div class="col-sm-9">
-                            <input type="number" name="restant"  id="restant" class="form-control"  readonly="readonly"  required/>
-                            <input type="hidden" name="reste" id="reste"/>
+                            <input type="number" name="restant" value="{{ $all_vente->totaux - $avoir }}"  id="restant" class="form-control"  readonly="readonly"  required/>
+                            <input type="hidden" name="reste" value="{{ $all_vente->totaux - $avoir }}" id="reste"/>
 
                         </div>
                     </div>
+                    @else
+                    <div class="col-md-4 form-group">
+                        <label class="col-sm-3 control-label" id="te"></label>
+                        <div class="col-sm-9">
+                            <input type="number" name="restant"  id="restant" class="form-control" value="0" readonly="readonly"  required/>
+                            <input type="hidden" name="reste" value="0" id="reste"/>
+                        </div>
+                    </div>
+                    @endif
+                    @else
+                    <div class="col-md-4 form-group">
+                        <label class="col-sm-3 control-label">Montant donné</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="donne"  id="donne" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label class="col-sm-3 control-label" id="te"></label>
+                        <div class="col-sm-9">
+                            <input type="number" name="restant"  id="restant" class="form-control" value="0" readonly="readonly"  required/>
+                            <input type="hidden" name="reste" value="0" id="reste"/>
+                        </div>
+                    </div>
+                    @endif
                 </div>
                 <a class=" btn btn-default mb-xs mt-xs mr-xs btn btn-danger"  href="{{route('ventes')}}"><i class="fa fa-close"></i> Fermer </i></a>
                 <input type="hidden" name="typeVente" id="typeVente" value="{{$all_vente->type_vente}}"/>
