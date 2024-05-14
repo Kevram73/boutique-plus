@@ -1385,6 +1385,17 @@ class VentesController extends Controller
         }
 
         $vente->update();
+        if($request->checkavoir){
+            $client = Client::find($request->client);
+            $avoir = $client->avoir;
+            if($vente->totaux > $avoir){
+                $client->avoir = 0;
+                $client->save();
+            } else {
+                $client->avoir -= $vente->totaux;
+                $client->save();
+            }
+        }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
@@ -1490,6 +1501,17 @@ class VentesController extends Controller
 
         $vente->update();
 
+        if($request->checkavoir){
+            $client = Client::find($request->client);
+            $avoir = $client->avoir;
+            if($vente->totaux > $avoir){
+                $client->avoir = 0;
+                $client->save();
+            } else {
+                $client->avoir -= $vente->totaux;
+                $client->save();
+            }
+        }
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
@@ -1594,6 +1616,17 @@ class VentesController extends Controller
         }
 
         $vente->update();
+        if($request->checkavoir){
+            $client = Client::find($request->client);
+            $avoir = $client->avoir;
+            if($vente->totaux > $avoir){
+                $client->avoir = 0;
+                $client->save();
+            } else {
+                $client->avoir -= $vente->totaux;
+                $client->save();
+            }
+        }
 
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
