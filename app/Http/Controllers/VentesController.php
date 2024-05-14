@@ -1182,7 +1182,11 @@ class VentesController extends Controller
         $vente ->type_vente= 1;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        $vente->with_avoir = $request->checkavoir;
+        if($request->checkavoir == "on"){
+            $vente->with_avoir = 1;
+        } else {
+            $vente->with_avoir = 0;
+        }
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1226,7 +1230,7 @@ class VentesController extends Controller
 
 
         $vente->update();
-        if($request->checkavoir){
+        if($vente->with_avoir){
             $client = Client::find($request->client);
             $avoir = $client->avoir;
             if($vente->totaux > $avoir){
@@ -1333,7 +1337,11 @@ class VentesController extends Controller
         $vente ->type_vente= 2;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        $vente->with_avoir = true;
+        if($request->checkavoir == "on"){
+            $vente->with_avoir = 1;
+        } else {
+            $vente->with_avoir = 0;
+        }
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1385,7 +1393,7 @@ class VentesController extends Controller
         }
 
         $vente->update();
-        if($request->checkavoir){
+        if($vente->with_avoir){
             $client = Client::find($request->client);
             $avoir = $client->avoir;
             if($vente->totaux > $avoir){
@@ -1464,7 +1472,11 @@ class VentesController extends Controller
         $vente ->type_vente= 3;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        $vente->with_avoir = true;
+        if($request->checkavoir == "on"){
+            $vente->with_avoir = 1;
+        } else {
+            $vente->with_avoir = 0;
+        }
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1501,7 +1513,7 @@ class VentesController extends Controller
 
         $vente->update();
 
-        if($request->checkavoir){
+        if($vente->with_avoir){
             $client = Client::find($request->client);
             $avoir = $client->avoir;
             if($vente->totaux > $avoir){
@@ -1580,7 +1592,12 @@ class VentesController extends Controller
         $vente ->type_vente= 4;
         $vente ->boutique_id= Auth::user()->boutique->id;
         $vente->delivered = "En attente";
-        $vente->with_avoir = true;
+        if($request->checkavoir == "on"){
+            $vente->with_avoir = 1;
+        } else {
+            $vente->with_avoir = 0;
+        }
+
         $vente->save();
         $total = 0;
         $allReduction = 0;
@@ -1616,7 +1633,7 @@ class VentesController extends Controller
         }
 
         $vente->update();
-        if($request->checkavoir){
+        if($vente->with_avoir){
             $client = Client::find($request->client);
             $avoir = $client->avoir;
             if($vente->totaux > $avoir){
