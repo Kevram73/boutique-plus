@@ -174,7 +174,7 @@
                                 </div>
                                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                     <input class="form-control d-inline mr-5" type="checkbox" name="checkavoir" id="checkavoir" onchange="updateCheckboxValue(this)">
-                                    <input type="text" id="checkboxValue" name="avoir_checked" value="0">
+                                    <input type="hidden" id="checkboxValue" name="avoir_checked" value="0">
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                     <input class="form-control d-none mr-5" type="number" name="avoir" id="avoir">
