@@ -173,7 +173,8 @@
                                     <label class="form-label d-inline mr-5" for="setTav">AVOIR </label>
                                 </div>
                                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                    <input class="form-control d-inline mr-5" type="checkbox" name="checkavoir" id="checkavoir">
+                                    <input class="form-control d-inline mr-5" type="checkbox" name="checkavoir" id="checkavoir" onchange="updateCheckboxValue(this)">
+                                    <input type="hidden" id="checkboxValue" name="avoir_checked" value="0">
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                     <input class="form-control d-none mr-5" type="number" name="avoir" id="avoir">
@@ -379,5 +380,11 @@
 });
 
 </script>
+<script>
+    function updateCheckboxValue(checkbox) {
+        var checkboxValue = document.getElementById('checkboxValue');
+        checkboxValue.value = checkbox.checked ? "1" : "0";
+    }
+    </script>
 
 @endsection

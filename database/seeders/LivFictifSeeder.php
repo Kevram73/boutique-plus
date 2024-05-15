@@ -40,13 +40,7 @@ class LivFictifSeeder extends Seeder
                     $livraisonCom->quantite_vendue = 0;
                     $livraisonCom->livraison_id = $livraison->id;
                     $livraisonCom->modele_id = $modele->id;
-
-                    $my_modele = Modele::where('libelle', $modele->libelle)->where('boutique_id', 1)->get()->first();
-                    $livraisonCom->commande_modele_id = $my_modele->id;
                     $livraisonCom->save();
-
-                    $my_modele->quantite -= $modele->quantite;
-                    $my_modele->save();
                 }
             }
         }
