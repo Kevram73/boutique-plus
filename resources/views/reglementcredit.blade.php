@@ -14,18 +14,18 @@
                                     <input type="hidden" name="id" id="id" value="{{ $all_vente->id }}">
                                     <div class="col-md-3 form-group">
                                         
-                                        <div class="col-sm-3"><input type="checkbox" name="use_avoir" id="use_avoir"></div>
-                                        <div class="col-sm-9">Utiliser l'avoir du client</div>
+                                        <div class="col-sm-2"><input type="checkbox" name="use_avoir" id="use_avoir"></div>
+                                        <div class="col-sm-10">Utiliser l'avoir du client</div>
                                         
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label class="col-sm-6 control-label">Mt total</label>
+                                        <label class="col-sm-6 control-label">Montant total</label>
                                         <div class="col-sm-6">
                                             <input type="number" name="total"  id="total" class="form-control"  value="{{ $all_vente->totaux }}"  readonly="readonly"   required/>
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label class="col-sm-6 control-label">Mt donné</label>
+                                        <label class="col-sm-6 control-label">Montant donné</label>
                                         <div class="col-sm-6">
                                             <input type="number" name="donne"  id="donne" class="form-control"  min="0" required/>
                                         </div>
