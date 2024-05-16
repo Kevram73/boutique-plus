@@ -13,6 +13,12 @@
                                     {{csrf_field()}}
                                     <input type="hidden" name="id" id="id" value="{{ $all_vente->id }}">
                                     <div class="col-md-4 form-group">
+                                        <div class="row">
+                                            <div><input type="checkbox" name="use_avoir" id="use_avoir"></div>
+                                            <div>Utiliser l'avoir du client</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 form-group">
                                         <label class="col-sm-3 control-label">Montant total</label>
                                         <div class="col-sm-9">
                                             <input type="number" name="total"  id="total" class="form-control"  value="{{ $all_vente->totaux }}"  readonly="readonly"   required/>
