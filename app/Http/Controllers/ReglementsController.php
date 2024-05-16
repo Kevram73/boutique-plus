@@ -640,7 +640,6 @@ public function reglementlistshow($id)
         }
 
         if($vente) {
-            $vente->with_avoir = $request->avoir_checked != "0";
         $total=DB::table('clients')
             ->join('reglements', function ($join) {
                 $join->on('reglements.client_id', '=', 'clients.id');
@@ -650,7 +649,7 @@ public function reglementlistshow($id)
             ->latest()
             ->first();
 
-        $vente->with_avoir = $request->avoir_checked != "0";
+        $vente->with_avoir = $request->use_avoir != "on";
         $vente->save();
         $client = Client::find($vente->client_id);
         if($vente->with_avoir){
