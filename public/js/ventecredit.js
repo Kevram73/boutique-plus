@@ -349,7 +349,7 @@ $('#valider').on('click',function (e) {
                         data: dataToSend,
 
                         success : function(data) {
-                            window.location='/reglements-'+data.id;
+                            window.location='/reglementcredit-'+data.id;
                         },
                         error : function(data){
                             let message='Erreur ';

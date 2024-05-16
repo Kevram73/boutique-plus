@@ -262,8 +262,8 @@ public function reglementlistshow($id)
             ->where(['ventes.type_vente' => 2])
             ->sum('ventes.totaux');
             //dd($totalventeClient);
-            
-            
+
+
 
 
         $historique = new Historique();
@@ -625,8 +625,8 @@ public function reglementlistshow($id)
         $etat->save();
             return $request ->input();
         }
-        
-        
+
+
     }
 
 
@@ -679,6 +679,9 @@ public function reglementlistshow($id)
         else{
             $reglement->montant_restant =0;
             $reglement->vente_id =$id;
+            $vente = vente::find($id);
+            $vente->payment_status = true;
+            $vente->save();
             $reglement->save();
 
             $client = client::find($vente->client_id);
