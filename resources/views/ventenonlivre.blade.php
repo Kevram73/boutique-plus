@@ -149,7 +149,7 @@
                         </form>
                     </div>
 
-                    <div id="avoircomform">
+                    {{-- <div id="avoircomform">
                                 <form  method="POST" class="	form-validate form-horizontal mb-lg" >
                                     {{csrf_field()}}
                                         <input type="hidden"  name="avoirvenTable" id="avoirvenTable">
@@ -165,7 +165,7 @@
                                                 </div>
                                             </div>
                                 </form>
-                        </div>
+                        </div> --}}
                     <table class="table table-bordered table-striped mb-none" id="venteTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                         <thead>
                             <tr>
