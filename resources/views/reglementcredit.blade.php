@@ -12,25 +12,25 @@
                                 <form id="form" action="" method="POST" class="	form-validate form-horizontal mb-lg" enctype="multipart/form-data">
                                     {{csrf_field()}}
                                     <input type="hidden" name="id" id="id" value="{{ $all_vente->id }}">
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-3 form-group">
                                         
-                                            <div class="col-sm-3"><input type="checkbox" name="use_avoir" id="use_avoir"></div>
-                                            <div class="col-sm-9">Utiliser l'avoir du client</div>
+                                        <div class="col-sm-3"><input type="checkbox" name="use_avoir" id="use_avoir"></div>
+                                        <div class="col-sm-9">Utiliser l'avoir du client</div>
                                         
                                     </div>
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-3 form-group">
                                         <label class="col-sm-6 control-label">Mt total</label>
                                         <div class="col-sm-6">
                                             <input type="number" name="total"  id="total" class="form-control"  value="{{ $all_vente->totaux }}"  readonly="readonly"   required/>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-3 form-group">
                                         <label class="col-sm-6 control-label">Mt donné</label>
                                         <div class="col-sm-6">
                                             <input type="number" name="donne"  id="donne" class="form-control"  min="0" required/>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-3 form-group">
                                         <label class="col-sm-6 control-label" id="te">Reste</label>
                                         <div class="col-sm-6">
                                             <input type="number" name="restant"  id="restant" class="form-control" readonly="readonly" required/>
