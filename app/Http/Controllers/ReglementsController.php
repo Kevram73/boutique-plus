@@ -633,12 +633,14 @@ public function reglementlistshow($id)
       public function store3(Request $request, $id)
     {
         $vente=DB::table('ventes')->find($id);
+
        // DD($vente);
         if($vente && $vente->type_vente == 4) {
             return $request ->input();
         }
 
         if($vente) {
+            $vente->with_avoir = $request->avoir_checked != "0";
         $total=DB::table('clients')
             ->join('reglements', function ($join) {
                 $join->on('reglements.client_id', '=', 'clients.id');
@@ -647,6 +649,9 @@ public function reglementlistshow($id)
             -> select ('reglements.montant_restant','reglements.created_at')
             ->latest()
             ->first();
+
+        $vente->with_avoir = $request->avoir_checked != "0";
+        $vente->save();
         $reglement=new Reglement();
         $reglement->montant_donne = $request->input('donne');
         $reglement->client_id = $vente->client_id;
@@ -658,9 +663,7 @@ public function reglementlistshow($id)
                 $reglement->montant_restant =$request->input('restant');
 
                 $client = client::find($vente->client_id);
-                // Mise à jour des informations de l'utilisateur
                 $client->solde = $client->solde - $request->input('donne');
-                // Sauvegarde des modifications
                 $client->save();
             }else{
                 $reglement->total =$request->input('total')+$total->montant_restant;
@@ -682,7 +685,6 @@ public function reglementlistshow($id)
             $reglement->save();
 
             $client = client::find($vente->client_id);
-            // Mise à jour des informations de l'utilisateur
             $client->solde = $client->solde - $request->input('donne');
             // Sauvegarde des modifications
             $client->save();
