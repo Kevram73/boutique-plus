@@ -19,23 +19,22 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
-                                        <label class="col-sm-3 control-label">Montant total</label>
+                                        <label class="col-sm-3 control-label">Mt total</label>
                                         <div class="col-sm-9">
                                             <input type="number" name="total"  id="total" class="form-control"  value="{{ $all_vente->totaux }}"  readonly="readonly"   required/>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
-                                        <label class="col-sm-3 control-label">Montant donné</label>
+                                        <label class="col-sm-3 control-label">Mt donné</label>
                                         <div class="col-sm-9">
                                             <input type="number" name="donne"  id="donne" class="form-control"  min="0" required/>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
-                                        <label class="col-sm-3 control-label" id="te"></label>
+                                        <label class="col-sm-3 control-label" id="te">Reste</label>
                                         <div class="col-sm-9">
-                                            <input type="number" name="restant"  id="restant" class="form-control"    readonly="readonly" required/>
+                                            <input type="number" name="restant"  id="restant" class="form-control" readonly="readonly" required/>
                                             <input type="hidden" name="reste" id="reste"/>
-
                                         </div>
                                     </div>
                                     <div class="row">
