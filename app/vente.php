@@ -24,13 +24,13 @@ class vente extends Model
     }
 
     public function payment_status(){
-        $reglements = Reglement::where('vente_id')->get();
+        $reglements = Reglement::where('vente_id', $this->id)->get();
         $sum_reglements = 0;
         foreach($reglements as $reglement)
         {
             $sum_reglements += $reglement->montant_donne;
         }
-        if($sum_reglements == $vente->totaux){
+        if($sum_reglements == $this->totaux){
             return true;
         }
         return false;
