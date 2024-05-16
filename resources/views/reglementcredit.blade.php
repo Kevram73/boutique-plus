@@ -173,26 +173,40 @@
             var totalVenteInput = document.getElementById('total');
             var amountValueInput = document.getElementById('amount_value');
             var avoirClientInput = document.getElementById('avoir_client');
+            var restantInput = document.getElementById('restant');
 
-            useAvoirCheckbox.addEventListener('change', function() {
+            useAvoirCheckbox.addEventListener('change', updateMontantDonne);
+            amountValueInput.addEventListener('input', updateMontantDonne);
+
+            function updateMontantDonne() {
+                var totalVente = parseFloat(totalVenteInput.value);
+                var amountValue = parseFloat(amountValueInput.value || 0);
                 var avoirClient = parseFloat(avoirClientInput.value);
+                var montantDonne = 0;
 
                 if (useAvoirCheckbox.checked) {
-                    var totalVente = parseFloat(totalVenteInput.value);
                     if (avoirClient > totalVente) {
-                        montantDonneInput.value = totalVente;
+                        montantDonne = totalVente;
                     } else {
-                        montantDonneInput.value = avoirClient;
+                        montantDonne = avoirClient;
                     }
                     amountValueInput.value = 0;
                     amountValueInput.setAttribute('readonly', true);
                 } else {
-                    montantDonneInput.value = 0;
-                    amountValueInput.value = '';
                     amountValueInput.removeAttribute('readonly');
+                    montantDonne = amountValue;
                 }
-            });
+
+                montantDonneInput.value = montantDonne;
+                calculateReste(totalVente, montantDonne);
+            }
+
+            function calculateReste(total, donne) {
+                var reste = total - donne;
+                restantInput.value = reste >= 0 ? reste : 0;
+            }
         });
+
 
     </script>
 
