@@ -16,7 +16,7 @@
 
                                         <div class="col-sm-2"><input type="checkbox" name="use_avoir" id="use_avoir"></div>
                                         <div class="col-sm-10">Utiliser l'avoir du client</div>
-                                        <input type="hidden" name="avoir_client" value="{{$client->avoir}}">
+                                        <input type="hidden" name="avoir_client" id="avoir_client" value="{{$client->avoir}}">
 
                                     </div>
                                     <div class="col-md-3 form-group">
