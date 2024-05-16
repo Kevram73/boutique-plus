@@ -178,12 +178,14 @@
             var montantDonneInput = document.getElementById('donne');
             var amountValueInput = document.getElementById('amount_value');
             var restantInput = document.getElementById('restant');
+            var resteInput = document.getElementById('reste');
 
             function updateMontantDonne() {
                 var amountValue = parseFloat(amountValueInput.value || 0);
                 var montantDonne = parseFloat(montantDonneInput.value || 0);
                 montantDonneInput.value = montantDonne + amountValue;
                 restantInput.value = totalVente - montantDonneInput.value;
+                resteInput.value = totalVente - montantDonneInput.value;
             }
 
             if (document.getElementById('use_avoir').checked) {
@@ -192,6 +194,7 @@
                     amountValueInput.value = 0;
                     amountValueInput.setAttribute('readonly', true);
                     restantInput.value = totalVente - montantDonneInput.value;
+                    resteInput.value = totalVente - montantDonneInput.value;
                 } else {
                     montantDonneInput.value = avoirClient;
                     amountValueInput.value = 0;
