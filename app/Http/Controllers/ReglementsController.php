@@ -652,6 +652,15 @@ public function reglementlistshow($id)
 
         $vente->with_avoir = $request->avoir_checked != "0";
         $vente->save();
+        $client = Client::find($vente->client_id);
+        if($vente->with_avoir){
+            if($vente->totaux > $client->avoir){
+                $client->avoir = 0;
+            } else {
+                $client->avoir = $client->avoir - $vente->totaux;
+            }
+            $client->save();
+        }
         $reglement=new Reglement();
         $reglement->montant_donne = $request->input('donne');
         $reglement->client_id = $vente->client_id;
