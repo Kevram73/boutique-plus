@@ -172,38 +172,41 @@
             restantInput.value = reste >= 0 ? reste : 0;
         }
 
-        document.getElementById('use_avoir').addEventListener('change', (){
-
+        document.getElementById('use_avoir').addEventListener('change', function() {
             var totalVente = parseFloat(document.getElementById('total').value);
             var avoirClient = parseFloat(document.getElementById('avoir_client').value);
+            var montantDonneInput = document.getElementById('donne');
+            var amountValueInput = document.getElementById('amount_value');
+            var restantInput = document.getElementById('restant');
 
-            if(document.getElementById('use_avoir').checked){
+            function updateMontantDonne() {
+                var amountValue = parseFloat(amountValueInput.value || 0);
+                var montantDonne = parseFloat(montantDonneInput.value || 0);
+                montantDonneInput.value = montantDonne + amountValue;
+                restantInput.value = totalVente - montantDonneInput.value;
+            }
 
-                if(avoirClient>totalVente){
-                    document.getElementById('donne').value = totalVente;
-                    document.getElementById('amount_value').value = 0;
-                    document.getElementById('amount_value').setAttribute('readonly', true);
-                    document.getElementById('restant').value = totalVente - document.getElementById('donne').value;
+            if (document.getElementById('use_avoir').checked) {
+                if (avoirClient > totalVente) {
+                    montantDonneInput.value = totalVente;
+                    amountValueInput.value = 0;
+                    amountValueInput.setAttribute('readonly', true);
+                    restantInput.value = totalVente - montantDonneInput.value;
                 } else {
-                    document.getElementById('donne').value += avoirClient;
-                    document.getElementById('amount_value').value = 0;
-                    document.getElementById('amount_value').setAttribute('readonly', false);
-                    document.getElementById('amount_value').addEventListener('change', (){
-                        document.getElementById('donne').value += document.getElementById('amount_value');
-                        document.getElementById('restant').value = totalVente - document.getElementById('donne').value;
-                    })
+                    montantDonneInput.value = avoirClient;
+                    amountValueInput.value = 0;
+                    amountValueInput.removeAttribute('readonly');
                 }
             } else {
-                document.getElementById('amount_value').value = 0;
-                document.getElementById('amount_value').setAttribute('readonly', false);
-                document.getElementById('amount_value').addEventListener('change', (){
-                    document.getElementById('donne').value += document.getElementById('amount_value');
-                    document.getElementById('restant').value = totalVente - document.getElementById('donne').value;
-                })
+                montantDonneInput.value = 0;
+                amountValueInput.value = 0;
+                amountValueInput.removeAttribute('readonly');
             }
-        })
 
-
+            // S'assurer que l'événement 'input' est bien géré pour 'amount_value'
+            amountValueInput.removeEventListener('input', updateMontantDonne);
+            amountValueInput.addEventListener('input', updateMontantDonne);
+        });
 
     </script>
 
