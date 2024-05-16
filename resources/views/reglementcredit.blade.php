@@ -13,16 +13,16 @@
                                     {{csrf_field()}}
                                     <input type="hidden" name="id" id="id" value="{{ $all_vente->id }}">
                                     <div class="col-md-3 form-group">
-                                        
+
                                         <div class="col-sm-2"><input type="checkbox" name="use_avoir" id="use_avoir"></div>
                                         <div class="col-sm-10">Utiliser l'avoir du client</div>
                                         <input type="hidden" name="avoir_client" value="{{$client->avoir}}">
-                                        
+
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label class="col-sm-6 control-label">Montant total</label>
                                         <div class="col-sm-6">
-                                            <input type="number" name="total"  id="total" class="form-control"  value="{{ $all_vente->totaux }}"  readonly="readonly"   required/>
+                                            <input type="number" name="total" id="total" class="form-control"  value="{{ $all_vente->totaux }}"  readonly="readonly"   required/>
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -181,8 +181,8 @@
             function updateMontantDonne() {
                 var totalVente = parseFloat(totalVenteInput.value);
                 var amountValue = parseFloat(amountValueInput.value || 0);
+                var montantDonne = parseFloat(montantDonneInput.value || 0);
                 var avoirClient = parseFloat(avoirClientInput.value);
-                var montantDonne = 0;
 
                 if (useAvoirCheckbox.checked) {
                     if (avoirClient > totalVente) {
