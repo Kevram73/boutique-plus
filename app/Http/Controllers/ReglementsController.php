@@ -648,9 +648,9 @@ public function reglementlistshow($id)
             -> select ('reglements.montant_restant','reglements.created_at')
             ->latest()
             ->first();
-
-        $vente->with_avoir = $request->use_avoir != "on";
-        $vente->save();
+        $my_vente = vente::find($id);
+        $my_vente->with_avoir = $request->use_avoir != "on";
+        $my_vente->save();
         $client = Client::find($vente->client_id);
         if($vente->with_avoir){
             if($vente->totaux > $client->avoir){
