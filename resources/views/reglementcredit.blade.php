@@ -34,7 +34,7 @@
                                     <div class="col-md-3 form-group">
                                         <label class="col-sm-6 control-label">Montant donné</label>
                                         <div class="col-sm-6">
-                                            <input type="number" name="donne"  id="donne" class="form-control"  min="0" readonly required/>
+                                            <input type="number" name="donne"  id="donne" class="form-control" value="0"  min="0" readonly required/>
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -167,45 +167,42 @@
         setNumeralHtml("prix", "0,0", "FCFA");
         setNumeralHtml("prix-n", "0,0");
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var useAvoirCheckbox = document.getElementById('use_avoir');
-            var montantDonneInput = document.getElementById('donne');
-            var totalVenteInput = document.getElementById('total');
-            var amountValueInput = document.getElementById('amount_value');
-            var avoirClientInput = document.getElementById('avoir_client');
-            var restantInput = document.getElementById('restant');
+        function calculateReste(total, donne) {
+            var reste = total - donne;
+            restantInput.value = reste >= 0 ? reste : 0;
+        }
 
-            useAvoirCheckbox.addEventListener('change', updateMontantDonne);
-            amountValueInput.addEventListener('input', updateMontantDonne);
+        document.getElementById('use_avoir').addEventListener('change', (){
 
-            function updateMontantDonne() {
-                var totalVente = parseFloat(totalVenteInput.value);
-                var amountValue = parseFloat(amountValueInput.value || 0);
-                var montantDonne = parseFloat(montantDonneInput.value || 0);
-                var avoirClient = parseFloat(avoirClientInput.value);
+            var totalVente = parseFloat(document.getElementById('total').value);
+            var avoirClient = parseFloat(document.getElementById('avoir_client').value);
 
-                if (useAvoirCheckbox.checked) {
-                    if (avoirClient > totalVente) {
-                        montantDonne = totalVente;
-                    } else {
-                        montantDonne = avoirClient;
-                    }
-                    amountValueInput.value = 0;
-                    amountValueInput.setAttribute('readonly', true);
+            if(document.getElementById('use_avoir').checked){
+
+                if(avoirClient>totalVente){
+                    document.getElementById('donne').value = totalVente;
+                    document.getElementById('amount_value').value = 0;
+                    document.getElementById('amount_value').setAttribute('readonly', true);
+                    document.getElementById('restant').value = totalVente - document.getElementById('donne').value;
                 } else {
-                    amountValueInput.removeAttribute('readonly');
-                    montantDonne = amountValue;
+                    document.getElementById('donne').value += avoirClient;
+                    document.getElementById('amount_value').value = 0;
+                    document.getElementById('amount_value').setAttribute('readonly', false);
+                    document.getElementById('amount_value').addEventListener('change', (){
+                        document.getElementById('donne').value += document.getElementById('amount_value');
+                        document.getElementById('restant').value = totalVente - document.getElementById('donne').value;
+                    })
                 }
-
-                montantDonneInput.value = montantDonne;
-                calculateReste(totalVente, montantDonne);
+            } else {
+                document.getElementById('amount_value').value = 0;
+                document.getElementById('amount_value').setAttribute('readonly', false);
+                document.getElementById('amount_value').addEventListener('change', (){
+                    document.getElementById('donne').value += document.getElementById('amount_value');
+                    document.getElementById('restant').value = totalVente - document.getElementById('donne').value;
+                })
             }
+        })
 
-            function calculateReste(total, donne) {
-                var reste = total - donne;
-                restantInput.value = reste >= 0 ? reste : 0;
-            }
-        });
 
 
     </script>
