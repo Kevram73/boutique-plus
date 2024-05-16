@@ -16,6 +16,7 @@
                                         
                                         <div class="col-sm-2"><input type="checkbox" name="use_avoir" id="use_avoir"></div>
                                         <div class="col-sm-10">Utiliser l'avoir du client</div>
+                                        <input type="hidden" name="avoir_client" value="{{$client->avoir}}">
                                         
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -25,9 +26,15 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group">
+                                        <label class="col-sm-6 control-label">Espèce</label>
+                                        <div class="col-sm-6">
+                                            <input type="number" name="amount_value"  id="amount_value" class="form-control"   required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 form-group">
                                         <label class="col-sm-6 control-label">Montant donné</label>
                                         <div class="col-sm-6">
-                                            <input type="number" name="donne"  id="donne" class="form-control"  min="0" required/>
+                                            <input type="number" name="donne"  id="donne" class="form-control"  min="0" readonly required/>
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -159,6 +166,34 @@
 
         setNumeralHtml("prix", "0,0", "FCFA");
         setNumeralHtml("prix-n", "0,0");
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var useAvoirCheckbox = document.getElementById('use_avoir');
+            var montantDonneInput = document.getElementById('donne');
+            var totalVenteInput = document.getElementById('total');
+            var amountValueInput = document.getElementById('amount_value');
+            var avoirClientInput = document.getElementById('avoir_client');
+
+            useAvoirCheckbox.addEventListener('change', function() {
+                var avoirClient = parseFloat(avoirClientInput.value);
+
+                if (useAvoirCheckbox.checked) {
+                    var totalVente = parseFloat(totalVenteInput.value);
+                    if (avoirClient > totalVente) {
+                        montantDonneInput.value = totalVente;
+                    } else {
+                        montantDonneInput.value = avoirClient;
+                    }
+                    amountValueInput.value = 0;
+                    amountValueInput.setAttribute('readonly', true);
+                } else {
+                    montantDonneInput.value = 0;
+                    amountValueInput.value = '';
+                    amountValueInput.removeAttribute('readonly');
+                }
+            });
+        });
+
     </script>
 
 @endsection
