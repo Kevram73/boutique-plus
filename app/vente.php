@@ -22,4 +22,17 @@ class vente extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
+
+    public function payment_status(){
+        $reglements = Reglement::where('vente_id')->get();
+        $sum_reglements = 0;
+        foreach($reglements as $reglement)
+        {
+            $sum_reglements += $reglement->montant_donne;
+        }
+        if($sum_reglements == $vente->totaux){
+            return true;
+        }
+        return false;
+    }
 }

@@ -27,7 +27,7 @@
                             <li class="list-group-item">Client :<b> <span class="text-danger" >{{$vente[0]->Nclient}}</span> </b></li>
                                 <li class="list-group-item">Montant total :<b> <span class="text-danger prix"  >{{ $all_vente->totaux }} FCFA</span></b></li>
                                 <li class="list-group-item">Statut du paiement :<b>
-                                    @if($all_vente->payment_status == 0)
+                                    @if($all_vente->payment_status() == 0)
                                     <span class="text-danger">
                                         Non payé
                                     </span>

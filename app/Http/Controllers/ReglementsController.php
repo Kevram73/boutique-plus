@@ -679,9 +679,6 @@ public function reglementlistshow($id)
         else{
             $reglement->montant_restant =0;
             $reglement->vente_id =$id;
-            $vente = vente::find($id);
-            $vente->payment_status = true;
-            $vente->save();
             $reglement->save();
 
             $client = client::find($vente->client_id);
