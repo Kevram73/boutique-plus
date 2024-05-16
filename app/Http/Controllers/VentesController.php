@@ -312,7 +312,9 @@ class VentesController extends Controller
         ->where('ventes.id','=',$id)
         ->SUM('preventes.reduction');
         $all_vente = Vente::find($id);
-        return view('reglementcredit',compact('total_reduction','all_vente', 'vente','modele2','mod','total','clients','credit','cre'));
+        $client = Client::find($all_vente->client_id);
+
+        return view('reglementcredit',compact('total_reduction','all_vente', 'vente','modele2','mod','total','clients','credit','cre', 'client'));
     }
 
     public function reglementgros($id)

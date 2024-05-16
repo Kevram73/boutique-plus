@@ -59,6 +59,7 @@
                                 <li class="list-group-item">Montant réduit :<b> <span class="text-danger " >{{$total_reduction}} FCFA</span></b></li>
                                 <li class="list-group-item">Montant donné :<b> <span class="text-danger " id="Sdonne" > </span></b></li>
                                 <li class="list-group-item">Montant Restant :<b> <span class="text-danger " id="Srestant" > </span></b></li>
+                                <li class="list-group-item">Client - avoir :<b> <span class="text-danger"> {{$client->nom}} - {{$client->avoir}} FCFA</span></b></li>
                         </ul>
                         </div>
                         <table class="table table-bordered table-striped mb-none" id="afficheTable"  >
