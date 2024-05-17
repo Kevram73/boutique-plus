@@ -53,6 +53,12 @@ class ClientsController extends Controller
         return view('client');
     }
 
+    public function client_avoir_liste($id){
+        $avoirs = Avoir::where('client_id', $id)->get();
+        $client = Client::find($id);
+        return view('client_avoir', compact('avoirs', 'client'));
+    }
+
  public function storeDEBITEUR(Request $request)
     {
         $client = new InventoryDebtor();

@@ -10,4 +10,8 @@ class Avoir extends Model
     {
         return Client::find($this->client_id);
     }
+
+    public function user(){
+        return User::find($this->user_id);
+    }
 }

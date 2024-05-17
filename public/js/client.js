@@ -212,19 +212,10 @@ alert('erreur')
 
 function avoirclt(id){
     $.ajax({
-        url : '/showclient-'+id,
+        url : '/client/avoir/'+id,
         type : "get",
         success : function(data) {
-
-            $('#Aidclient').val(data.id);
-            $('#Anom').val(data.nom);
-            $('#Abtnadd').text('Modifier');
-            $('#Abtnadd').removeClass('btn-primary');
-            $('#Abtnadd').addClass('btn-warning');
-            $('.modal-title-user').text('Ajouter un avoir');
-            $('#Aavoir').val(data.avoir);
-            $('#edit_avoir').modal('show');
-
+            console.log("cool")
         },
         error : function(data){
 alert('erreur')
