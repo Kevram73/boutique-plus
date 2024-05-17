@@ -73,7 +73,8 @@ class TransfertsController extends Controller
         $historique->cible = "Transferts";
         $historique->user_id =Auth::user()->id;
         $historique->save();
-        return view('transfert',compact('transfert', 'reception', 'categorie', 'magasins'));
+        return view('transfe
+        rt',compact('transfert', 'reception', 'categorie', 'magasins'));
 
     }
 

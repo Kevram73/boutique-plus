@@ -43,7 +43,7 @@ $('#categorie').on('change',function ( ) {
 
 $('#famille').on('change',function ( ) {
     $.ajax({
-        url: '/recuperermodeleboutique-' + $('#famille').val(),
+        url: '/recuperermodele-' + $('#famille').val(),
         type: "get",
         success: function (data) {
             $('#modele').empty();
@@ -51,7 +51,7 @@ $('#famille').on('change',function ( ) {
 
             for (var i = 0; i < data.length; i++) {
 
-                $('#modele').append('<option value="'+data[i].id+'|'+data[i].quantite+'">'+data[i].libelle+'</option>')
+                $('#modele').append('<option value="'+data[i].id+'">'+data[i].libelle+'</option>')
             }
 
         },
@@ -554,7 +554,7 @@ $('#btnupdate').on('click',function (e) {
             cancelButtonColor:'#d33',
             confirmButtonText:'Oui '
         }).then ((result)=>{
-    
+
             if (result.value){
                 let url = '/updatetransfert';
 
