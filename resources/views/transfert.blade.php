@@ -101,9 +101,12 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-lg">
-                                                                <label class="col-sm-3 control-label">Stock</label>
+                                                                <label class="col-sm-3 control-label">Livraison</label>
                                                                 <div class="col-sm-9">
-                                                                    <input type="integer" name="stock" id="stock" class="form-control" placeholder="100" readonly/>
+                                                                    <select name="livraison" id="livraison" class="form-control">
+
+                                                                    </select>
+                                                                    <input type="hidden" value="{{ Auth::user()->boutique_id }}" id="boutique" name="boutique"/>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-lg">
@@ -218,7 +221,7 @@
                                                                 <li class="list-group-item">crée le :<b> <span class="text-primary" id="r2date"></span></b> </li>
                                                                 <li class="list-group-item">Statut transfert :<b> <span class="" id="r2statut"></span></b> </li>
                                                             </ul>
-                                                            
+
                                                             <br>
 
                                                             <table class="table table-bordered table-striped mb-none" id="produitReceptionTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
@@ -325,5 +328,72 @@
     <script src="octopus/assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js"></script>
     <script src="octopus/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
     <script src="js/transfert.js"></script>
+    <script>
+        var my_tab = [];
+           $('#modele').on('change', function() {
+                var modele = $(this).val();
+                var boutique_id = $('#boutique').val();
+
+                if (modele) {
+                    // Réinitialisation du champ de sélection avant la requête
+                    $('#livraison').empty().append('<option value="">Chargement...</option>'); // Option par défaut pendant le chargement
+
+                    $.ajax({
+                        url: '/getLivraisonsByProduit',
+                        type: 'GET',
+                        data: { modele_id: modele, boutique_id: boutique_id },
+                        success: function(response) {
+                            var options = '<option value="">Choisissez une livraison</option>'; // Valeur par défaut
+                            response.livraisons.forEach(function(livraison) {
+                                my_tab = response.livraisons
+                                options += '<option value="' + livraison.numero + '">' + livraison.numero + ' *** ' + 'Qte rest: ' + livraison.quantite_restante + '</option>';
+                            });
+
+                            $('#livraison').html(options); // Remplir avec les nouvelles options
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Erreur lors du chargement des livraisons :", error);
+                            // Réinitialiser le champ de sélection en cas d'erreur
+                            $('#livraison').empty().append('<option value="">Erreur de chargement</option>');
+                        }
+                    });
+                } else {
+                    // Réinitialisation si aucun modèle n'est sélectionné
+                    $('#livraison').empty().append('<option value="">Choisissez une livraison</option>');
+                }
+            });
+
+            function getQuantiteRestante(numero){
+                for(var i = 0; i < my_tab.length; i++){
+                    if(my_tab[i].numero === numero){
+                        return my_tab[i].quantite_restante;
+                    }
+                }
+                return null;
+            }
+
+            $('#livraison').on('change', function(){
+                var livraison = $(this).val();
+
+                if(livraison){
+                    quantite = getQuantiteRestante(livraison);
+                    var quantiteInput = document.getElementById("quantite");
+                    quantiteInput.setAttribute("max", quantite);
+                }
+            })
+
+            $('#quantite').on('change', function() {
+        var enteredQuantity = parseInt($(this).val());
+        var maxQuantity = parseInt($(this).attr("max"));
+
+        if (enteredQuantity > maxQuantity) {
+            alert("Quantité entrée supérieure à la quantité maximale autorisée.");
+            $(this).val(0);
+            $('#prixQte').val(0);
+            // You can also reset the input value here if needed
+        }
+    });
+
+    </script>
 
 @endsection
