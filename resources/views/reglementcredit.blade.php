@@ -200,14 +200,14 @@
                     } else {
 
                         document.getElementById('donne').value = avoirClient;
-                        var donne = document.getElementById('donne').value;
+                        var donne = parseFloat(document.getElementById('donne').value);
                         document.getElementById('amount_value').removeAttribute('readonly');
                         var restant = totalVente - document.getElementById('donne').value - document.getElementById('amount_value').value;
                         restantInput.value = restant >= 0 ? restant : 0;
                         resteInput.value = restantInput.value;
                         document.getElementById('amount_value').addEventListener('change', function() {
                             document.getElementById('donne').value = donne;
-                            document.getElementById('donne').value += this.value;
+                            document.getElementById('donne').value += parseFloat(this.value);
                             document.getElementById('restant').value = restant - this.value;
                             document.getElementById('reste').value = restant - this.value;
                         })
