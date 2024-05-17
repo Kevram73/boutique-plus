@@ -221,8 +221,8 @@
                     restant = restantInput.value;
                     document.getElementById('amount_value').addEventListener('change', function() {
                             document.getElementById('donne').value = parseFloat(this.value);
-                            document.getElementById('restant').value = restant + this.value;
-                            document.getElementById('reste').value = restant + this.value;
+                            document.getElementById('restant').value = parseFloat(restant + this.value);
+                            document.getElementById('reste').value = parseFloat(restant + this.value);
                         })
                 }
 
