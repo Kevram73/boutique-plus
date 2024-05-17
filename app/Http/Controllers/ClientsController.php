@@ -98,7 +98,7 @@ class ClientsController extends Controller
         $client->avoir += $request->amount;
         $client->save();
 
-        return $request->input();
+        return back();
 
     }
 
