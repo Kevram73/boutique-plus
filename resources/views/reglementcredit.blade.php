@@ -189,6 +189,7 @@
                 var amountValue = parseFloat(amountValueInput.value || 0);
 
                 if (this.checked) {
+                    document.getElementById('amount_value').setAttribute('readonly', false);
                     // Ajuster le montant donné en fonction de l'avoir du client
                     if (avoirClient >= totalVente) {
                         document.getElementById('donne').value = totalVente;
