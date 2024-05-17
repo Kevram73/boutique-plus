@@ -668,7 +668,7 @@ public function reglementlistshow($id)
             return $request->input();
         }
 
-        $vente->with_avoir = $request->use_avoir != "on";
+        $vente->with_avoir = $request->use_avoir == "on";
         $vente->save();
 
         $latestReglement = $vente->client->reglements->sortByDesc('created_at')->first();
