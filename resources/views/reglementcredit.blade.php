@@ -206,8 +206,7 @@
                         restantInput.value = restant >= 0 ? restant : 0;
                         resteInput.value = restantInput.value;
                         document.getElementById('amount_value').addEventListener('change', function() {
-                            document.getElementById('donne').value = donne;
-                            document.getElementById('donne').value += parseFloat(this.value);
+                            document.getElementById('donne').value = avoirClient + parseFloat(this.value);
                             document.getElementById('restant').value = restant - this.value;
                             document.getElementById('reste').value = restant - this.value;
                         })
