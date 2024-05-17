@@ -199,7 +199,7 @@
                     } else {
                         document.getElementById('donne').value = avoirClient;
                         document.getElementById('amount_value').setAttribute('readonly', false);
-                        var restant = totalVente - document.getElementById('donne') - document.getElementById('amount_value').value;
+                        var restant = totalVente - document.getElementById('donne').value - document.getElementById('amount_value').value;
                         restantInput.value = restant >= 0 ? restant : 0;
                         resteInput.value = restantInput.value;
                     }
