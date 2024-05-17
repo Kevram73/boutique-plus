@@ -211,17 +211,7 @@ alert('erreur')
 }
 
 function avoirclt(id){
-    $.ajax({
-        url : '/client/avoir/'+id,
-        type : "get",
-        success : function(data) {
-            console.log("cool")
-        },
-        error : function(data){
-alert('erreur')
-        }
-
-    });
+    window.location='/client/avoir/'+id;
 }
 
 
