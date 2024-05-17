@@ -181,6 +181,7 @@
             var restantInput = document.getElementById('restant');
             var resteInput = document.getElementById('reste');
             document.getElementById('amount_value').addEventListener('change', function() {
+                restant = 0;
                         document.getElementById('donne').value = parseFloat(this.value);
                         document.getElementById('restant').value = parseFloat(restant + this.value);
                         document.getElementById('reste').value = parseFloat(restant + this.value);
