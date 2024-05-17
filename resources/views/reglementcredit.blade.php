@@ -180,7 +180,11 @@
             var amountValueInput = document.getElementById('amount_value');
             var restantInput = document.getElementById('restant');
             var resteInput = document.getElementById('reste');
-
+            document.getElementById('amount_value').addEventListener('change', function() {
+                        document.getElementById('donne').value = parseFloat(this.value);
+                        document.getElementById('restant').value = parseFloat(restant + this.value);
+                        document.getElementById('reste').value = parseFloat(restant + this.value);
+                    })
 
             useAvoirCheckbox.addEventListener('change', function() {
                 var totalVente = parseFloat(totalVenteInput.value);
