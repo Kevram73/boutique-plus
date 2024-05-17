@@ -14,4 +14,8 @@ class Reglement extends Model
         return $this->belongsTo('App\Boutique');
     }
 
+    public function vente() {
+        return $this->belongsTo('App\vente');
+    }
+
 }

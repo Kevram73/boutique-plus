@@ -629,76 +629,78 @@ public function reglementlistshow($id)
 
     }
 
-
-      public function store3(Request $request, $id)
+    public function store_vente(Request $request, $id)
     {
-        $vente=DB::table('ventes')->find($id);
+        $vente = vente::find($id);
 
-       // DD($vente);
-        if($vente && $vente->type_vente == 4) {
-            return $request ->input();
+        // Interrupt
+        if($vente && $vente->type_vente == 4){
+            return $request->input();
         }
 
-        if($vente) {
-        $total=DB::table('clients')
-            ->join('reglements', function ($join) {
-                $join->on('reglements.client_id', '=', 'clients.id');
-            })
-            -> where ('reglements.client_id', '=',$vente->client_id)
-            -> select ('reglements.montant_restant','reglements.created_at')
-            ->latest()
-            ->first();
+        if($vente){
+            $total = DB::table('clients')
+                ->join('reglements', function ($join) {
+                    $join->on('reglements.client_id', '=', 'clients.id');
+                })
+                ->where('reglements.client_id', '=', $vente->client_id)
+                ->select('reglements.montant_restant', 'reglements.created_at')
+                ->latest()
+                ->first();
 
-        $my_vente = vente::find($id);
-        $my_vente->with_avoir = $request->use_avoir != "on";
-        $my_vente->save();
+            $vente->with_avoir = $request->use_avoir != "on";
+            $vente->save();
 
-        $reglement=new Reglement();
-        $reglement->montant_donne = $request->input('donne');
-        $reglement->client_id = $vente->client_id;
-        $reglement->type = 1;
-        $reglement->vente_id = $vente->id;
-        if ($request->input('reste')>0){
-            if ($total==null){
-                $reglement->total =$request->input('total');
-                $reglement->montant_restant =$request->input('restant');
 
-                $client = client::find($vente->client_id);
-                $client->solde = $client->solde - $request->input('donne');
-                $client->save();
-            }else{
-                $reglement->total =$request->input('total')+$total->montant_restant;
-                $reglement->montant_restant =$request->input('total')+$total->montant_restant-$request->input('donne');
-
-                $client = client::find($vente->client_id);
-                // Mise à jour des informations de l'utilisateur
-                $client->solde = $client->solde - $request->input('donne');
-                // Sauvegarde des modifications
-                $client->save();
-            }
-            $reglement->vente_id =$id;
-            $reglement->save();
-            return $request ->input();
-        }
-        else{
-            $reglement->montant_restant =0;
-            $reglement->vente_id =$id;
-            $reglement->total = $reglement->montant_donne;
-            $reglement->save();
-
-            $client = Client::find($vente->client_id);
-            if($vente->with_avoir){
-                if($vente->totaux > $client->avoir){
-                    $client->avoir = 0;
-                } else {
-                    $client->avoir = $client->avoir - $vente->totaux;
-                }
-                $client->save();
-            }
-            return $request ->input();
         }
     }
-      }
+
+
+    public function store3(Request $request, $id)
+    {
+        $vente = vente::with('client.reglements')->find($id);
+
+        if (!$vente) {
+            abort(404, 'Vente not found.');
+        }
+
+        if ($vente->type_vente == 4) {
+            return $request->input();
+        }
+
+        $vente->with_avoir = $request->use_avoir != "on";
+        $vente->save();
+
+        $latestReglement = $vente->client->reglements->sortByDesc('created_at')->first();
+        $total = $latestReglement ? $latestReglement->montant_restant : null;
+
+        $reglement = new Reglement([
+            'montant_donne' => $request->input('donne'),
+            'client_id' => $vente->client_id,
+            'type' => 1,
+            'vente_id' => $vente->id,
+            'total' => $request->input('reste') > 0 ? ($total ? $request->input('total') + $total : $request->input('total')) : $request->input('donne'),
+            'montant_restant' => $request->input('reste') > 0 ? ($total ? $request->input('total') + $total - $request->input('donne') : $request->input('restant')) : 0
+        ]);
+
+        $reglement->save();
+
+        $this->updateClient($vente->client, $request->input('donne'), $vente);
+
+        return $request->input();
+    }
+
+    private function updateClient(Client $client, $donne, Vente $vente)
+    {
+        $client->solde -= $donne;
+
+        if ($vente->with_avoir) {
+            $client->avoir = max($vente->totaux > $client->avoir ? 0 : $client->avoir - $vente->totaux, 0);
+        }
+
+        $client->save();
+    }
+
 
     /**
      * Display the specified resource.
