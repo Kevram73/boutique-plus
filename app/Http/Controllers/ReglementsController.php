@@ -648,18 +648,11 @@ public function reglementlistshow($id)
             -> select ('reglements.montant_restant','reglements.created_at')
             ->latest()
             ->first();
+
         $my_vente = vente::find($id);
         $my_vente->with_avoir = $request->use_avoir != "on";
         $my_vente->save();
-        $client = Client::find($vente->client_id);
-        if($vente->with_avoir){
-            if($vente->totaux > $client->avoir){
-                $client->avoir = 0;
-            } else {
-                $client->avoir = $client->avoir - $vente->totaux;
-            }
-            $client->save();
-        }
+
         $reglement=new Reglement();
         $reglement->montant_donne = $request->input('donne');
         $reglement->client_id = $vente->client_id;
@@ -690,12 +683,18 @@ public function reglementlistshow($id)
         else{
             $reglement->montant_restant =0;
             $reglement->vente_id =$id;
+            $reglement->total = $reglement->montant_donne;
             $reglement->save();
 
-            $client = client::find($vente->client_id);
-            $client->solde = $client->solde - $request->input('donne');
-            // Sauvegarde des modifications
-            $client->save();
+            $client = Client::find($vente->client_id);
+            if($vente->with_avoir){
+                if($vente->totaux > $client->avoir){
+                    $client->avoir = 0;
+                } else {
+                    $client->avoir = $client->avoir - $vente->totaux;
+                }
+                $client->save();
+            }
             return $request ->input();
         }
     }
