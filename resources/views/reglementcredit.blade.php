@@ -213,10 +213,17 @@
                     }
 
                 } else {
+                    document.getElementById('amount_value').removeAttribute('readonly');
+                    document.getElementById('amount_value').value = 0;
                     document.getElementById('donne').value = 0;
                     restantInput.value = totalVente;
                     resteInput.value = totalVente;
-                    amountValueInput.setAttribute('readonly', false);
+                    restant = restantInput.value;
+                    document.getElementById('amount_value').addEventListener('change', function() {
+                            document.getElementById('donne').value = parseFloat(this.value);
+                            document.getElementById('restant').value = restant + this.value;
+                            document.getElementById('reste').value = restant + this.value;
+                        })
                 }
 
             });
