@@ -184,8 +184,14 @@
                 var amountValue = parseFloat(amountValueInput.value || 0);
                 var montantDonne = parseFloat(montantDonneInput.value || 0);
                 montantDonneInput.value = montantDonne + amountValue;
-                restantInput.value = totalVente - montantDonneInput.value;
-                resteInput.value = totalVente - montantDonneInput.value;
+
+                if (document.getElementById('use_avoir').checked) {
+                    restantInput.value = totalVente - avoirClient - amountValue;
+                    resteInput.value = restantInput.value;  // Synchronisation avec le champ 'restant'
+                } else {
+                    restantInput.value = totalVente - montantDonne;
+                    resteInput.value = restantInput.value;  // Synchronisation avec le champ 'restant'
+                }
             }
 
             if (document.getElementById('use_avoir').checked) {
@@ -193,23 +199,28 @@
                     montantDonneInput.value = totalVente;
                     amountValueInput.value = 0;
                     amountValueInput.setAttribute('readonly', true);
-                    restantInput.value = totalVente - montantDonneInput.value;
-                    resteInput.value = totalVente - montantDonneInput.value;
                 } else {
                     montantDonneInput.value = avoirClient;
                     amountValueInput.value = 0;
                     amountValueInput.removeAttribute('readonly');
                 }
+                restantInput.value = totalVente - avoirClient - parseFloat(amountValueInput.value || 0);
+                resteInput.value = restantInput.value;  // Synchronisation avec le champ 'restant'
             } else {
                 montantDonneInput.value = 0;
                 amountValueInput.value = 0;
                 amountValueInput.removeAttribute('readonly');
+                restantInput.value = totalVente;
+                resteInput.value = totalVente;  // Synchronisation avec le champ 'restant'
             }
 
-            // S'assurer que l'événement 'input' est bien géré pour 'amount_value'
+            // Ajouter ou supprimer l'écouteur 'input' en fonction de l'état de 'readonly'
             amountValueInput.removeEventListener('input', updateMontantDonne);
-            amountValueInput.addEventListener('change', updateMontantDonne);
+            if (!amountValueInput.getAttribute('readonly')) {
+                amountValueInput.addEventListener('input', updateMontantDonne);
+            }
         });
+
 
     </script>
 
