@@ -187,11 +187,7 @@
 
                 if (this.checked) {
                     // Ajuster le montant donné en fonction de l'avoir du client
-                    if (avoirClient >= totalVente) {
-                        montantDonneInput.value = totalVente;
-                    } else {
-                        montantDonneInput.value = avoirClient;
-                    }
+                    montantDonneInput.value = Math.min(avoirClient, totalVente);
                     amountValueInput.value = 0; // Réinitialiser le champ amount_value
                     amountValueInput.setAttribute('readonly', true);
                 } else {
@@ -200,23 +196,30 @@
                 }
 
                 // Mise à jour initiale des champs restant et reste
-                updateReste();
+                updateMontants();
             });
 
-            // Fonction pour mettre à jour les champs restant et reste
-            function updateReste() {
+            // Fonction pour mettre à jour les champs donne, restant et reste
+            function updateMontants() {
                 var totalVente = parseFloat(totalVenteInput.value);
-                var montantDonne = parseFloat(montantDonneInput.value);
+                var montantDonne = parseFloat(montantDonneInput.value || 0);
                 var amountValue = parseFloat(amountValueInput.value || 0);
 
-                var restant = totalVente - montantDonne - amountValue;
+                // Ajouter l'amount_value à montantDonne si use_avoir n'est pas coché
+                if (!useAvoirCheckbox.checked) {
+                    montantDonne += amountValue;
+                    montantDonneInput.value = montantDonne;
+                }
+
+                var restant = totalVente - montantDonne;
                 restantInput.value = restant >= 0 ? restant : 0;
                 resteInput.value = restantInput.value; // Synchronisation avec restant
             }
 
-            // Écouteur sur le champ amount_value pour ajuster uniquement restant et reste
-            amountValueInput.addEventListener('input', updateReste);
+            // Écouteur sur le champ amount_value pour ajuster montant donné, restant et reste
+            amountValueInput.addEventListener('input', updateMontants);
         });
+
 
 
     </script>
