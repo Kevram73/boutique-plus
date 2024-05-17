@@ -181,28 +181,35 @@
             var restantInput = document.getElementById('restant');
             var resteInput = document.getElementById('reste');
 
+
             useAvoirCheckbox.addEventListener('change', function() {
                 var totalVente = parseFloat(totalVenteInput.value);
                 var avoirClient = parseFloat(avoirClientInput.value);
+                var montantDonne = parseFloat(montantDonneInput.value);
+                var amountValue = parseFloat(amountValueInput.value || 0);
 
                 if (this.checked) {
                     // Ajuster le montant donné en fonction de l'avoir du client
                     if (avoirClient >= totalVente) {
                         montantDonneInput.value = totalVente;
+                        restantInput.value = 0;
+                        resteInput.value = 0;
                         amountValueInput.value = 0;
                         amountValueInput.setAttribute('readonly', true);
                     } else {
                         montantDonneInput.value = avoirClient;
                         montantDonneInput.value = 0;
-                        amountValueInput.removeAttribute('readonly');
+                        amountValueInput.setAttribute('readonly', false);
+                        var restant = totalVente - montantDonne - amountValue;
+                        restantInput.value = restant >= 0 ? restant : 0;
+                        resteInput.value = restantInput.value;
                     }
 
                 } else {
                     montantDonneInput.value = 0;
-                    amountValueInput.removeAttribute('readonly');
-                    var restant = totalVente - montantDonne - amountValue;
-                    restantInput.value = restant >= 0 ? restant : 0;
-                    resteInput.value = restantInput.value;
+                    restantInput.value = totalVente;
+                    resteInput.value = totalVente;
+                    amountValueInput.setAttribute('readonly', false);
                 }
 
                 // Mise à jour initiale des champs restant et reste
@@ -211,18 +218,9 @@
             });
 
             // Fonction pour mettre à jour les champs restant et reste
-            function updateReste() {
-                var totalVente = parseFloat(totalVenteInput.value);
-                var montantDonne = parseFloat(montantDonneInput.value);
-                var amountValue = parseFloat(amountValueInput.value || 0);
-
-                var restant = totalVente - montantDonne - amountValue;
-                restantInput.value = restant >= 0 ? restant : 0;
-                resteInput.value = restantInput.value; // Synchronisation avec restant
-            }
 
             // Écouteur sur le champ amount_value pour ajuster uniquement restant et reste
-            amountValueInput.addEventListener('input', updateReste);
+            //amountValueInput.addEventListener('input', updateReste);
         });
 
 
