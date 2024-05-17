@@ -40,8 +40,8 @@
                                     <div class="col-md-3 form-group">
                                         <label class="col-sm-6 control-label" id="te">Reste</label>
                                         <div class="col-sm-6">
-                                            <input type="number" name="restant"  id="restant" class="form-control" readonly="readonly" required/>
-                                            <input type="hidden" name="reste" id="reste"/>
+                                            <input type="number" name="restant"  id="restant" class="form-control" value="0" readonly="readonly" required/>
+                                            <input type="hidden" name="reste" id="reste" value="0"/>
                                         </div>
                                     </div>
                                     <div class="row">
