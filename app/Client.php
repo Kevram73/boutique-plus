@@ -17,6 +17,6 @@ class Client extends Authenticatable
     }
 
     public function reglements() {
-        return $this->hasMany('App\Reglements');
+        return $this->hasMany('App\Reglement');
     }
 }
