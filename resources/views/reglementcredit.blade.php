@@ -208,7 +208,7 @@
 
             // S'assurer que l'événement 'input' est bien géré pour 'amount_value'
             amountValueInput.removeEventListener('input', updateMontantDonne);
-            amountValueInput.addEventListener('input', updateMontantDonne);
+            amountValueInput.addEventListener('change', updateMontantDonne);
         });
 
     </script>
