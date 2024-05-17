@@ -189,14 +189,17 @@
                     // Ajuster le montant donné en fonction de l'avoir du client
                     if (avoirClient >= totalVente) {
                         montantDonneInput.value = totalVente;
+                        amountValueInput.value = 0;
+                        amountValueInput.setAttribute('readonly', true);
                     } else {
                         montantDonneInput.value = avoirClient;
+                        montantDonneInput.value = 0;
+                        amountValueInput.removeAttribute('readonly');
                     }
-                    amountValueInput.value = 0; // Réinitialiser le champ amount_value
-                    amountValueInput.setAttribute('readonly', true);
+
                 } else {
                     montantDonneInput.value = 0;
-                    amountValueInput.removeAttribute('readonly', false);
+                    amountValueInput.removeAttribute('readonly');
                 }
 
                 // Mise à jour initiale des champs restant et reste
