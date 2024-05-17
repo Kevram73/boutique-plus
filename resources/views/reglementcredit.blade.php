@@ -172,53 +172,50 @@
             restantInput.value = reste >= 0 ? reste : 0;
         }
 
-        document.getElementById('use_avoir').addEventListener('change', function() {
-            var totalVente = parseFloat(document.getElementById('total').value);
-            var avoirClient = parseFloat(document.getElementById('avoir_client').value);
+        document.addEventListener('DOMContentLoaded', function() {
+            var useAvoirCheckbox = document.getElementById('use_avoir');
+            var totalVenteInput = document.getElementById('total');
+            var avoirClientInput = document.getElementById('avoir_client');
             var montantDonneInput = document.getElementById('donne');
             var amountValueInput = document.getElementById('amount_value');
             var restantInput = document.getElementById('restant');
             var resteInput = document.getElementById('reste');
 
-            function updateMontantDonne() {
-                var amountValue = parseFloat(amountValueInput.value || 0);
-                var montantDonne = parseFloat(montantDonneInput.value || 0);
-                montantDonneInput.value = montantDonne + amountValue;
+            useAvoirCheckbox.addEventListener('change', function() {
+                var totalVente = parseFloat(totalVenteInput.value);
+                var avoirClient = parseFloat(avoirClientInput.value);
 
-                if (document.getElementById('use_avoir').checked) {
-                    restantInput.value = totalVente - avoirClient - amountValue;
-                    resteInput.value = restantInput.value;  // Synchronisation avec le champ 'restant'
-                } else {
-                    restantInput.value = totalVente - montantDonne;
-                    resteInput.value = restantInput.value;  // Synchronisation avec le champ 'restant'
-                }
-            }
-
-            if (document.getElementById('use_avoir').checked) {
-                if (avoirClient > totalVente) {
-                    montantDonneInput.value = totalVente;
-                    amountValueInput.value = 0;
+                if (this.checked) {
+                    // Ajuster le montant donné en fonction de l'avoir du client
+                    if (avoirClient >= totalVente) {
+                        montantDonneInput.value = totalVente;
+                    } else {
+                        montantDonneInput.value = avoirClient;
+                    }
+                    amountValueInput.value = 0; // Réinitialiser le champ amount_value
                     amountValueInput.setAttribute('readonly', true);
                 } else {
-                    montantDonneInput.value = avoirClient;
-                    amountValueInput.value = 0;
+                    montantDonneInput.value = 0;
                     amountValueInput.removeAttribute('readonly');
                 }
-                restantInput.value = totalVente - avoirClient - parseFloat(amountValueInput.value || 0);
-                resteInput.value = restantInput.value;  // Synchronisation avec le champ 'restant'
-            } else {
-                montantDonneInput.value = 0;
-                amountValueInput.value = 0;
-                amountValueInput.removeAttribute('readonly');
-                restantInput.value = totalVente;
-                resteInput.value = totalVente;  // Synchronisation avec le champ 'restant'
+
+                // Mise à jour initiale des champs restant et reste
+                updateReste();
+            });
+
+            // Fonction pour mettre à jour les champs restant et reste
+            function updateReste() {
+                var totalVente = parseFloat(totalVenteInput.value);
+                var montantDonne = parseFloat(montantDonneInput.value);
+                var amountValue = parseFloat(amountValueInput.value || 0);
+
+                var restant = totalVente - montantDonne - amountValue;
+                restantInput.value = restant >= 0 ? restant : 0;
+                resteInput.value = restantInput.value; // Synchronisation avec restant
             }
 
-            // Ajouter ou supprimer l'écouteur 'input' en fonction de l'état de 'readonly'
-            amountValueInput.removeEventListener('input', updateMontantDonne);
-            if (!amountValueInput.getAttribute('readonly')) {
-                amountValueInput.addEventListener('input', updateMontantDonne);
-            }
+            // Écouteur sur le champ amount_value pour ajuster uniquement restant et reste
+            amountValueInput.addEventListener('input', updateReste);
         });
 
 
