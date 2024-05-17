@@ -189,7 +189,7 @@
                 var amountValue = parseFloat(amountValueInput.value || 0);
 
                 if (this.checked) {
-                    document.getElementById('amount_value').setAttribute('readonly', false);
+                    document.getElementById('amount_value').removeAttribute('readonly');
                     // Ajuster le montant donné en fonction de l'avoir du client
                     if (avoirClient >= totalVente) {
                         document.getElementById('donne').value = totalVente;
@@ -199,7 +199,7 @@
                         document.getElementById('amount_value').setAttribute('readonly', true);
                     } else {
                         document.getElementById('donne').value = avoirClient;
-                        document.getElementById('amount_value').setAttribute('readonly', false);
+                        document.getElementById('amount_value').removeAttribute('readonly');
                         var restant = totalVente - document.getElementById('donne').value - document.getElementById('amount_value').value;
                         restantInput.value = restant >= 0 ? restant : 0;
                         resteInput.value = restantInput.value;
