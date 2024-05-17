@@ -805,7 +805,7 @@ class CaisseController extends Controller
                 if(count($avoirs) == 0){
                     $totalAvoirs = 0;
                 } else {
-                    
+
                     $totalAvoirs = $avoirs->sum('amount');
                 }
         $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret+$totalAvoirs;
