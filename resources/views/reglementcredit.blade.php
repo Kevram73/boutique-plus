@@ -200,10 +200,14 @@
                 } else {
                     montantDonneInput.value = 0;
                     amountValueInput.removeAttribute('readonly');
+                    var restant = totalVente - montantDonne - amountValue;
+                    restantInput.value = restant >= 0 ? restant : 0;
+                    resteInput.value = restantInput.value;
                 }
 
                 // Mise à jour initiale des champs restant et reste
-                updateReste();
+
+                // updateReste();
             });
 
             // Fonction pour mettre à jour les champs restant et reste
