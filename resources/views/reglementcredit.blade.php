@@ -182,44 +182,41 @@
             var resteInput = document.getElementById('reste');
 
             useAvoirCheckbox.addEventListener('change', function() {
-                toggleReadonlyState();
-                updateMontant();
-            });
-
-            amountValueInput.addEventListener('input', updateMontant);
-
-            function toggleReadonlyState() {
                 var totalVente = parseFloat(totalVenteInput.value);
                 var avoirClient = parseFloat(avoirClientInput.value);
 
-                if (useAvoirCheckbox.checked) {
-                    montantDonneInput.value = Math.min(avoirClient, totalVente);
-                    amountValueInput.value = 0;
+                if (this.checked) {
+                    // Ajuster le montant donné en fonction de l'avoir du client
+                    if (avoirClient >= totalVente) {
+                        montantDonneInput.value = totalVente;
+                    } else {
+                        montantDonneInput.value = avoirClient;
+                    }
+                    amountValueInput.value = 0; // Réinitialiser le champ amount_value
                     amountValueInput.setAttribute('readonly', true);
                 } else {
                     montantDonneInput.value = 0;
-                    amountValueInput.removeAttribute('readonly');
+                    amountValueInput.removeAttribute('readonly', false);
                 }
-            }
 
-            function updateMontant() {
+                // Mise à jour initiale des champs restant et reste
+                updateReste();
+            });
+
+            // Fonction pour mettre à jour les champs restant et reste
+            function updateReste() {
                 var totalVente = parseFloat(totalVenteInput.value);
-                var montantDonne = 0;
+                var montantDonne = parseFloat(montantDonneInput.value);
                 var amountValue = parseFloat(amountValueInput.value || 0);
 
-                if (useAvoirCheckbox.checked) {
-                    montantDonne = parseFloat(montantDonneInput.value); // Keep montant donne as is if use_avoir is checked
-                } else {
-                    montantDonne = amountValue; // Directly use amountValue if use_avoir is not checked
-                }
-
-                var restant = totalVente - montantDonne - (useAvoirCheckbox.checked ? 0 : amountValue);
+                var restant = totalVente - montantDonne - amountValue;
                 restantInput.value = restant >= 0 ? restant : 0;
                 resteInput.value = restantInput.value; // Synchronisation avec restant
             }
+
+            // Écouteur sur le champ amount_value pour ajuster uniquement restant et reste
+            amountValueInput.addEventListener('input', updateReste);
         });
-
-
 
 
     </script>
