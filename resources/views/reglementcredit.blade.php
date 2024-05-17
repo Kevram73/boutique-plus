@@ -191,30 +191,26 @@
                 if (this.checked) {
                     // Ajuster le montant donné en fonction de l'avoir du client
                     if (avoirClient >= totalVente) {
-                        montantDonneInput.value = totalVente;
-                        restantInput.value = 0;
-                        resteInput.value = 0;
-                        amountValueInput.value = 0;
-                        amountValueInput.setAttribute('readonly', true);
+                        document.getElementById('donne').value = totalVente;
+                        document.getElementById('restant').value = 0;
+                        document.getElementById('reste').value = 0;
+                        document.getElementById('amount_value').value = 0;
+                        document.getElementById('amount_value').setAttribute('readonly', true);
                     } else {
-                        montantDonneInput.value = avoirClient;
-                        montantDonneInput.value = 0;
-                        amountValueInput.setAttribute('readonly', false);
-                        var restant = totalVente - montantDonne - amountValue;
+                        document.getElementById('donne').value = avoirClient;
+                        document.getElementById('amount_value').setAttribute('readonly', false);
+                        var restant = totalVente - document.getElementById('donne') - document.getElementById('amount_value').value;
                         restantInput.value = restant >= 0 ? restant : 0;
                         resteInput.value = restantInput.value;
                     }
 
                 } else {
-                    montantDonneInput.value = 0;
+                    document.getElementById('donne').value = 0;
                     restantInput.value = totalVente;
                     resteInput.value = totalVente;
                     amountValueInput.setAttribute('readonly', false);
                 }
 
-                // Mise à jour initiale des champs restant et reste
-
-                // updateReste();
             });
 
             // Fonction pour mettre à jour les champs restant et reste
