@@ -16,7 +16,7 @@
                             <a href="#" class="fa fa-caret-down"></a>
                         </div>
 
-                        <h1 class="panel-title">{{ $boutiques[0]->nom }} - {{ $boutiques[0]->adresse }} - {{ $boutiques[0]->telephone }}</h1>
+                        <h1 class="panel-title">{{ $boutique->nom }} - {{ $boutique->adresse }} - {{ $boutique->telephone }}</h1>
                      </header>
 
                     <div class="panel-body">
