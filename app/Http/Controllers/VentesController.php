@@ -703,7 +703,7 @@ class VentesController extends Controller
                 $dompdf = new Dompdf($options);
 
                 // Chargez la vue dans Dompdf
-                $view = view('facturecredit', compact('all_vente', 'vente', 'modele2', 'mod', 'total', 'clients', 'credit', 'cre'))->render();
+                $view = view('facturegros', compact('all_vente', 'vente', 'modele2', 'mod', 'total', 'clients', 'credit', 'cre'))->render();
                 $dompdf->loadHtml($view);
 
                 // Définissez la taille du papier
