@@ -97,10 +97,80 @@ class TransfertsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request)
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //         $transfert = new Transfert([
+    //             'code' => "TSF" . now()->format('Y') . "-" . (DB::table('transferts')->max('id') + 1),
+    //             'status' => 0,
+    //             'magasin_transfert_id' => Auth::user()->boutique->id,
+    //             'magasin_reception_id' => $request->input('idmagasin'),
+    //             'livraison' => $request->input('livraison')
+    //         ]);
+    //         $transfert->save();
+
+
+
+    //         $livraison = new Livraison([
+    //             'numero' => "LIV" . now()->format('Y') . "-" . (DB::table('livraisons')->max('id') + 1),
+    //             'date_livraison' => now(),
+    //             'boutique_id' => $request->input('idmagasin'),
+    //             'transfert_id' => $transfert->id,
+    //         ]);
+    //         $livraison->save();
+
+    //         $produitTransfertData = explode('|', $request->input('produitTransfertData'));
+    //         for ($i = 0; $i < count($produitTransfertData); $i += 4) {
+    //             $modele = Modele::find($produitTransfertData[$i]);
+
+    //             $quantiteToTransfer = min($produitTransfertData[$i+3], $modele->quantite); // Ensuring we do not transfer more than available
+    //             if ($quantiteToTransfer <= 0 || !$modele) {
+    //                 throw new \Exception("Stock insuffisant ou modèle introuvable pour " . $produitTransfertData[$i+1]);
+    //             }
+
+    //             DB::table('transfert_lignes')->insert([
+    //                 'transfert_id' => $transfert->id,
+    //                 'modele_libelle' => $produitTransfertData[$i+1],
+    //                 'modele_qte' => $quantiteToTransfer,
+    //                 'modele_transfert_id' => $produitTransfertData[$i],
+    //                 'modele_reception_id' => null,
+    //                 'created_at' => now(),
+    //                 'updated_at' => now()
+    //             ]);
+
+    //             $modele->decrement('quantite', $quantiteToTransfer);
+
+    //             $livraisoncommande = new livraisonCommande([
+    //                 'commande_modele_id' => $produitTransfertData[$i],
+    //                 'livraison_id' => $livraison->id,
+    //                 'modele_id' => null,
+    //                 'quantite_livre' => $quantiteToTransfer, // Use the calculated quantity to transfer
+    //                 'quantite_restante' => 0,
+    //             ]);
+    //             $livraisoncommande->save();
+
+    //             $livraison_a_prelever = Livraison::where('numero', $produitTransfertData[$i+2])->get()->first();
+    //             $livraisons_commande = LivraisonCommande::where('livraison_id', $livraison_a_prelever->id)->where('modele_id', $produitTransfertData[$i])->get()->first();
+    //             $livraisons_commande->update([
+    //                 'quantite_livre' => $livraisons_commande->quantite_livre - $quantiteToTransfer,
+    //             ]);
+    //             $livraisons_commande->save();
+    //         }
+
+    //         DB::commit();
+    //         return $transfert;
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         return response()->json(['error' => $e->getMessage()], 400);
+    //     }
+    // }
+
     public function store(Request $request)
     {
         DB::beginTransaction();
         try {
+            // Création de l'objet Transfert avec les données nécessaires
             $transfert = new Transfert([
                 'code' => "TSF" . now()->format('Y') . "-" . (DB::table('transferts')->max('id') + 1),
                 'status' => 0,
@@ -110,52 +180,29 @@ class TransfertsController extends Controller
             ]);
             $transfert->save();
 
-
-
-            $livraison = new Livraison([
-                'numero' => "LIV" . now()->format('Y') . "-" . (DB::table('livraisons')->max('id') + 1),
-                'date_livraison' => now(),
-                'boutique_id' => $request->input('idmagasin'),
-                'transfert_id' => $transfert->id,
-            ]);
-            $livraison->save();
-
+            // Traitement des données des produits à transférer
             $produitTransfertData = explode('|', $request->input('produitTransfertData'));
             for ($i = 0; $i < count($produitTransfertData); $i += 4) {
                 $modele = Modele::find($produitTransfertData[$i]);
+                $quantiteToTransfer = min($produitTransfertData[$i+3], $modele->quantite); // Assurer de ne pas transférer plus que le stock disponible
 
-                $quantiteToTransfer = min($produitTransfertData[$i+3], $modele->quantite); // Ensuring we do not transfer more than available
                 if ($quantiteToTransfer <= 0 || !$modele) {
                     throw new \Exception("Stock insuffisant ou modèle introuvable pour " . $produitTransfertData[$i+1]);
                 }
 
+                // Insertion des lignes de transfert
                 DB::table('transfert_lignes')->insert([
                     'transfert_id' => $transfert->id,
                     'modele_libelle' => $produitTransfertData[$i+1],
                     'modele_qte' => $quantiteToTransfer,
                     'modele_transfert_id' => $produitTransfertData[$i],
-                    'modele_reception_id' => null,
+                    'modele_reception_id' => null, // Ce champ sera mis à jour dans la méthode update
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
 
+                // Décrémenter le stock du modèle transféré
                 $modele->decrement('quantite', $quantiteToTransfer);
-
-                $livraisoncommande = new livraisonCommande([
-                    'commande_modele_id' => $produitTransfertData[$i],
-                    'livraison_id' => $livraison->id,
-                    'modele_id' => null,
-                    'quantite_livre' => $quantiteToTransfer, // Use the calculated quantity to transfer
-                    'quantite_restante' => 0,
-                ]);
-                $livraisoncommande->save();
-
-                $livraison_a_prelever = Livraison::where('numero', $produitTransfertData[$i+2])->get()->first();
-                $livraisons_commande = LivraisonCommande::where('livraison_id', $livraison_a_prelever->id)->where('modele_id', $produitTransfertData[$i])->get()->first();
-                $livraisons_commande->update([
-                    'quantite_livre' => $livraisons_commande->quantite_livre - $quantiteToTransfer,
-                ]);
-                $livraisons_commande->save();
             }
 
             DB::commit();
@@ -165,6 +212,9 @@ class TransfertsController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+
+
+
 
     public function get_modele_stock($id){
         $modele = Modele::find($id);
@@ -201,6 +251,41 @@ class TransfertsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // public function update(Request $request)
+    // {
+    //     $data = json_decode($request->data);
+    //     if (empty($data)) {
+    //         return response()->json(['error' => 'No data provided'], 400);
+    //     }
+
+    //     try {
+    //         $transfertId = $data[0]->transfert_id;
+    //         $livraison = Livraison::where('transfert_id', $transfertId)->firstOrFail();
+    //         DB::beginTransaction();
+
+    //         foreach ($data as $item) {
+    //             TransfertLigne::where('id', $item->id)
+    //                 ->update(['modele_reception_id' => $item->modele_reception_id]);
+
+    //             livraisonCommande::where('livraison_id', $livraison->id)
+    //                 ->update(['modele_id' => $item->modele_reception_id]);
+
+    //             Modele::where('id', $item->modele_reception_id)
+    //                 ->increment('quantite', $item->modele_qte);
+    //         }
+
+    //         Transfert::where('id', $transfertId)
+    //                 ->update(['status' => 1]);
+
+    //         DB::commit();
+    //         return response()->json($data);
+
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         return response()->json(['error' => 'An error occurred', 'message' => $e->getMessage()], 500);
+    //     }
+    // }
+
     public function update(Request $request)
     {
         $data = json_decode($request->data);
@@ -210,22 +295,40 @@ class TransfertsController extends Controller
 
         try {
             $transfertId = $data[0]->transfert_id;
-            $livraison = Livraison::where('transfert_id', $transfertId)->firstOrFail();
+            $transfert = Transfert::findOrFail($transfertId);
             DB::beginTransaction();
 
+            // Créer la Livraison si elle n'existe pas déjà pour ce transfert
+            $livraison = Livraison::firstOrCreate([
+                'transfert_id' => $transfertId
+            ], [
+                'numero' => "LIV" . now()->format('Y') . "-" . (DB::table('livraisons')->max('id') + 1),
+                'date_livraison' => now(),
+                'boutique_id' => $transfert->magasin_reception_id,
+            ]);
+
             foreach ($data as $item) {
-                TransfertLigne::where('id', $item->id)
-                    ->update(['modele_reception_id' => $item->modele_reception_id]);
+                // Mettre à jour la ligne de transfert
+                $transfertLigne = TransfertLigne::findOrFail($item->id);
+                $transfertLigne->update(['modele_reception_id' => $item->modele_reception_id]);
 
-                livraisonCommande::where('livraison_id', $livraison->id)
-                    ->update(['modele_id' => $item->modele_reception_id]);
+                // Créer ou mettre à jour la commande de livraison associée
+                LivraisonCommande::updateOrCreate([
+                    'livraison_id' => $livraison->id,
+                    'commande_modele_id' => $transfertLigne->modele_transfert_id,
+                ], [
+                    'modele_id' => $item->modele_reception_id,
+                    'quantite_livre' => $item->modele_qte,
+                    'quantite_restante' => 0, // Mettre à jour selon la logique nécessaire
+                ]);
 
+                // Ajuster la quantité en stock du modèle réceptionné
                 Modele::where('id', $item->modele_reception_id)
                     ->increment('quantite', $item->modele_qte);
             }
 
-            Transfert::where('id', $transfertId)
-                    ->update(['status' => 1]);
+            // Mettre à jour le statut du transfert pour indiquer qu'il est complet
+            $transfert->update(['status' => 1]);
 
             DB::commit();
             return response()->json($data);
@@ -235,6 +338,7 @@ class TransfertsController extends Controller
             return response()->json(['error' => 'An error occurred', 'message' => $e->getMessage()], 500);
         }
     }
+
 
 
     public function indexUpdate($id)
