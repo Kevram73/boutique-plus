@@ -692,17 +692,38 @@ class VentesController extends Controller
 
             $name = "facture_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
             $pdf = null;
-            $all_vente = Vente::find($id);
-            try{
-                $pdf = PDF::loadView('facturegros',compact('all_vente', 'vente','modele2','mod','total','clients','cre'))
-                        ->setPaper('a4')
-                        ->save(public_path("factures/".$name));
-                DB::table('ventes')->where('id',$id)->update(['facture' => $name]);
-            }catch(Exception $e)
-            {}
+            $all_vente = vente::find($id);
 
-            // return $pdf->stream();
-            return $pdf->download($name);
+            try {
+                // Créez une instance de Dompdf avec des options
+                $options = new Options();
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('isPhpEnabled', true);
+
+                $dompdf = new Dompdf($options);
+
+                // Chargez la vue dans Dompdf
+                $view = view('facturecredit', compact('all_vente', 'vente', 'modele2', 'mod', 'total', 'clients', 'credit', 'cre'))->render();
+                $dompdf->loadHtml($view);
+
+                // Définissez la taille du papier
+                $dompdf->setPaper('a4');
+
+                // Rendez le PDF
+                $dompdf->render();
+
+                // Enregistrez le PDF dans un répertoire
+                file_put_contents(public_path("factures/" . $name), $dompdf->output());
+
+                // Mettez à jour la base de données avec le nom du fichier
+                DB::table('ventes')->where('id', $id)->update(['facture' => $name]);
+
+                return response()->download(public_path("factures/" . $name));
+
+            } catch (Exception $e) {
+                return response()->json(['message marche pas' => $e->getMessage()]);
+            }
+
 
         // return view('facturecredit',compact('vente','modele2','mod','total','clients','credit','cre'));
     }
