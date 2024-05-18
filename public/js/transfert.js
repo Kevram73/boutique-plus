@@ -351,25 +351,24 @@ $('#btnselect').on('click',function () {
         else{
 
 
-                    var d=document.getElementById('famille')
-                    var b=document.getElementById('modele')
-                    var famille=d.options[d.selectedIndex].text;
-                    var modele=b.options[b.selectedIndex].text;
-                    const data = $('#modele').val().split('|');
-                    produitTransfertTable.row.add({
-                        "id":data[0],
-                        "produit": famille + " -> " + modele,
-                        "stock": 5000,
-                        "quantite": $('#quantite').val(),
-                    }).draw()
+            var d=document.getElementById('famille')
+            var b=document.getElementById('modele')
+            var famille=d.options[d.selectedIndex].text;
+            var modele=b.options[b.selectedIndex].text;
+            const data = $('#modele').val().split('|');
+            produitTransfertTable.row.add({
+                "id":data[0],
+                "produit": famille + " -> " + modele,
+                "quantite": $('#quantite').val(),
+            }).draw()
 
 
-                    $('#categorie').val(null);
-                    $('#famille').empty();
-                    $('#modele').empty();
-                    $('#livraison').empty();
-                    $('#quantite').val(null);
-                    $('#stock').val(null);
+            $('#categorie').val(null);
+            $('#famille').empty();
+            $('#modele').empty();
+            $('#livraison').empty();
+            $('#quantite').val(null);
+            $('#stock').val(null);
 
             }
         }
