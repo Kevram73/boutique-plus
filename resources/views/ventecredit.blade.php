@@ -171,6 +171,7 @@
                                  <th class="center hidden-phone">Numero</th>
                                  <th class="center hidden-phone">Produit</th>
                                 <th class="center hidden-phone">Modele</th>
+                                <th class="center hidden-phone">Livraison</th>
                                  <th class="center hidden-phone">Quantité </th>
                                  <th class="center hidden-phone">Prix </th>
                                  <th class="center hidden-phone">Réduction </th>
