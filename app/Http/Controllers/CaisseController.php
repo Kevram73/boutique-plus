@@ -544,277 +544,319 @@ class CaisseController extends Controller
             }
     }
 
-
-
     public function showdetailcaisse()
     {
-        $date = Carbon::now()->format('Y-m-d');
-        $totalAvoirs = 0;
-        $existe = DB::table('caisses')
-                        ->where('date', '=', $date)
-                        ->where ('boutique_id', '=',Auth::user()->boutique->id )
-                        ->exists();
-                        //dd($existe);
-                        $boutiques= DB::table('boutiques')
-                            ->where ('id', '=',Auth::user()->boutique->id )
-                            ->get();
-            // si aucune ligne n'existe, insérer une nouvelle ligne avec la date d'aujourd'hui et un montant de zéro
-            if(!$existe) {
-                $globalbybousimple=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
+        $date = Carbon::today()->format('Y-m-d');
+        $boutiqueId = Auth::user()->boutique->id;
 
-                ->where('ventes.boutique_id',Auth::user()->boutique->id)
-                //->where('ventes.date_vente',now())
-                ->whereDate('ventes.date_vente', '=', $date)
-                //->where(Carbon::createFromFormat('Y-m-d', $datevente),$date)
-                ->where('ventes.type_vente',1)
-                ->sum('ventes.totaux');
+        // Check if caisse entry exists for today
+        $caisseExist = DB::table('caisses')->where('date', $date)->where('boutique_id', $boutiqueId)->exists();
+        $boutique = Boutique::find($boutiqueId); // Supposant que vous avez un modèle Eloquent pour les boutiques
 
-                //dd($globalbybousimple);
+        // If no caisse entry exists, proceed with calculations
+        if (!$caisseExist) {
+            $venteSimple = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
+                                ->where('type_vente', 1)->sum('totaux');
+            $venteCredit = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
+                                ->where('type_vente', 2)->sum('totaux');
+            $venteNonLivret = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
+                                ->where('type_vente', 3)->sum('totaux');
+            $remiseGlobal = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
+                                ->sum('montant_reduction');
 
-            /*     $globalbyboucredit=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
+            $avoirs = Avoir::whereDate('date_ajout', $date)->where('boutique_id', $boutiqueId)->sum('amount');
 
-                ->where('boutiques.id',Auth::user()->boutique->id)
-                //->where('ventes.date_vente',now())
-                ->whereDate('ventes.date_vente', '=', $date)
+            // Calculate total receipts
+            $reglements = Reglement::whereDate('created_at', $date)
+                                ->whereHas('client', function($query) use ($boutiqueId) {
+                                    $query->where('boutique_id', $boutiqueId);
+                                })->sum('montant_donne');
 
-                ->where('ventes.type_vente',2)
-                ->sum('ventes.totaux') ;
-                */
-               // $montant=DB::table('billing_caisses')->max('total');
-                $montant=DB::table('billing_caisses')
-                ->latest('created_at')
-                ->pluck('total')
-                ->first();
-                $total = DB::table('billing_caisses')
-                    ->whereDate('created_at', $date)
-                    ->where('boutique_id',Auth::user()->boutique->id ) // Remplacer today() par la date souhaitée
-                    ->sum('total');
-                $totalmontant = DB::table('caisse_boutiques')
-                ->where('boutique_id',Auth::user()->boutique->id )
-                ->latest('id')
-                ->pluck('solde_total')
-                ->first();
+            $depenses = Depense::where('boutique_id', $boutiqueId)->whereDate('date_dep', $date)->sum('montant');
+            $dernierSolde = Caisse::where('boutique_id', $boutiqueId)->latest()->pluck('soldeMagasin')->first() ?? 0;
 
-                //dd($totalmontant);
-                $globalbyboucredit = Client::join('reglements', 'reglements.client_id', '=', 'clients.id')
-                        ->where ('clients.boutique_id', '=',Auth::user()->boutique->id )
-                        ->where('reglements.type',1)
-                        ->whereDate('reglements.created_at', '=', $date)
-                        ->sum('reglements.montant_restant');
-                $globalbybounonlivret=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('boutiques.id',Auth::user()->boutique->id)
-               // ->where('ventes.date_vente',now())
-               ->whereDate('ventes.date_vente', '=', $date)
-                ->where('ventes.type_vente',3)
-                ->sum('ventes.totaux') ;
-                $globalbybouventeglobal=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('boutiques.id',Auth::user()->boutique->id)
-                //->where('ventes.date_vente',now())
-                 ->where('ventes.type_vente',1)
-                //->where('ventes.type_vente',4)
-                ->whereDate('ventes.date_vente', '=', $date)
-                  ->where('ventes.with_avoir',0)
-                ->sum('ventes.totaux') ;
-                $globalbybouremiseglobal=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('boutiques.id',Auth::user()->boutique->id)
-                //->where('ventes.date_vente',now())
+            $recetteTotale = $venteSimple + $venteCredit + $venteNonLivret - $depenses + $reglements + $avoirs;
+            $soldemagasin = $recetteTotale + $dernierSolde;
 
-                ->whereDate('ventes.date_vente', '=', $date)
+        }
 
-                ->sum('ventes.montant_reduction');
-                $venteNette = $globalbybouventeglobal;
-                  $globalbyboutiqAvoir =  DB::table('clients')
-                ->where('boutique_id',Auth::user()->boutique->id)
-                ->whereDate('updated_at', '=', $date)
-                ->where('with_avoir',1)
-                ->sum('avoir');
-                $recouvrementInterieur = DB::table('clients')
-                ->join('reglements', 'reglements.client_id', '=', 'clients.id')
-                        ->where ('clients.boutique_id', '=',Auth::user()->boutique->id )
-                        //->where('reglements.date_reglement',now())
-                        ->whereDate('reglements.created_at', '=', $date)
-
-                    ->sum('reglements.montant_donne');
-                    //dd($recouvrementInterieur);
-                    $TOTALdepense = Depense::where('boutique_id', Auth::user()->boutique->id)
-                    //->where('depenses.date_dep',now())
-                    ->whereDate('depenses.date_dep', '=', $date)
-
-                    ->sum('montant');
-                     $dernieresolde=DB::table('caisses')->where('boutique_id',Auth::user()->boutique->id )->max('soldeMagasin');
-
-                     if($dernieresolde == null)
-                    {
-                      $dernieresolde = 0;
-                    }else{
-                        $dernieresolde = DB::table('caisses')
-                            ->where('boutique_id',Auth::user()->boutique->id )
-                            ->latest('id')
-                            ->pluck('soldeMagasin')
-                            ->first();
-
-                    }
-
-                    $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
-
-                if(count($avoirs) == 0){
-                    $totalAvoirs = 0;
-                } else {
-                    $totalAvoirs = $avoirs->sum('amount');
-                }
-
-
-
-                 $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret+$totalAvoirs;
-                 $soldemagasin =$recetteTotale - $totalmontant +$dernieresolde;
-
-                //dd($globalbyboucredit);
-            } else{
-        // récupérer la dernière date enregistrée dans la table
-                    $derniereDate = DB::table('caisses')
-                        ->max('date');
-                       // $montant=DB::table('billing_caisses')->max('total');
-                       $montant=DB::table('billing_caisses')
-                       ->latest('created_at')
-                       ->pluck('total')
-                       ->first();
-                       $total = DB::table('billing_caisses')
-                       ->whereDate('created_at', $date)
-                       ->where('boutique_id',Auth::user()->boutique->id ) // Remplacer today() par la date souhaitée
-                       ->sum('total');
-
-                       $totalmontant = DB::table('caisse_boutiques')
-                       ->where('boutique_id',Auth::user()->boutique->id )
-                       ->latest('created_at')
-                       ->pluck('solde_total')
-                       ->first();
-                    //dd($soldemagasin);
-            $date_carbon = Carbon::createFromFormat('Y-m-d', $derniereDate); // Conversion de la chaîne en objet Carbon
-            $date_carbon->addDay();
-
-            //$date=$date_carbon->addDay();
-        // calculer la somme des montants enregistrés dans la table pour la période allant du lendemain de la dernière date enregistrée jusqu'à la date actuelle
-                       $globalbybousimple=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-
-                ->where('boutiques.id',Auth::user()->boutique->id)
-
-                ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
-                //->where('ventes.date_vente', '<', now())
-                ->whereDate('ventes.date_vente', '<', $date)
-
-                ->where('ventes.type_vente',1)
-                ->sum('ventes.totaux');
-
-                $globalbyboucredit = Vente::join('reglements', 'reglements.vente_id', '=', 'ventes.id')
-                ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
-                //->where('reglements.date_reglement',now())
-                ->whereDate('reglements.created_at', '>=', $date_carbon->addDay())
-                ->where('reglements.type',1)
-                ->whereDate('reglements.created_at', '<', $date)
-                ->sum('reglements.montant_restant');
-
-                $globalbybounonlivret=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-
-                ->where('boutiques.id',Auth::user()->boutique->id)
-
-                ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
-                //->where('ventes.date_vente', '<', now())
-                ->whereDate('ventes.date_vente', '<', $date)
-
-                ->where('ventes.type_vente',3)
-                ->sum('ventes.totaux') ;
-                $globalbybouventeglobal=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('boutiques.id',Auth::user()->boutique->id)
-
-                ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
-                //->where('ventes.date_vente', '<', now())
-                 ->where('ventes.type_vente',1)
-                ->where('ventes.type_vente',4)
-                  ->where('ventes.with_avoir',0)
-                ->whereDate('ventes.date_vente', '<', $date)
-
-                ->sum('ventes.totaux') ;
-                $globalbybouremiseglobal=   DB::table('boutiques')
-                ->join('ventes', function ($join) {
-                    $join->on('ventes.boutique_id', '=', 'boutiques.id');
-                })
-                ->where('boutiques.id',Auth::user()->boutique->id)
-
-                ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
-                //->where('ventes.date_vente', '<', now())
-                ->whereDate('ventes.date_vente', '<', $date)
-
-                ->sum('ventes.montant_reduction');
-                $globalbyboutiqAvoir =  DB::table('clients')
-                ->where('boutique_id',Auth::user()->boutique->id)
-
-                ->whereDate('updated_at', '>=', $date_carbon->addDay())
-                ->whereDate('updated_at', '<', $date)
-                ->where('with_avoir',1)
-                ->sum('avoir');
-
-                $venteNette = $globalbybouventeglobal;
-                $recouvrementInterieur = Vente::join('reglements', 'reglements.vente_id', '=', 'ventes.id')
-                        ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
-                       // ->where('reglements.date_reglement',now())
-                        ->whereDate('reglements.created_at', '=', $date)
-
-                        ->whereDate('reglements.created_at', '>=', $date_carbon->addDay())
-                        //->where('reglements.date_reglement', '<', now())
-                        ->whereDate('reglements.date_reglement', '<', $date)
-
-                    ->sum('reglements.montant_donne');
-                    $TOTALdepense = Depense::where('boutique_id', Auth::user()->boutique->id)
-
-                    ->whereDate('depenses.date_dep', '>=', $date_carbon->addDay())
-                    //->where('depenses.date_dep', '<', now())
-                    ->whereDate('depenses.date_dep', '<', $date)
-                    ->sum('montant');
-                    $dernieresolde= Caisse::where('boutique_id', Auth::user()->boutique->id)
-
-                    ->whereDate('caisses.date', '>=', $date_carbon->addDay())
-                    //->where('caisses.date', '<', now())
-                    ->whereDate('caisses.date', '<', $date)
-                    ->select('soldeMagasin');
-                $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
-
-                if(count($avoirs) == 0){
-                    $totalAvoirs = 0;
-                } else {
-
-                    $totalAvoirs = $avoirs->sum('amount');
-                }
-        $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret+$totalAvoirs;
-        $soldemagasin =$recetteTotale - $totalmontant +$dernieresolde;
-        //$soldeMagasin =$recetteTotale + $dernieresolde - $TOTALdepense-;
-                //dd($globalbyboucredit);
-            }
-            return view('caisse.addcaisse', compact('boutiques','soldemagasin','globalbyboutiqAvoir','dernieresolde','date','recetteTotale','TOTALdepense','recouvrementInterieur','venteNette',
-            'globalbybouremiseglobal','totalmontant','montant','globalbybouventeglobal','globalbybounonlivret','globalbyboucredit','globalbybousimple', 'totalAvoirs'));
+        return view('caisse.addcaisse', compact(
+            'boutique', 'soldemagasin', 'dernierSolde', 'date', 'recetteTotale', 'depenses',
+            'reglements', 'venteSimple', 'venteCredit', 'venteNonLivret', 'avoirs', 'remiseGlobal'
+        ));
     }
+
+
+
+    // public function showdetailcaisse()
+    // {
+    //     $date = Carbon::now()->format('Y-m-d');
+    //     $totalAvoirs = 0;
+    //     $existe = DB::table('caisses')
+    //                     ->where('date', '=', $date)
+    //                     ->where ('boutique_id', '=',Auth::user()->boutique->id )
+    //                     ->exists();
+    //                     //dd($existe);
+    //                     $boutiques= DB::table('boutiques')
+    //                         ->where ('id', '=',Auth::user()->boutique->id )
+    //                         ->get();
+    //         // si aucune ligne n'existe, insérer une nouvelle ligne avec la date d'aujourd'hui et un montant de zéro
+    //         if(!$existe) {
+    //             $globalbybousimple=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+
+    //             ->where('ventes.boutique_id',Auth::user()->boutique->id)
+    //             //->where('ventes.date_vente',now())
+    //             ->whereDate('ventes.date_vente', '=', $date)
+    //             //->where(Carbon::createFromFormat('Y-m-d', $datevente),$date)
+    //             ->where('ventes.type_vente',1)
+    //             ->sum('ventes.totaux');
+
+    //             //dd($globalbybousimple);
+
+    //         /*     $globalbyboucredit=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+    //             //->where('ventes.date_vente',now())
+    //             ->whereDate('ventes.date_vente', '=', $date)
+
+    //             ->where('ventes.type_vente',2)
+    //             ->sum('ventes.totaux') ;
+    //             */
+    //            // $montant=DB::table('billing_caisses')->max('total');
+    //             $montant=DB::table('billing_caisses')
+    //             ->latest('created_at')
+    //             ->pluck('total')
+    //             ->first();
+    //             $total = DB::table('billing_caisses')
+    //                 ->whereDate('created_at', $date)
+    //                 ->where('boutique_id',Auth::user()->boutique->id ) // Remplacer today() par la date souhaitée
+    //                 ->sum('total');
+    //             $totalmontant = DB::table('caisse_boutiques')
+    //             ->where('boutique_id',Auth::user()->boutique->id )
+    //             ->latest('id')
+    //             ->pluck('solde_total')
+    //             ->first();
+
+    //             //dd($totalmontant);
+    //             $globalbyboucredit = Client::join('reglements', 'reglements.client_id', '=', 'clients.id')
+    //                     ->where ('clients.boutique_id', '=',Auth::user()->boutique->id )
+    //                     ->where('reglements.type',1)
+    //                     ->whereDate('reglements.created_at', '=', $date)
+    //                     ->sum('reglements.montant_restant');
+    //             $globalbybounonlivret=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+    //            // ->where('ventes.date_vente',now())
+    //            ->whereDate('ventes.date_vente', '=', $date)
+    //             ->where('ventes.type_vente',3)
+    //             ->sum('ventes.totaux') ;
+    //             $globalbybouventeglobal=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+    //             //->where('ventes.date_vente',now())
+    //              ->where('ventes.type_vente',1)
+    //             //->where('ventes.type_vente',4)
+    //             ->whereDate('ventes.date_vente', '=', $date)
+    //               ->where('ventes.with_avoir',0)
+    //             ->sum('ventes.totaux') ;
+    //             $globalbybouremiseglobal=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+    //             //->where('ventes.date_vente',now())
+
+    //             ->whereDate('ventes.date_vente', '=', $date)
+
+    //             ->sum('ventes.montant_reduction');
+    //             $venteNette = $globalbybouventeglobal;
+    //               $globalbyboutiqAvoir =  DB::table('clients')
+    //             ->where('boutique_id',Auth::user()->boutique->id)
+    //             ->whereDate('updated_at', '=', $date)
+    //             ->where('with_avoir',1)
+    //             ->sum('avoir');
+    //             $recouvrementInterieur = DB::table('clients')
+    //             ->join('reglements', 'reglements.client_id', '=', 'clients.id')
+    //                     ->where ('clients.boutique_id', '=',Auth::user()->boutique->id )
+    //                     //->where('reglements.date_reglement',now())
+    //                     ->whereDate('reglements.created_at', '=', $date)
+
+    //                 ->sum('reglements.montant_donne');
+    //                 //dd($recouvrementInterieur);
+    //                 $TOTALdepense = Depense::where('boutique_id', Auth::user()->boutique->id)
+    //                 //->where('depenses.date_dep',now())
+    //                 ->whereDate('depenses.date_dep', '=', $date)
+
+    //                 ->sum('montant');
+    //                  $dernieresolde=DB::table('caisses')->where('boutique_id',Auth::user()->boutique->id )->max('soldeMagasin');
+
+    //                  if($dernieresolde == null)
+    //                 {
+    //                   $dernieresolde = 0;
+    //                 }else{
+    //                     $dernieresolde = DB::table('caisses')
+    //                         ->where('boutique_id',Auth::user()->boutique->id )
+    //                         ->latest('id')
+    //                         ->pluck('soldeMagasin')
+    //                         ->first();
+
+    //                 }
+
+    //                 $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
+
+    //             if(count($avoirs) == 0){
+    //                 $totalAvoirs = 0;
+    //             } else {
+    //                 $totalAvoirs = $avoirs->sum('amount');
+    //             }
+
+
+
+    //              $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret+$totalAvoirs;
+    //              $soldemagasin =$recetteTotale - $totalmontant +$dernieresolde;
+
+    //             //dd($globalbyboucredit);
+    //         } else{
+    //     // récupérer la dernière date enregistrée dans la table
+    //                 $derniereDate = DB::table('caisses')
+    //                     ->max('date');
+    //                    // $montant=DB::table('billing_caisses')->max('total');
+    //                    $montant=DB::table('billing_caisses')
+    //                    ->latest('created_at')
+    //                    ->pluck('total')
+    //                    ->first();
+    //                    $total = DB::table('billing_caisses')
+    //                    ->whereDate('created_at', $date)
+    //                    ->where('boutique_id',Auth::user()->boutique->id ) // Remplacer today() par la date souhaitée
+    //                    ->sum('total');
+
+    //                    $totalmontant = DB::table('caisse_boutiques')
+    //                    ->where('boutique_id',Auth::user()->boutique->id )
+    //                    ->latest('created_at')
+    //                    ->pluck('solde_total')
+    //                    ->first();
+    //                 //dd($soldemagasin);
+    //         $date_carbon = Carbon::createFromFormat('Y-m-d', $derniereDate); // Conversion de la chaîne en objet Carbon
+    //         $date_carbon->addDay();
+
+    //         //$date=$date_carbon->addDay();
+    //     // calculer la somme des montants enregistrés dans la table pour la période allant du lendemain de la dernière date enregistrée jusqu'à la date actuelle
+    //                    $globalbybousimple=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+
+    //             ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
+    //             //->where('ventes.date_vente', '<', now())
+    //             ->whereDate('ventes.date_vente', '<', $date)
+
+    //             ->where('ventes.type_vente',1)
+    //             ->sum('ventes.totaux');
+
+    //             $globalbyboucredit = Vente::join('reglements', 'reglements.vente_id', '=', 'ventes.id')
+    //             ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
+    //             //->where('reglements.date_reglement',now())
+    //             ->whereDate('reglements.created_at', '>=', $date_carbon->addDay())
+    //             ->where('reglements.type',1)
+    //             ->whereDate('reglements.created_at', '<', $date)
+    //             ->sum('reglements.montant_restant');
+
+    //             $globalbybounonlivret=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+
+    //             ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
+    //             //->where('ventes.date_vente', '<', now())
+    //             ->whereDate('ventes.date_vente', '<', $date)
+
+    //             ->where('ventes.type_vente',3)
+    //             ->sum('ventes.totaux') ;
+    //             $globalbybouventeglobal=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+
+    //             ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
+    //             //->where('ventes.date_vente', '<', now())
+    //              ->where('ventes.type_vente',1)
+    //             ->where('ventes.type_vente',4)
+    //               ->where('ventes.with_avoir',0)
+    //             ->whereDate('ventes.date_vente', '<', $date)
+
+    //             ->sum('ventes.totaux') ;
+    //             $globalbybouremiseglobal=   DB::table('boutiques')
+    //             ->join('ventes', function ($join) {
+    //                 $join->on('ventes.boutique_id', '=', 'boutiques.id');
+    //             })
+    //             ->where('boutiques.id',Auth::user()->boutique->id)
+
+    //             ->whereDate('ventes.date_vente', '>=', $date_carbon->addDay())
+    //             //->where('ventes.date_vente', '<', now())
+    //             ->whereDate('ventes.date_vente', '<', $date)
+
+    //             ->sum('ventes.montant_reduction');
+    //             $globalbyboutiqAvoir =  DB::table('clients')
+    //             ->where('boutique_id',Auth::user()->boutique->id)
+
+    //             ->whereDate('updated_at', '>=', $date_carbon->addDay())
+    //             ->whereDate('updated_at', '<', $date)
+    //             ->where('with_avoir',1)
+    //             ->sum('avoir');
+
+    //             $venteNette = $globalbybouventeglobal;
+    //             $recouvrementInterieur = Vente::join('reglements', 'reglements.vente_id', '=', 'ventes.id')
+    //                     ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id )
+    //                    // ->where('reglements.date_reglement',now())
+    //                     ->whereDate('reglements.created_at', '=', $date)
+
+    //                     ->whereDate('reglements.created_at', '>=', $date_carbon->addDay())
+    //                     //->where('reglements.date_reglement', '<', now())
+    //                     ->whereDate('reglements.date_reglement', '<', $date)
+
+    //                 ->sum('reglements.montant_donne');
+    //                 $TOTALdepense = Depense::where('boutique_id', Auth::user()->boutique->id)
+
+    //                 ->whereDate('depenses.date_dep', '>=', $date_carbon->addDay())
+    //                 //->where('depenses.date_dep', '<', now())
+    //                 ->whereDate('depenses.date_dep', '<', $date)
+    //                 ->sum('montant');
+    //                 $dernieresolde= Caisse::where('boutique_id', Auth::user()->boutique->id)
+
+    //                 ->whereDate('caisses.date', '>=', $date_carbon->addDay())
+    //                 //->where('caisses.date', '<', now())
+    //                 ->whereDate('caisses.date', '<', $date)
+    //                 ->select('soldeMagasin');
+    //             $avoirs = Avoir::whereDate('date_ajout', '=', $date)->where('boutique_id', Auth::user()->boutique_id)->get();
+
+    //             if(count($avoirs) == 0){
+    //                 $totalAvoirs = 0;
+    //             } else {
+
+    //                 $totalAvoirs = $avoirs->sum('amount');
+    //             }
+    //     $recetteTotale = $venteNette - $TOTALdepense +$recouvrementInterieur +$globalbybounonlivret+$totalAvoirs;
+    //     $soldemagasin =$recetteTotale - $totalmontant +$dernieresolde;
+    //     //$soldeMagasin =$recetteTotale + $dernieresolde - $TOTALdepense-;
+    //             //dd($globalbyboucredit);
+    //         }
+    //         return view('caisse.addcaisse', compact('boutiques','soldemagasin','globalbyboutiqAvoir','dernieresolde','date','recetteTotale','TOTALdepense','recouvrementInterieur','venteNette',
+    //         'globalbybouremiseglobal','totalmontant','montant','globalbybouventeglobal','globalbybounonlivret','globalbyboucredit','globalbybousimple', 'totalAvoirs'));
+    // }
 
 }
