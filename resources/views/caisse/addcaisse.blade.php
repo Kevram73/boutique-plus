@@ -55,7 +55,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Ventes</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="totalVente" id="totalVente" value="{{ $venteSimple ?? '0' }}" readonly class="form-control" required/>
+                                                                <input type="number" name="totalVente" id="totalVente" value="{{ $venteSG ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
