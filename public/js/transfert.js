@@ -349,41 +349,36 @@ $('#btnselect').on('click',function () {
             sweetToast('warning',message);
         }
         else{
-            $(document).ready(function() {
-                // Assume `produitTransfertTable` is already initialized elsewhere
-                $('#quantite, #modele').change(function() {
-                    const modeleId = $('#modele').val();
-                    if (!modeleId) return;  // Ensure there's a value to avoid unnecessary requests
+            const modeleId = $('#modele').val();
+            if (!modeleId) return;  // Ensure there's a value to avoid unnecessary requests
 
-                    $.ajax({
-                        url: '/modeles/transfert/' + modeleId,
-                        type: "GET",
-                        success: function(qte) {
-                            var d = document.getElementById('famille');
-                            var b = document.getElementById('modele');
-                            var famille = d.options[d.selectedIndex].text;
-                            var modele = b.options[b.selectedIndex].text;
-                            const data = modeleId.split('|');
+            $.ajax({
+                url: '/modeles/transfert/' + modeleId,
+                type: "GET",
+                success: function(qte) {
+                    var d = document.getElementById('famille');
+                    var b = document.getElementById('modele');
+                    var famille = d.options[d.selectedIndex].text;
+                    var modele = b.options[b.selectedIndex].text;
+                    const data = modeleId.split('|');
 
-                            produitTransfertTable.row.add({
-                                "id": data[0],
-                                "produit": famille + " -> " + modele,
-                                "stock": qte,
-                                "quantite": $('#quantite').val()
-                            }).draw();
-                            $('#categorie').val(null);
-                        $('#famille').empty();
-                        $('#modele').empty();
-                        $('#livraison').empty();
-                        $('#quantite').val(null);
-                        $('#sto ck').val(null);
-                            },
-                            error: function(xhr, status, error) {
-                                console.log("Error fetching quantity: " + error);
-                            }
-                        });
+                    produitTransfertTable.row.add({
+                        "id": data[0],
+                        "produit": famille + " -> " + modele,
+                        "stock": qte,
+                        "quantite": $('#quantite').val()
+                    }).draw();
+                    $('#categorie').val(null);
+                $('#famille').empty();
+                $('#modele').empty();
+                $('#livraison').empty();
+                $('#quantite').val(null);
+                $('#sto ck').val(null);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error fetching quantity: " + error);
+                    }
                 });
-            });
 
             }
         }
