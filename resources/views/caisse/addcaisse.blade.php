@@ -73,7 +73,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Vente nette</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="venteNette" id="venteNette" value="{{ $recetteTotale - $depenses ?? '0' }}" readonly class="form-control" required/> <!-- Assurez-vous que cette formule est correcte pour "venteNette" -->
+                                                                <input type="number" name="venteNette" id="venteNette" value="{{ $venteSG ?? '0' }}" readonly class="form-control" required/> <!-- Assurez-vous que cette formule est correcte pour "venteNette" -->
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
