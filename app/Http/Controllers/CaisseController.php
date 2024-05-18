@@ -575,7 +575,7 @@ class CaisseController extends Controller
                                 ->whereHas('client', function($query) use ($boutiqueId) {
                                     $query->where('boutique_id', $boutiqueId);
                                 })->sum('montant_donne');
-            $creances = Reglement::whereDate('created_at', $date)->sum('montant_restant');
+            $creances = Reglement::whereDate('created_at', $date)->where('type', 1)->sum('montant_restant');
 
             $depenses = Depense::where('boutique_id', $boutiqueId)->whereDate('date_dep', $date)->sum('montant');
             $dernierSolde = Caisse::where('boutique_id', $boutiqueId)->latest()->pluck('soldeMagasin')->first() ?? 0;
