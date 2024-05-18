@@ -556,8 +556,11 @@ class CaisseController extends Controller
 
         // If no caisse entry exists, proceed with calculations
         if (!$caisseExist) {
-            $venteSG = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
-                                ->where('type_vente', 1)->where('type_vente', 4)->sum('totaux');
+            $venteSG = Vente::where('boutique_id', $boutiqueId)
+                ->whereDate('date_vente', $date)
+                ->whereIn('type_vente', [1, 4]) // Permet de sélectionner les types de vente 1 ou 4
+                ->sum('totaux');
+
             $venteCredit = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
                                 ->where('type_vente', 2)->sum('totaux');
             $venteNonLivret = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
