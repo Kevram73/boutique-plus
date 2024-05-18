@@ -53,88 +53,85 @@
 
 
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Ventes  </label>
+                                                            <label class="col-sm-3 control-label">Ventes</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="totalVente" id="totalVente" value="{{ $globalbybouventeglobal }}" readonly class="form-control"  required/>
-                                                            </div>
-                                                        </div>
-                                                          <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Avoirs  </label>
-                                                            <div class="col-sm-9">
-                                                                <input type="number" name="totalAvoir" id="totalAvoir" value="{{ $totalAvoirs }}" readonly class="form-control"  required/>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Remise  </label>
-                                                            <div class="col-sm-9">
-                                                                <input type="number" name="remise" id="remise" readonly class="form-control"  value="{{ $globalbybouremiseglobal }}"  required/>
+                                                                <input type="number" name="totalVente" id="totalVente" value="{{ $venteSimple ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Vente nette  </label>
+                                                            <label class="col-sm-3 control-label">Avoirs</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="ventenette" id="ventenette" readonly class="form-control"  value="{{ $venteNette }}"  required/>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Créance  </label>
-                                                            <div class="col-sm-9">
-                                                                <input type="number" name="venteCredit" id="venteCredit" readonly class="form-control"  value="{{ $globalbyboucredit }}"  required/>
+                                                                <input type="number" name="totalAvoir" id="totalAvoir" value="{{ $avoirs ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Recouvrement Intérieur  </label>
+                                                            <label class="col-sm-3 control-label">Remise</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="recouvrementInte" id="recouvrementInte" readonly class="form-control"  value="{{ $recouvrementInterieur }}"  required/>
+                                                                <input type="number" name="remise" id="remise" value="{{ $remiseGlobal ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Avance Client </label>
+                                                            <label class="col-sm-3 control-label">Vente nette</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="ventenonlivre" id="ventenonlivre" readonly class="form-control"  value="{{ $globalbybounonlivret }}"  required/>
+                                                                <input type="number" name="venteNette" id="venteNette" value="{{ $recetteTotale - $depenses ?? '0' }}" readonly class="form-control" required/> <!-- Assurez-vous que cette formule est correcte pour "venteNette" -->
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Total Dépense </label>
+                                                            <label class="col-sm-3 control-label">Créance</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="totalDepense" id="totalDepense" readonly class="form-control"  value="{{ $TOTALdepense }}"  required/>
+                                                                <input type="number" name="venteCredit" id="venteCredit" value="{{ $venteCredit ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Recette total  </label>
+                                                            <label class="col-sm-3 control-label">Recouvrement Intérieur</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="recetteTotal" id="recetteTotal" readonly class="form-control"  value="{{ $recetteTotale }}"   required/>
+                                                                <input type="number" name="recouvrementInte" id="recouvrementInte" value="{{ $reglements ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Montant Collecté  </label>
+                                                            <label class="col-sm-3 control-label">Avance Client</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="montantcollecte" id="montantcollecte" readonly  class="form-control"  value="{{ $totalmontant }}"  required/>
-                                                                <a  class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default"  href="/addBulling">Ajouter Billetage </a>
-
+                                                                <input type="number" name="ventenonlivre" id="ventenonlivre" value="{{ $venteNonLivret ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Solde veille  </label>
+                                                            <label class="col-sm-3 control-label">Total Dépense</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="solde" id="solde" readonly class="form-control"  value="{{ $dernieresolde }}" />
+                                                                <input type="number" name="totalDepense" id="totalDepense" value="{{ $depenses ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Solde Magasin  </label>
+                                                            <label class="col-sm-3 control-label">Recette totale</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="soldeMagasin" id="soldeMagasin" readonly class="form-control"  value="{{ $soldemagasin }}" />
+                                                                <input type="number" name="recetteTotal" id="recetteTotal" value="{{ $recetteTotale ?? '0' }}" readonly class="form-control" required/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Montant Collecté</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="montantCollecte" id="montantCollecte" value="{{ $reglements ?? '0' }}" readonly class="form-control" required/>
+                                                                <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" href="/addBulling">Ajouter Billetage</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Solde veille</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="solde" id="solde" value="{{ $dernierSolde ?? '0' }}" readonly class="form-control"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Solde Magasin</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="soldeMagasin" id="soldeMagasin" value="{{ $soldemagasin ?? '0' }}" readonly class="form-control"/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group mt-lg">
-                                                            <label class="col-sm-3 control-label">Date * </label>
+                                                            <label class="col-sm-3 control-label">Date</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" name="date"  id="date" readonly class="form-control date" placeholder=""  value="{{ $date }}"  required/>
-
+                                                                <input type="text" name="date" id="date" readonly class="form-control date" value="{{ $date }}" required/>
                                                             </div>
                                                         </div>
+
 
                                                      {{--    <div class="form-group mt-lg">
                                                             <label class="col-sm-3 control-label">solde Magasin * </label>
