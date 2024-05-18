@@ -74,13 +74,13 @@
                         <td class="text-center">
 
                             <address>
-                                {{ $all_vente->numero }}
+                                {{ $vente[0]->numero }}
                             </address>
                         </td>
                         <td class="text-center">
 
                             <address>
-                                {{ $all_vente->date }}
+                                {{ $vente[0]->date }}
                             </address>
                         </td>
 
@@ -160,7 +160,7 @@
 
                 <p> Arrêter la présente Facture à la somme TTC de : {{ $all_vente->totaux }}</p>
 
-                <p>Condition de paiement : Avance : {{ $all_vente->donne }} FCFA ; Reste à payer : {{ $vente[0]->restant
+                <p>Condition de paiement : Avance : {{ $vente[0]->donne }} FCFA ; Reste à payer : {{ $vente[0]->restant
                     }} FCFA </p>
 
                 <table style="position: absolute; bottom: 20px; left: 0px;">

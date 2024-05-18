@@ -144,7 +144,12 @@ $('#ajout_reglement  form').on('submit', function (e) {
                 Swal.fire('Patientez',
                         'Enregistrement en cours...',
                         'info')
-                window.location='/facturecredit-'+$('#id').val();
+                        if(document.getElementById('type_vente').value == 4){
+                            window.location='/facturegros-'+$('#id').val();
+                        } else {
+                            window.location='/facturecredit-'+$('#id').val();
+                        }
+
                 setTimeout(() => {
                     Swal.fire('Confirmé',
                             'Vente encaissée avec succes',

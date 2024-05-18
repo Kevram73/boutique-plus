@@ -123,7 +123,7 @@
                         </div>
                         @endif
                     </div>
-
+                    <input type="hidden" value="{{ $all_vente->type_vente }}" id="type_vente">
                 </section>
              </div>
          </section>
