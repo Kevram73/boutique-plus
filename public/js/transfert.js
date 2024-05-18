@@ -372,16 +372,16 @@ $('#btnselect').on('click',function () {
                                 "quantite": $('#quantite').val()
                             }).draw();
                             $('#categorie').val(null);
-                    $('#famille').empty();
-                    $('#modele').empty();
-                    $('#livraison').empty();
-                    $('#quantite').val(null);
-                    $('#sto ck').val(null);
-                        },
-                        error: function(xhr, status, error) {
-                            console.log("Error fetching quantity: " + error);
-                        }
-                    });
+                        $('#famille').empty();
+                        $('#modele').empty();
+                        $('#livraison').empty();
+                        $('#quantite').val(null);
+                        $('#sto ck').val(null);
+                            },
+                            error: function(xhr, status, error) {
+                                console.log("Error fetching quantity: " + error);
+                            }
+                        });
                 });
             });
 
