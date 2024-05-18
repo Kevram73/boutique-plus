@@ -359,7 +359,7 @@ $('#btnselect').on('click',function () {
                     produitTransfertTable.row.add({
                         "id":data[0],
                         "produit": famille + " -> " + modele,
-                        "stock": "-----",
+                        "stock": 0,
                         "quantite": $('#quantite').val(),
                     }).draw()
 
