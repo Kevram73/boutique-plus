@@ -20,6 +20,7 @@ use App\vente;
 use App\DepenseFile;
 use App\JournalDepense;
 use App\Historique;
+use App\Reglement;
 use App\File;
 
 use App\Client;
