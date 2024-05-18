@@ -349,36 +349,27 @@ $('#btnselect').on('click',function () {
             sweetToast('warning',message);
         }
         else{
-            const modeleId = $('#modele').val();
-            if (!modeleId) return;  // Ensure there's a value to avoid unnecessary requests
 
-            $.ajax({
-                url: '/modeles/transfert/' + modeleId,
-                type: "GET",
-                success: function(qte) {
-                    var d = document.getElementById('famille');
-                    var b = document.getElementById('modele');
-                    var famille = d.options[d.selectedIndex].text;
-                    var modele = b.options[b.selectedIndex].text;
-                    const data = modeleId.split('|');
 
+                    var d=document.getElementById('famille')
+                    var b=document.getElementById('modele')
+                    var famille=d.options[d.selectedIndex].text;
+                    var modele=b.options[b.selectedIndex].text;
+                    const data = $('#modele').val().split('|');
                     produitTransfertTable.row.add({
-                        "id": data[0],
+                        "id":data[0],
                         "produit": famille + " -> " + modele,
-                        "stock": qte,
-                        "quantite": $('#quantite').val()
-                    }).draw();
+                        "stock": "-----",
+                        "quantite": $('#quantite').val(),
+                    }).draw()
+
+
                     $('#categorie').val(null);
-                $('#famille').empty();
-                $('#modele').empty();
-                $('#livraison').empty();
-                $('#quantite').val(null);
-                $('#sto ck').val(null);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Error fetching quantity: " + error);
-                    }
-                });
+                    $('#famille').empty();
+                    $('#modele').empty();
+                    $('#livraison').empty();
+                    $('#quantite').val(null);
+                    $('#stock').val(null);
 
             }
         }
