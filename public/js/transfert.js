@@ -503,10 +503,10 @@ $('#btnadd').on('click',function (e) {
                 let content =''
                 for(let i = 0; i <  produitTransfertTable.data().length; i++){
                     if (i!=produitTransfertTable.data().length-1){
-                        content +=   produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|"+ produitTransfertTable.data()[i].stock+"|" + produitTransfertTable.data()[i].quantite+"|"
+                        content +=   produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|" + produitTransfertTable.data()[i].quantite+"|"
 
                     }else{
-                        content +=  produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|"+ produitTransfertTable.data()[i].stock +"|"+ produitTransfertTable.data()[i].quantite
+                        content +=  produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|"+ produitTransfertTable.data()[i].quantite
                     }
                 }
                 $('#produitTransfertData').val(content)
