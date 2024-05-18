@@ -79,7 +79,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Créance</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="venteCredit" id="venteCredit" value="{{ $venteCredit ?? '0' }}" readonly class="form-control" required/>
+                                                                <input type="number" name="venteCredit" id="venteCredit" value="{{ $creances ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
