@@ -35,7 +35,7 @@
                     <!-- /.col -->
                     <div class="row invoice-info">
                         <div class="col-sm-4 invoice-col">
-        
+
                             <address>
                                 <b> {{Auth::user()->boutique->nom}}</b><br>
                                 Adresse: {{Auth::user()->boutique->adresse}}<br>
@@ -74,13 +74,13 @@
                         <td class="text-center">
 
                             <address>
-                                {{ $vente[0]->numero }}
+                                {{ $all_vente->numero }}
                             </address>
                         </td>
                         <td class="text-center">
 
                             <address>
-                                {{ $vente[0]->date }}
+                                {{ $all_vente->date }}
                             </address>
                         </td>
 
@@ -125,7 +125,7 @@
                             @endforeach
 
                         </table>
-                        <center> 
+                        <center>
                             <li class="list-group-item center hidden-phone">Montant réduction :<b> <span class="prix">{{
                                         $all_vente->montant_reduction }} FCFA</span></b></li>
                         </center>
@@ -160,7 +160,7 @@
 
                 <p> Arrêter la présente Facture à la somme TTC de : {{ $all_vente->totaux }}</p>
 
-                <p>Condition de paiement : Avance : {{ $vente[0]->donne }} FCFA ; Reste à payer : {{ $vente[0]->restant
+                <p>Condition de paiement : Avance : {{ $all_vente->donne }} FCFA ; Reste à payer : {{ $vente[0]->restant
                     }} FCFA </p>
 
                 <table style="position: absolute; bottom: 20px; left: 0px;">

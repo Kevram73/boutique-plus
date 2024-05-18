@@ -578,7 +578,7 @@ class VentesController extends Controller
 
             $name = "facture_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
             $pdf = null;
-            $all_vente = Vente::find($id);
+            $all_vente = vente::find($id);
             /* try{
                 $pdf = PDF::loadView('facturecredit',compact('all_vente', 'vente','modele2','mod','total','clients','credit','cre'))
                         ->setPaper('a4')
