@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transfert extends Model
 {
+    protected $fillable = [
+        'code',
+        'status',
+        'magasin_transfert_id',
+        'magasin_reception_id',
+        'livraison'  // Include other fields as necessary
+    ];
     public function magasin_transfert()
     {
         return $this->belongsTo('App\Boutique','magasin_transfert_id');

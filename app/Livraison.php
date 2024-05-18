@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Livraison extends Model
 {
+
+    protected $fillable = [
+        'numero',
+        'date_livraison',
+        'boutique_id',
+        'transfert_id',
+    ];
+
     public function commande(){
         return $this->belongsTo('App\Commande');
     }

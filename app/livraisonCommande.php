@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class livraisonCommande extends Model
 {
+    protected $fillable = [
+        'commande_modele_id',
+        'livraison_id',
+        'modele_id',
+        'quantite_livre',
+        'quantite_restante'
+    ];
+
     public function livraison()
     {
         return $this->belongsTo(Livraison::class, 'livraison_id');

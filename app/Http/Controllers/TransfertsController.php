@@ -141,7 +141,7 @@ class TransfertsController extends Controller
 
                 $modele->decrement('quantite', $quantiteToTransfer);
 
-                $livraisoncommande = new LivraisonCommande([
+                $livraisoncommande = new livraisonCommande([
                     'commande_modele_id' => $produitTransfertData[$i],
                     'livraison_id' => $livraison->id,
                     'modele_id' => null,
