@@ -8,6 +8,7 @@ use App\Modele;
 use App\Historique;
 use App\Livraison;
 use App\livraisonCommande;
+use App\TransfertLigne;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
@@ -211,7 +212,7 @@ class TransfertsController extends Controller
                 TransfertLigne::where('id', $item->id)
                     ->update(['modele_reception_id' => $item->modele_reception_id]);
 
-                LivraisonCommande::where('livraison_id', $livraison->id)
+                livraisonCommande::where('livraison_id', $livraison->id)
                     ->update(['modele_id' => $item->modele_reception_id]);
 
                 Modele::where('id', $item->modele_reception_id)
