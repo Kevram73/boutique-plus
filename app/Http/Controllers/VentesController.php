@@ -1221,7 +1221,7 @@ class VentesController extends Controller
             $prevente->vente_id=$vente->id;
             $prevente->save();
 
-
+            $allReduction += $line["reduction"];
             $total+= $prevente->prixtotal;
         }
 
@@ -1360,6 +1360,7 @@ class VentesController extends Controller
             $prevente->vente_id=$vente->id;
             $prevente->save();
 
+            $allReduction += $line["reduction"];
             $total+= $prevente->prixtotal;
         }
 
@@ -1479,6 +1480,7 @@ class VentesController extends Controller
             $prevente->prixtotal = $line['prix']*$line['quantite'] - $line['reduction'];
             $prevente->vente_id=$vente->id;
             $prevente->save();
+            $allReduction += $line["reduction"];
             $total+= $prevente->prixtotal;
         }
 
@@ -1596,6 +1598,7 @@ class VentesController extends Controller
             $prevente->vente_id=$vente->id;
             $prevente->save();
 
+            $allReduction += $line["reduction"];
             $total+= $prevente->prixtotal;
         }
         $vente=vente::findOrFail($vente->id);
