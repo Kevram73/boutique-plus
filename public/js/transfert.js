@@ -364,6 +364,7 @@ $('#btnselect').on('click',function () {
                     $('#categorie').val(null);
                     $('#famille').empty();
                     $('#modele').empty();
+                    $('#livraison').empty();
                     $('#quantite').val(null);
                     $('#stock').val(null);
 
