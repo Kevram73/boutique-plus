@@ -353,13 +353,14 @@ $('#btnselect').on('click',function () {
 
             var d=document.getElementById('famille')
             var b=document.getElementById('modele')
+            var livraison= document.getElementById('livraison')
             var famille=d.options[d.selectedIndex].text;
             var modele=b.options[b.selectedIndex].text;
             const data = $('#modele').val().split('|');
             produitTransfertTable.row.add({
                 "id":data[0],
                 "produit": famille + " -> " + modele,
-                "livraison": $('#livraison').val(),
+                "livraison": livraison,
                 "quantite": $('#quantite').val(),
             }).draw()
 
