@@ -353,7 +353,7 @@ $('#btnselect').on('click',function () {
 
             var d=document.getElementById('famille')
             var b=document.getElementById('modele')
-            var livraison= document.getElementById('livraison')
+            var livraison= document.getElementById('livraison').value
             var famille=d.options[d.selectedIndex].text;
             var modele=b.options[b.selectedIndex].text;
             const data = $('#modele').val().split('|');
