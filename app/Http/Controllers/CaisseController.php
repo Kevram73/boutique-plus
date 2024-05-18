@@ -14,7 +14,7 @@ use App\User;
 use App\Avoir;
 
 use App\Depense;
-
+use App\Boutique;
 use Carbon\Carbon;
 use App\vente;
 use App\DepenseFile;
