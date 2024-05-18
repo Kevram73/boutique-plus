@@ -18,4 +18,10 @@ class Reglement extends Model
         return $this->belongsTo('App\vente');
     }
 
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+}
+
 }
