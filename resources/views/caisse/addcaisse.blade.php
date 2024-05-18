@@ -45,8 +45,7 @@
  --}}
                                                                     <select class="form-group">
                                                                         <optgroup>
-                                                                            <option></option>
-                                                                            <option value="{{ $boutiques[0]->id }}" name="boutique_id" id="boutique_id" selected >{{ $boutiques[0]->nom }}</option>
+                                                                            <option value="{{ $boutique->id }}" name="boutique_id" id="boutique_id" selected >{{ $boutique->nom }}</option>
                                                                         </optgroup>
                                                                     </select>
                                                             </div>
