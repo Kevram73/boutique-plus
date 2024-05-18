@@ -692,8 +692,6 @@ public function reglementlistshow($id)
 
     private function updateClient(Client $client, $donne, Vente $vente)
     {
-        $client->solde -= $donne;
-
         if ($vente->with_avoir) {
             $client->avoir = max($vente->totaux > $client->avoir ? 0 : $client->avoir - $vente->totaux, 0);
         }
