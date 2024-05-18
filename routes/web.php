@@ -522,6 +522,7 @@ Route::get('/sets', 'SettingController@index');
 Route::post('/export-db', 'SettingController@export_db');
 
 Route::get('/transferts', 'TransfertsController@liste')->name('transferts');
+Route::get('/modeles/transfert/{id}', 'TransfertsController@get_modele_stock')->name('get_modele_stock');
 Route::get('/recuperertransfert', 'TransfertsController@transfert');
 Route::get('/recupererreception', 'TransfertsController@reception');
 Route::get('/alltransfert', 'TransfertsController@indexTransfert');

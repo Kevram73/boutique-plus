@@ -349,6 +349,14 @@ $('#btnselect').on('click',function () {
             sweetToast('warning',message);
         }
         else{
+            var qte=0;
+            $.ajax({
+                url: '/modeles/transfert/'+$('#modele').val(),
+                type: "get",
+                success : function(data) {
+                    qte = data;
+                }
+            })
                     var d=document.getElementById('famille')
                     var b=document.getElementById('modele')
                     var famille=d.options[d.selectedIndex].text;
@@ -357,6 +365,7 @@ $('#btnselect').on('click',function () {
                     produitTransfertTable.row.add({
                         "id":data[0],
                         "produit": famille + " -> " + modele,
+                        "stock": qte,
                         "quantite": $('#quantite').val(),
                     }).draw()
 

@@ -166,6 +166,11 @@ class TransfertsController extends Controller
         }
     }
 
+    public function get_modele_stock($id){
+        $modele = Modele::find($id);
+        return $modele->quantite;
+    }
+
 
 
     /**
