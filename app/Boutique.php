@@ -26,4 +26,28 @@ class Boutique extends Model
                     ->withPivot(["is_active", "key", "value"])
                     ->withTimestamps();
     }
+    public function ventes()
+    {
+        return $this->hasMany(Vente::class);
+    }
+
+    public function depenses()
+    {
+        return $this->hasMany(Depense::class);
+    }
+
+    public function caisses()
+    {
+        return $this->hasMany(Caisse::class);
+    }
+
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
+
+    public function reglements()
+    {
+        return $this->hasManyThrough(Reglement::class, Client::class);
+    }
 }

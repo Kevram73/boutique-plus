@@ -35,4 +35,10 @@ class vente extends Model
         }
         return false;
     }
+
+
+    public function reglements()
+    {
+        return $this->hasMany(Reglement::class);
+    }
 }

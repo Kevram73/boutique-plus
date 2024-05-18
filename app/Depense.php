@@ -13,4 +13,5 @@ class Depense extends Model
     public function boutique(){
         return $this->belongsTo('App\Boutique');
     }
+    
 }
