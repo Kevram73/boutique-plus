@@ -227,6 +227,7 @@ $(function( ) {
         columns: [
             { data: 'id' },
             { data: 'produit' },
+            { data: 'livraison' },
             { data: 'quantite' },
         ]
     });
@@ -358,6 +359,7 @@ $('#btnselect').on('click',function () {
             produitTransfertTable.row.add({
                 "id":data[0],
                 "produit": famille + " -> " + modele,
+                "livraison": $('#livraison').val(),
                 "quantite": $('#quantite').val(),
             }).draw()
 
@@ -504,10 +506,10 @@ $('#btnadd').on('click',function (e) {
                 let content =''
                 for(let i = 0; i <  produitTransfertTable.data().length; i++){
                     if (i!=produitTransfertTable.data().length-1){
-                        content +=   produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|"+ produitTransfertTable.data()[i].quantite+"|"
+                        content +=   produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|"+ produitTransfertTable.data()[i].livraison+"|" + produitTransfertTable.data()[i].quantite+"|"
 
                     }else{
-                        content +=  produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|"+  produitTransfertTable.data()[i].quantite
+                        content +=  produitTransfertTable.data()[i].id+"|"+ produitTransfertTable.data()[i].produit+"|"+ produitTransfertTable.data()[i].livraison +"|"+ produitTransfertTable.data()[i].quantite
                     }
                 }
                 $('#produitTransfertData').val(content)

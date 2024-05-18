@@ -124,7 +124,7 @@ class TransfertsController extends Controller
             for ($i = 0; $i < count($produitTransfertData); $i += 4) {
                 $modele = Modele::find($produitTransfertData[$i]);
 
-                $quantiteToTransfer = min($produitTransfertData[$i+2], $modele->quantite); // Ensuring we do not transfer more than available
+                $quantiteToTransfer = min($produitTransfertData[$i+3], $modele->quantite); // Ensuring we do not transfer more than available
                 if ($quantiteToTransfer <= 0 || !$modele) {
                     throw new \Exception("Stock insuffisant ou modèle introuvable pour " . $produitTransfertData[$i+1]);
                 }
@@ -150,7 +150,7 @@ class TransfertsController extends Controller
                 ]);
                 $livraisoncommande->save();
 
-                $livraison_a_prelever = Livraison::where('numero', $request->input('livraison'))->get()->first();
+                $livraison_a_prelever = Livraison::where('numero', $produitTransfertData[$i+2])->get()->first();
                 $livraisons_commande = LivraisonCommande::where('livraison_id', $livraison_a_prelever->id)->where('modele_id', $produitTransfertData[$i])->get()->first();
                 $livraisons_commande->update([
                     'quantite_livre' => $livraisons_commande->quantite_livre - $quantiteToTransfer,

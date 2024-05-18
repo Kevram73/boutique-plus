@@ -125,6 +125,7 @@
                                                                 <tr>
                                                                     <th class="center hidden-phone" style="display: table-column;"></th>
                                                                     <th class="center hidden-phone">Libellé produit</th>
+                                                                    <th class="center hidden-phone">Livraison</th>
                                                                     <th class="center hidden-phone">Qte transfert</th>
                                                                 </tr>
                                                                 </thead>
