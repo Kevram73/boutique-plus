@@ -580,7 +580,7 @@ class CaisseController extends Controller
             $depenses = Depense::where('boutique_id', $boutiqueId)->whereDate('date_dep', $date)->sum('montant');
             $dernierSolde = Caisse::where('boutique_id', $boutiqueId)->latest()->pluck('soldeMagasin')->first() ?? 0;
 
-            $recetteTotale = $venteSG + $venteCredit + $venteNonLivret - $depenses + $reglements + $avoirs;
+            $recetteTotale = $venteSG - $depenses + $reglements + $avoirs + $venteNonLivret;
             $soldemagasin = $recetteTotale + $dernierSolde;
 
         }
