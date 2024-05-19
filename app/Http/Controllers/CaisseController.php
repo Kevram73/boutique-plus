@@ -606,7 +606,7 @@ class CaisseController extends Controller
             $creances = Reglement::whereDate('created_at', $date)->where('type', 1)
                                 ->join('ventes', function($join) {
                                     $join->on('reglements.vente_id', '=', 'ventes.id')
-                                            ->where('ventes.boutique_id', '=', $boutiqueId);
+                                            ->where('ventes.boutique_id', '=', Auth::user()->boutique_id);
                                     })
                                 ->sum('montant_restant');
 
