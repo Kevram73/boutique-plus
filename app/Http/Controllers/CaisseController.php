@@ -603,12 +603,14 @@ class CaisseController extends Controller
             }
 
 
-            $creances = Reglement::whereDate('created_at', $date)->where('type', 1)
-                                ->join('ventes', function($join) {
-                                    $join->on('reglements.vente_id', '=', 'ventes.id')
-                                            ->where('ventes.boutique_id', '=', Auth::user()->boutique_id);
-                                    })
-                                ->sum('montant_restant');
+            $creances = Reglement::whereDate('reglements.created_at', $date)
+                            ->where('reglements.type', 1)
+                            ->join('ventes', function($join) {
+                                $join->on('reglements.vente_id', '=', 'ventes.id')
+                                    ->where('ventes.boutique_id', '=', Auth::user()->boutique_id);
+                            })
+                            ->sum('montant_restant');
+
 
             $depenses = Depense::where('boutique_id', $boutiqueId)->whereDate('date_dep', $date)->sum('montant');
             $dernierSolde = Caisse::where('boutique_id', $boutiqueId)->latest()->pluck('soldeMagasin')->first() ?? 0;
