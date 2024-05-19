@@ -521,12 +521,16 @@ public function reglementlistshow($id)
                 $reglement->montant_restant =$request->input('total')+$total->montant_restant-$request->input('donne');
 
             }
-            $client = client::find($client[0]->client);
 
-            $client->solde += $request->input('restant');
-            $client->save();
             $reglement->vente_id =$id;
             $reglement->save();
+
+            if($request->input('reste')>0){
+                $client = client::find($client[0]->client);
+                $client->solde += $request->input('restant');
+                $client->save();
+            }
+
             return $request ->input();
         }
         else{
