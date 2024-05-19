@@ -563,6 +563,16 @@ class CaisseController extends Controller
                 ->where('with_avoir', 0)
                 ->whereIn('type_vente', [1, 4]) // Permet de sélectionner les types de vente 1 ou 4
                 ->sum('totaux');
+            $vente2SG = Vente::where('boutique_id', $boutiqueId)
+                ->whereDate('date_vente', $date)
+                ->where('with_avoir', 1)
+                ->where(function ($query) {
+                    $query->whereNotNull('avoir_donner')
+                          ->orWhere('avoir_donner', '>', 0);
+                })
+                ->whereIn('type_vente', [1, 4])
+                ->sum('totaux');
+            $venteSG += $vente2SG;
 
             $venteCredit = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
                                 ->where('type_vente', 2)->sum('totaux');
@@ -574,15 +584,16 @@ class CaisseController extends Controller
             $avoirs = Avoir::whereDate('date_ajout', $date)->where('boutique_id', $boutiqueId)->sum('amount');
 
             // Calculate total receipts
-            $reglements = Reglement::whereDate('created_at', $date)
-                                ->whereHas('client', function($query) use ($boutiqueId) {
-                                    $query->where('boutique_id', $boutiqueId);
-                                })
-                                ->join('ventes', function($join) {
-                                    $join->on('reglements.vente_id', '=', 'ventes.id')
-                                        ->where('ventes.with_avoir', '=', 0);
-                                })
-                                ->sum('montant_donne');
+            $reglements = Reglement::whereDate('reglements.created_at', $date)
+                            ->whereHas('client', function($query) use ($boutiqueId) {
+                                $query->where('boutique_id', $boutiqueId);
+                            })
+                            ->join('ventes', function($join) {
+                                $join->on('reglements.vente_id', '=', 'ventes.id')
+                                    ->where('ventes.with_avoir', '=', 0);
+                            })
+                            ->sum('montant_donne');
+
             $billing_caisses = BillingCaisse::whereDate('created_at', $date)->where('boutique_id', $boutiqueId)->get();
             $total_billing = 0;
             if(count($billing_caisses)>0){
