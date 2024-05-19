@@ -514,10 +514,17 @@ public function reglementlistshow($id)
             if ($total==null){
                 $reglement->total =$request->input('total');
                 $reglement->montant_restant =$request->input('restant');
+                $client = client::find($reglement->client_id);
+                // Mise à jour des informations de l'utilisateur
+                $client->solde = $reglement->montant_restant;
+                // Sauvegarde des modifications
+                $client->save();
 
             }else{
                 $reglement->total =$request->input('total')+$total->montant_restant;
                 $reglement->montant_restant =$request->input('total')+$total->montant_restant-$request->input('donne');
+
+                
             }
             $reglement->vente_id =$id;
             $reglement->save();
