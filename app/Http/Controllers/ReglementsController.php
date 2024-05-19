@@ -695,6 +695,12 @@ public function reglementlistshow($id)
 
         $reglement->save();
 
+        if($request->input('reste')>0){
+            $client = Client::find($client[0]->client);
+            $client->solde += $request->input('restant');
+            $client->save();
+        }
+
         $this->updateClient($vente->client, $request->input('donne'), $vente);
 
         return $request->input();
