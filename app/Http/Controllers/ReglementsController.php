@@ -696,7 +696,7 @@ public function reglementlistshow($id)
         $reglement->save();
 
         if($request->input('reste')>0){
-            $client = Client::find($client[0]->client);
+            $client = Client::find($vente->client_id);
             $client->solde += $request->input('restant');
             $client->save();
         }
