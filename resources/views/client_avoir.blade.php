@@ -30,6 +30,8 @@
 
 
                         </div>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-money"></i> Ajouter avoir</button>
+                        
                         <table class="table table-bordered table-striped mb-4" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                             <thead>
                             <tr>
@@ -135,7 +137,6 @@
                         </div>
 
 
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-money"></i> Ajouter avoir</button>
                         {{-- <a style="display: none !important;" class=" btn btn-default mb-xs mt-xs mr-xs btn btn-danger"  href="/retourvente-{{ $all_vente->id }}"><i class="fa fa-arrow-left"></i>Retour Vente</a> --}}
                     </div>
 
