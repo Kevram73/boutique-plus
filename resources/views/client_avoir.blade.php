@@ -30,9 +30,9 @@
 
 
                         </div>
-                        <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-money"></i> Ajouter avoir</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-money"></i> Ajouter avoir</button>
 
-                        <table class="table table-bordered table-striped mb-4" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
+                        <table class="table table-bordered table-striped mb-4 mt-4" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                             <thead>
                             <tr>
                                 <th class="center hidden-phone">Date</th>

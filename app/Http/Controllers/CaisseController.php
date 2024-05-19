@@ -560,6 +560,7 @@ class CaisseController extends Controller
         if (!$caisseExist) {
             $venteSG = Vente::where('boutique_id', $boutiqueId)
                 ->whereDate('date_vente', $date)
+                ->where('with_avoir', 0)
                 ->whereIn('type_vente', [1, 4]) // Permet de sélectionner les types de vente 1 ou 4
                 ->sum('totaux');
 
