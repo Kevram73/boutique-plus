@@ -523,11 +523,7 @@ public function reglementlistshow($id)
             $reglement->vente_id =$id;
             $reglement->save();
 
-            if($request->input('reste')>0){
-                $client = Client::find($client[0]->client);
-                $client->solde += $request->input('restant');
-                $client->save();
-            }
+
 
             return $request ->input();
         }
@@ -547,6 +543,7 @@ public function reglementlistshow($id)
         $reglement->client_id = $request->input('client');
         $reglement->vente_id = $request->input('idvente');
         $reglement->total = $request->input('total');
+        $reglement->boutique_id = Auth::user()->boutique_id;
         if ($request->input('reste')>0)
         {
             $reglement->montant_restant = $request->input('restant');
