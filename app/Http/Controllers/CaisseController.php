@@ -571,7 +571,7 @@ class CaisseController extends Controller
                           ->orWhere('avoir_donner', '>', 0);
                 })
                 ->whereIn('type_vente', [1, 4])
-                ->sum('totaux');
+                ->sum('avoir_donner');
             $venteSG += $vente2SG;
 
             $venteCredit = vente::where('boutique_id', $boutiqueId)->whereDate('date_vente', $date)
