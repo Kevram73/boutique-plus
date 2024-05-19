@@ -467,6 +467,7 @@ class CaisseController extends Controller
         $reglement->solde = $request->input('solde');
         $reglement->date = date('Y-m-d', strtotime($request->date));
         $reglement->totalVente = $request->input('totalVente');
+        $reglement->ventenette = $request->input('ventenette');
         $reglement->remise = $request->input('remise');
         $reglement->ventenette = $request->input('ventenette');
         $reglement->venteCredit = $request->input('venteCredit');
@@ -476,6 +477,7 @@ class CaisseController extends Controller
         $reglement->montantcollecte = $request->input('montantcollecte');
         $reglement->recetteTotal = $request->input('recetteTotal');
         $reglement->soldeMagasin = $request->input('soldeMagasin');
+        $reglement->avoir = $request->input('avoir');
         $reglement->boutique_id = Auth::user()->boutique->id;
         $reglement->user_id = Auth::user()->id;
 

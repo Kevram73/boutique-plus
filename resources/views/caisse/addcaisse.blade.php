@@ -61,7 +61,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Avoirs</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="totalAvoir" id="totalAvoir" value="{{ $avoirs ?? '0' }}" readonly class="form-control" required/>
+                                                                <input type="number" name="avoir" id="avoir" value="{{ $avoirs ?? '0' }}" readonly class="form-control" required/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -73,7 +73,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Vente nette</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="venteNette" id="venteNette" value="{{ $venteSG ?? '0' }}" readonly class="form-control" required/> <!-- Assurez-vous que cette formule est correcte pour "venteNette" -->
+                                                                <input type="number" name="ventenette" id="ventenette" value="{{ $venteSG ?? '0' }}" readonly class="form-control" required/> <!-- Assurez-vous que cette formule est correcte pour "venteNette" -->
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
