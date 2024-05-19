@@ -109,7 +109,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Montant Collecté</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="montantCollecte" id="montantCollecte" value="{{ $total_billing ?? '0' }}" readonly class="form-control" required/>
+                                                                <input type="number" name="montantcollecte" id="montantcollecte" value="{{ $total_billing ?? '0' }}" readonly class="form-control" required/>
                                                                 <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-default" href="/addBulling">Ajouter Billetage</a>
                                                             </div>
                                                         </div>
