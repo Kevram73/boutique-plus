@@ -25,7 +25,14 @@
                                             <div class="col-md-4 form-group">
                                                 <label class="col-md-4 control-label">Nom</label>
                                                 <div class="col-md-9 form-group">
-                                                    
+                                                    <select  name="client" id="client"  class=" form-control populate">
+                                                        <optgroup label="Choisir le client">
+                                                            <option value=""></option>
+                                                            @foreach($client as $clt)
+                                                                <option value="{{$clt->id}}">{{$clt->nom}}</option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    </select>
                                                 </div>
                                                 <a class="modal-with-form btn btn-default mb-xs mt-xs mr-xs btn btn-primary" id="btnclient"><i class="fa fa-plus"></i></a>
                                             </div>
@@ -33,21 +40,42 @@
                                             <div class="col-md-4 form-group">
                                                 <label class="col-md-4 control-label">Categorie</label>
                                                 <div class="col-md-9 form-group">
-                                                    
+                                                    <select  name="categorie" id="categorie"  class="form-control populate">
+                                                        <optgroup label="Choisir la categorie">
+                                                            <option value=""></option>
+                                                            @foreach($categorie as $cat)
+                                                                <option value="{{$cat->id}}">{{$cat->nom}}</option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    </select>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Produit</label>
                                                 <div class="col-md-9 form-group">
-                                                    
+                                                    <select  name="produit" id="produit"   class="form-control populate">
+                                                        <optgroup label="Choisir un produit">
+                                                            <option value="" ></option>
+                                                            @foreach($produits as $cat)
+                                                                <option value="{{$cat->id}}">{{$cat->nom}}</option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    </select>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Modele</label>
                                                 <div class="col-md-9 form-group">
-                                                    
+                                                    <select  name="modele" id="modele"  class="form-control populate">
+                                                        <optgroup label="Choisir le modele">
+                                                            <option value=""></option>
+                                                            @foreach($modeles as $cat)
+                                                                <option value="{{$cat->id}}">{{$cat->libelle}}</option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
@@ -64,7 +92,7 @@
                                                     <input type="number" name="quantite"  id="quantite" class="form-control" placeholder="100"  min="1" required/>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-4 form-group"></div>
                                             <div class="col-md-4 form-group">
                                                 <label class="col-sm-4 control-label">Total</label>
@@ -93,8 +121,8 @@
                                                     <button type="button" class="mb-xs mt-xs mr-xs btn btn-default  "  id="annuler"><i class="fa fa-times"></i> Annuler</button>
                                                 </div>
 
-                    
-                    
+
+
                     <div class="col-md-12">
                         <div class="row">
                         <div class="col-md-6"></div>
@@ -106,14 +134,14 @@
                             <div class="col-md-6">
                                 <a class="btn btn-danger" id="sup" ><i class="fa fa-trash-o" ></i>Supprimer</a>
                             </div>
-                            
+
                             <div class="col-md-6 text-right">
                                 <h3 class="m-0">Total: <strong id="montant_total" class="prix">0</strong></h3>
                             </div>
                         </div>
                     </div>
 
-                    
+
                     </div>
             </div>
         </section>
