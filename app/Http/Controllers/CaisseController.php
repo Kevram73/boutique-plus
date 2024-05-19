@@ -575,19 +575,28 @@ class CaisseController extends Controller
                                 ->whereHas('client', function($query) use ($boutiqueId) {
                                     $query->where('boutique_id', $boutiqueId);
                                 })->sum('montant_donne');
+            $billing_caisses = BillingCaisse::whereDate('created_at', $date)->where('boutique_id', $boutiqueId)->get();
+            $total_billing = 0;
+            if(count($billing_caisses)>0){
+                foreach($billing_caisses as $bill){
+                    $total_billing += $bill->prix * $bill->total;
+                }
+            }
+
+
             $creances = Reglement::whereDate('created_at', $date)->where('type', 1)->sum('montant_restant');
 
             $depenses = Depense::where('boutique_id', $boutiqueId)->whereDate('date_dep', $date)->sum('montant');
             $dernierSolde = Caisse::where('boutique_id', $boutiqueId)->latest()->pluck('soldeMagasin')->first() ?? 0;
 
             $recetteTotale = $venteSG - $depenses + $reglements + $avoirs + $venteNonLivret;
-            $soldemagasin = $recetteTotale + $dernierSolde;
+            $soldemagasin = $recetteTotale + $dernierSolde - $total_billing;
 
         }
 
         return view('caisse.addcaisse', compact(
             'boutique', 'soldemagasin', 'dernierSolde', 'date', 'recetteTotale', 'depenses',
-            'reglements', 'venteSG', 'venteCredit', 'venteNonLivret', 'avoirs', 'remiseGlobal', 'creances'
+            'reglements', 'venteSG', 'venteCredit', 'venteNonLivret', 'avoirs', 'remiseGlobal', 'creances', 'total_billing'
         ));
     }
 
