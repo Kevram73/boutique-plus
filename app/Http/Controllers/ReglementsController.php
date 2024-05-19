@@ -119,12 +119,12 @@ class ReglementsController extends Controller
             ->groupBy('clients.id', 'clients.nom', 'clients.contact', 'ventes.numero', 'ventes.id', 'ventes.totaux','reglements.created_at')
             ->orderBy('reglements.created_at', 'desc')
             ->get();
-            $reglements = Reglement::where('boutique_id', '=', Auth::user()->boutique->id)
-    ->join('clients', 'reglements.client_id', '=', 'clients.id')
-    ->selectRaw('clients.id as venteId, clients.nom, clients.contact, clients.solde, SUM(reglements.montant_donne) as donner, reglements.created_at as date')
-    ->groupBy('clients.id', 'clients.nom', 'clients.contact', 'clients.solde', 'reglements.created_at')
-    ->orderBy('reglements.created_at', 'desc')
-    ->get();
+            $reglements = Reglement::where('reglements.boutique_id', '=', Auth::user()->boutique->id)
+                        ->join('clients', 'reglements.client_id', '=', 'clients.id')
+                        ->selectRaw('clients.id as venteId, clients.nom, clients.contact, clients.solde, SUM(reglements.montant_donne) as donner, reglements.created_at as date')
+                        ->groupBy('clients.id', 'clients.nom', 'clients.contact', 'clients.solde', 'reglements.created_at')
+                        ->orderBy('reglements.created_at', 'desc')
+                            ->get();
 
             //dd($reglements);
         // $ventes = vente::with('boutique')->where ('ventes.boutique_id', '=',Auth::user()->boutique->id)
