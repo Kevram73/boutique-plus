@@ -679,6 +679,9 @@ public function reglementlistshow($id)
         }
 
         $vente->with_avoir = $request->use_avoir == "on";
+        if($vente->with_avoir){
+            $vente->avoir_donner = $request->input('amount_value');
+        }
         $vente->save();
 
         $latestReglement = $vente->client->reglements->sortByDesc('created_at')->first();
