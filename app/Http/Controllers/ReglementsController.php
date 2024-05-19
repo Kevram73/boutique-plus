@@ -119,15 +119,13 @@ class ReglementsController extends Controller
             ->groupBy('clients.id', 'clients.nom', 'clients.contact', 'ventes.numero', 'ventes.id', 'ventes.totaux','reglements.created_at')
             ->orderBy('reglements.created_at', 'desc')
             ->get();
-            $reglements=Reglement::with('boutique')->where ('boutique_id', '=',Auth::user()->boutique->id)
-            ->join('clients', function ($join) {
-                $join->on('reglements.client_id', '=', 'clients.id');
-            })
-            ->selectRaw('clients.id as venteId, clients.nom, clients.contact,clients.solde, SUM(reglements.montant_donne) as donner,reglements.created_at as date')
-            ->groupBy('clients.id', 'clients.nom', 'clients.contact','clients.solde','reglements.created_at')
-            ->orderBy('reglements.created_at', 'desc')
+            $reglements = Reglement::where('boutique_id', '=', Auth::user()->boutique->id)
+    ->join('clients', 'reglements.client_id', '=', 'clients.id')
+    ->selectRaw('clients.id as venteId, clients.nom, clients.contact, clients.solde, SUM(reglements.montant_donne) as donner, reglements.created_at as date')
+    ->groupBy('clients.id', 'clients.nom', 'clients.contact', 'clients.solde', 'reglements.created_at')
+    ->orderBy('reglements.created_at', 'desc')
+    ->get();
 
-            ->get();
             //dd($reglements);
         // $ventes = vente::with('boutique')->where ('ventes.boutique_id', '=',Auth::user()->boutique->id)
         //     ->join('clients', function ($join) {
@@ -691,6 +689,7 @@ public function reglementlistshow($id)
             'montant_donne' => $request->input('donne'),
             'client_id' => $vente->client_id,
             'type' => 1,
+            'boutique_id' => Auth::user()->boutique_id,
             'vente_id' => $vente->id,
             'total' => $request->input('reste') > 0 ? ($total ? $request->input('total') + $total : $request->input('total')) : $request->input('donne'),
             'montant_restant' => $request->input('reste') > 0 ? ($total ? $request->input('total') + $total - $request->input('donne') : $request->input('restant')) : 0
