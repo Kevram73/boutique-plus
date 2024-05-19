@@ -521,9 +521,9 @@ public function reglementlistshow($id)
                 $reglement->montant_restant =$request->input('total')+$total->montant_restant-$request->input('donne');
 
             }
-            $client = client::find($reglement->client_id);
+            $client = client::find($client[0]->client);
 
-            $client->solde += $reglement->montant_restant;
+            $client->solde += $request->input('restant');
             $client->save();
             $reglement->vente_id =$id;
             $reglement->save();
