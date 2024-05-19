@@ -579,7 +579,7 @@ class CaisseController extends Controller
             $total_billing = 0;
             if(count($billing_caisses)>0){
                 foreach($billing_caisses as $bill){
-                    $total_billing += ($bill->prix * $bill->total);
+                    $total_billing += ($bill->prix * $bill->nombre);
                 }
             }
 
