@@ -1386,14 +1386,7 @@ class VentesController extends Controller
         }else{
             $vente->with_tva = false;
             $vente->totaux = $total;
-             // Récupération de l'utilisateur à mettre à jour
-             $client = Client::find($vente->client_id);
-
-             // Mise à jour des informations de l'utilisateur
-             $client->solde = $vente->totaux + $client->solde;
-
-             // Sauvegarde des modifications
-             $client->save();
+             
         }
 
         $vente->update();
@@ -1503,17 +1496,7 @@ class VentesController extends Controller
 
         $vente->update();
 
-        if($vente->with_avoir){
-            $client = Client::find($request->client);
-            $avoir = $client->avoir;
-            if($vente->totaux > $avoir){
-                $client->avoir = 0;
-                $client->save();
-            } else {
-                $client->avoir -= $vente->totaux;
-                $client->save();
-            }
-        }
+
         $modele2=DB::table('modeles')
             ->join('produits', function ($join) {
                 $join->on('modeles.produit_id', '=', 'produits.id');
