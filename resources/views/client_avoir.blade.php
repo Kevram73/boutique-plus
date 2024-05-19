@@ -30,7 +30,7 @@
 
 
                         </div>
-                        <table class="table table-bordered table-striped mb-none" id="afficheTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf" >
+                        <table class="table table-bordered table-striped mb-none" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
                             <thead>
                             <tr>
                                 <th class="center hidden-phone">Date</th>
@@ -52,6 +52,43 @@
 
                             </tbody>
                         </table>
+
+                        <table class="table table-bordered table-striped mb-none" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
+                            <thead>
+                            <tr>
+                                <th class="center hidden-phone">Vente</th>
+                                <th class="center hidden-phone">Montant</th>
+                                <th class="center hidden-phone">Date</th>
+                                <th class="center hidden-phone">Type</th>
+                            </tr>
+                            </thead>
+                            <tbody class="center hidden-phone">
+
+                            @foreach($ventes as $vente)
+
+                                <tr class="gradeA">
+                                    <td class="center hidden-phone">{{$vente->numero}}</td>
+                                    <td class="center hidden-phone prix">{{$vente->totaux}} fcfa</td>
+                                    <td class="center hidden-phone">{{$vente->created_at->format('Y-m-d')}}</td>
+                                    <td class="center hidden-phone">
+                                        @if($vente->type_vente == 1)
+                                         SIMPLE
+                                        @elseif ($vente->type_vente == 2)
+                                         A CREDIT
+                                        @elseif ($vente->type_vente == 3)
+                                         NON LIVREE
+                                        @elseif ($vente->type_vente == 4)
+                                         EN GROS
+                                        @endif
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                            </tbody>
+                        </table>
+
+
 
 
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

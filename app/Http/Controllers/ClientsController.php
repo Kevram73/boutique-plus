@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Avoir;
 use App\Boutique;
+use App\vente;
 
 use App\InventoryDebtor;
 use App\Historique;
@@ -55,8 +56,9 @@ class ClientsController extends Controller
 
     public function client_avoir_liste($id){
         $avoirs = Avoir::where('client_id', $id)->get();
+        $ventes = vente::where('client_id', $id)->where('with_avoir', 1)->get();
         $client = Client::find($id);
-        return view('client_avoir', compact('avoirs', 'client'));
+        return view('client_avoir', compact('avoirs', 'client', 'ventes'));
     }
 
  public function storeDEBITEUR(Request $request)
