@@ -183,31 +183,31 @@ class CaisseController extends Controller
  public function store_depense(Request $request)
     {
 
-        $record = Versement::findorfail($request->depense_id);
+        $request->validate([
+            'depense_id' => 'required|exists:versements,id',
+            'file' => 'sometimes|file'
+        ]);
 
-       // $name = File::newFile($request->file, "storage/fichiers");
-       // if($name){
-            if (request()->hasFile('file')) {
-                $file = request()->file('file');
+        $record = Versement::findOrFail($request->depense_id);
 
-                $record->justificatif_versement = $file->store('storage/fichiers');
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
 
-                $file->store('public/storage/fichiers/');
-            }
+            // Stocker le fichier directement dans le répertoire 'fichiers'
+            $path = $file->store('fichiers');
+            $record->justificatif_versement = $path;
+        }
 
-            $record->save();
-                                   // dd($file);
-
-       // }
+        // Mettre à jour le statut et sauvegarder l'enregistrement
         $record->statut = 1;
-        $record->update();
+        $record->save();
 
+        // Mettre à jour le solde du compte bancaire associé
         $modele = CompteBancaire::find($record->compte_id);
-        $modele->solder = $modele->solder + $record->montant;
+        $modele->solder += $record->montant;
         $modele->save();
-       // DB::commit();
 
-        return redirect()->back()->with('success', 'Fichier Enregistrer');
+        return redirect()->back()->with('success', 'Fichier Enregistré');
 
     }
 
