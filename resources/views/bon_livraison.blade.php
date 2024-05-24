@@ -246,8 +246,8 @@
 
     <footer>
         <div class="footer-info">SIS à DJAPENI, Rue Numero 1 Carréfour Non Loin de L'EPP  DJAPENI, Cinkasse-Togo</div>
-        <div class="footer-info">Tél: +228 90 48 40 05 | NIF : 1001178767 | N° R.C.C.M : TG-LOM 2019 B 0001</div>
-        <div class="footer-info">E-mail: <span>mingoubek@gmail.com</span> | Site web: <span>www.migoubeetfils.com</span></div>
+        <div class="footer-info">Tél: +228 90 91 35 00 | NIF : 1001178767 | N° R.C.C.M : TG-LOM 2019 B 0001</div>
+        <div class="footer-info">E-mail: <span>kmingoube@mingoube.com</span> | Site web: <span>www.mingoube.com</span> | BP: <span>347 - Dapaong</span></div>
     </footer>
 
 </body>
