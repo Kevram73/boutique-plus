@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devis en détail</title>
-    
+
     <style>
         @page {
             size: A4;
@@ -21,9 +21,9 @@
             margin: auto;
             position: relative;
             z-index: 1;
-          
+
         }
-        
+
         body::before{
             content: '';
           position: absolute;
@@ -70,7 +70,7 @@
             font-size: 14px;
             text-align: left;
         }
-        
+
         .date{
             font-size: 14px;
             text-align: right;
@@ -95,15 +95,15 @@
             text-align: center;
             font-size: 12px;
         }
-        
+
         .footer-info {
             margin-bottom: 5px;
         }
-        
+
         .footer-info span {
             font-weight: bold;
         }
-        
+
         .bottom-space {
             display: flex;
             justify-content: space-between;
@@ -112,7 +112,7 @@
             text-decoration: underline;
             font-weight: bold;
         }
-        
+
         .bottom-space .second{
             text-align: right;
             margin-top: -15px;
@@ -152,7 +152,7 @@
     <header>
         <img src="https://boutique.mingoube.com/image/top.png" />
     </header>
-    
+
     <h3 class="header-text">Devis Détail</h3>
 
     <!-- Head Table -->
@@ -236,12 +236,12 @@
 echo $fmt->format($devis->totaux); @endphp Francs CFA.</span></p>
 
     <h3 class="condition">Condition de paiement :</h3>
-    <p class="date">Fait à {{ Auth::user()->boutique->nom }}, ce @php 
+    <p class="date">Fait à {{ Auth::user()->boutique->nom }}, ce @php
     setlocale(LC_TIME, 'fr_FR.UTF-8');
     $date = new DateTimeImmutable(now());
     echo strftime('%A %d %B %Y', $date->getTimestamp());
 @endphp</p>
-    
+
     <div class="bottom-space">
         <p>Client:</p>
         <p class="second">Kanfitine MINGOUBE</p>
@@ -251,9 +251,9 @@ echo $fmt->format($devis->totaux); @endphp Francs CFA.</span></p>
 
     <footer>
         <div class="footer-info">SIS à DJAPENI, Rue Numero 1 Carréfour Non Loin de L'EPP  DJAPENI, Cinkasse-Togo</div>
-        <div class="footer-info">Tél: +228 90 48 40 05 | NIF : 1001178767 | N° R.C.C.M : TG-LOM 2019 B 0001</div>
-        <div class="footer-info">E-mail: <span>mingoubek@gmail.com</span> | Site web: <span>www.migoubeetfils.com</span></div>
+        <div class="footer-info">Tél: +228 90 91 35 00 | NIF : 1001178767 | N° R.C.C.M : TG-LOM 2019 B 0001</div>
+        <div class="footer-info">E-mail: <span>kmingoube@mingoube.com</span> | Site web: <span>www.mingoube.com</span> | BP: <span>347 - Dapaong</span></div>
     </footer>
-    
+
 </body>
 </html>
