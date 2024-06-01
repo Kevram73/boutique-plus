@@ -606,6 +606,7 @@ Route::get('/livraison/bon/{id}', 'VentesController@bon_de_livraison')->name('bo
 Route::get('/getLivraisonsByProduit', 'VentesController@getLivraisonsByProduit');
 
 Route::get('/livraison/shop', 'LivraisonsController@livraisonsShop')->name('livraisons.shop');
+Route::get('/livraison/bon/commande/{id}', 'LivraisonsController@livraison_bon_commande')->name('livraisons.bon_commande');
 Route::get('/livraison/shop/{id}', 'LivraisonsController@show_livraison')->name('show_livraison');
 Route::get('/livraison/detail/{id}', 'LivraisonsController@detail_livraison')->name('detail_livraison');
 Route::get('/modelelivraisons-{id}', 'LivraisonsController@show_modele_livraison')->name('show_modele_livraison');

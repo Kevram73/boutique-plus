@@ -12,9 +12,9 @@ class Avoir extends Model
     }
 
     public function user(){
-        return User::find($this->user_id);
+    return User::find($this->user_id);
     }
-    
+
     public function boutique()
     {
         return $this->belongsTo(Boutique::class);

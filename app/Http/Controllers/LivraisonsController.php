@@ -1419,6 +1419,40 @@ public function indexNew($id)
         return view('livraisonsShop', compact('livraisons'));
     }
 
+    public function livraison_bon_commande(Request $request, $id)
+    {
+        $livraisons = Livraison::find($id);
+
+        $name = "bon_commande_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
+
+        try{
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', TRUE);
+            $options->set('isPhpEnabled', true);
+
+            $dompdf = new Dompdf($options);
+
+            // Chargez la vue dans Dompdf
+            $view = view('bon_commande',compact('livraisons'))->render();
+            $dompdf->loadHtml($view);
+
+            // Définissez la taille du papier
+            $dompdf->setPaper('a4');
+
+            // Rendez le PDF
+            $dompdf->render();
+
+            // Enregistrez le PDF dans un répertoire
+            file_put_contents(public_path("bons/" . $name), $dompdf->output());
+
+        }catch(Exception $e)
+        {}
+
+        //return $pdf->download($name);
+        return response()->download(public_path("bons/" . $name));
+    }
+
     public function show_livraison(Request $request, int $id){
         $livraison = Livraison::find($id);
         $num_livraison = $livraison->numero;
