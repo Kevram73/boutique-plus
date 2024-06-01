@@ -14,7 +14,10 @@ use App\Prevente;
 use App\Modele;
 
 use App\Categorie;
-
+use PDF;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Exception;
 use App\Produit;
 use App\modeleFournisseur;
 use Illuminate\Support\Facades\DB;
