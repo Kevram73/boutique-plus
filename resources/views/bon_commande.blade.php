@@ -231,7 +231,7 @@
         </tbody>
 
     </table>
-    <h4 style="text-align: center;"> @php echo($total) @endphp </h4>
+    <h4 style="text-align: center;">Valeur totale:  @php echo($total) @endphp FCFA </h4>
 
 
     <!-- Footer Text -->
