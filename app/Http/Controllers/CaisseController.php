@@ -590,9 +590,10 @@ class CaisseController extends Controller
                             })
                             ->join('ventes', function($join) {
                                 $join->on('reglements.vente_id', '=', 'ventes.id')
-                                    ->where('ventes.with_avoir', '=', 0);
+                                    ->where('ventes.with_avoir', '=', 0)
+                                    ->where('ventes.type_vente', '=', 2);
                             })
-                            ->where('reglements.type', 0)
+                            ->where('reglements.type', 1)
                             ->sum('montant_donne');
 
             $billing_caisses = BillingCaisse::whereDate('created_at', $date)->where('boutique_id', $boutiqueId)->get();
