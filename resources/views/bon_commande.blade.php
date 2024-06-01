@@ -214,19 +214,22 @@
         </thead>
         <tbody>
             @foreach($livraisons->livraison_lines() as $ven)
-
+                @php
+                    $total += $ven->quantite_livre*$ven->modele_produit()->prix;
+                @endphp
                 <tr class="gradeA">
 
                     <td class="center hidden-phone">{{$ven->modele_produit()->libelle}} </td>
                     <td class="center hidden-phone">{{$ven->quantite_livre}} </td>
-                    <td class="center hidden-phone prix">{{$ven->modele_produit()->prix}}</td>
-                    <td class="center hidden-phone">{{ $ven->quantite_livre*$ven->modele_produit()->prix }}</td>
+                    <td class="center hidden-phone prix">{{$ven->modele_produit()->prix}} FCFA</td>
+                    <td class="center hidden-phone">{{ $ven->quantite_livre*$ven->modele_produit()->prix }} FCFA</td>
                 </tr>
 
             @endforeach
         </tbody>
 
     </table>
+    <h4 style="text-align: center;"> @php echo($total) @endphp </h4>
 
 
     <!-- Footer Text -->
@@ -239,9 +242,7 @@
 
 
     <div class="bottom-space">
-        <p class="second">Le gérant</p>
-
-        <p>{{ Auth::user()->nom }}</p>
+        <p class="second">Le gérant {{ Auth::user()->nom }}</p>
     </div>
 
     <div class="separator"></div>
