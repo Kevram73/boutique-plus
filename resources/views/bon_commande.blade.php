@@ -200,7 +200,9 @@
 
         </div>
     </div>
-
+    @php
+        $total = 0;
+    @endphp
 
     <!-- Main Table -->
     <table>
