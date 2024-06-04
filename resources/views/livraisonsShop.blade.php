@@ -21,7 +21,7 @@
 
                     <div class="panel-body">
 
-                        <table class="table table-bordered table-striped mb-none">
+                        <table class="table table-bordered table-striped mb-none" id="employeTable">
                             <thead>
                             <tr>
                                 <th class="center hidden-phone">Numero</th>
