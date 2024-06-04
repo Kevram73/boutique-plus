@@ -21,7 +21,7 @@
 
                     <div class="panel-body">
 
-                        <table class="table table-bordered table-striped mb-none" id="employeTable" data-swf-path="octopus/assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
+                        <table class="table table-bordered table-striped mb-none">
                             <thead>
                             <tr>
                                 <th class="center hidden-phone">Numero</th>
