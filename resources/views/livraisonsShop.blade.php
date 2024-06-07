@@ -72,7 +72,10 @@
     <script>
         $(document).ready(function() {
             $('#employeTable').DataTable({
-                "paging": true // Activer la pagination
+                columnDefs: [{
+                    "defaultContent": "-",
+                    "targets": "_all"
+                  }]
             });
         });
     </script>
