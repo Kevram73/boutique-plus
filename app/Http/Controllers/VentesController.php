@@ -2118,7 +2118,7 @@ class VentesController extends Controller
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
-            ->where ('journals.boutique_id', '=',$ed)
+            ->where ('ventes.boutique_id', '=',$ed)
             ->select('ventes.id as id','ventes.numero as vente','ventes.totaux as totaux')
             ->get();
         return datatables()->of($vente)
