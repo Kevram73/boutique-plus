@@ -2662,7 +2662,7 @@ class VentesController extends Controller
 
         $ventes = [];
         if($boutique == 0){
-            $ventes = Vente::where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();;
+            $ventes = Vente::where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
         }
         else{
             $ventes = Vente::where('boutique_id', $boutique)->where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
