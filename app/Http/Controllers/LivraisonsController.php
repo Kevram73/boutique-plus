@@ -1084,6 +1084,7 @@ public function indexNew($id)
             $livraison ->numero="LIV".now()->format('Y')."-".$ed;
             $livraison ->date_livraison= now();
             $livraison ->boutique_id=$alllivraison[0];
+            $livraison->status = 1;
             $livraison->save();
 
             for ($i =0 ;$i<count($alllivraison);$i+=4) {
