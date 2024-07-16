@@ -2655,5 +2655,21 @@ class VentesController extends Controller
         ]);
     }
 
+    public function sales_data(Request $request){
+        $boutique = $request->input('boutique');
+        $date_deb = $request->input('date_deb');
+        $date_fin = $request->input('date_fin');
+
+        $ventes = [];
+        if($boutique == 0){
+            $ventes = Vente::where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();;
+        }
+        else{
+            $ventes = Vente::where('boutique_id', $boutique)->where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
+        }
+
+        return response()->json($ventes);
+
+    }
 
 }
