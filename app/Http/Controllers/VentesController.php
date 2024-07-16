@@ -2136,7 +2136,7 @@ class VentesController extends Controller
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
-            ->where ('journals.boutique_id', '=',Auth::user()->boutique->id)
+            ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id)
             ->where('journals.mois', '=', $id)
             ->where('journals.annee', '=', $ed)
             ->sum('preventes.prixtotal');
@@ -2151,7 +2151,7 @@ class VentesController extends Controller
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
-            ->where ('journals.boutique_id', '=',$ad)
+            ->where ('ventes.boutique_id', '=',$ad)
             ->where('journals.mois', '=', $id)
             ->where('journals.annee', '=', $ed)
             ->sum('preventes.prixtotal');
@@ -2166,7 +2166,7 @@ class VentesController extends Controller
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
-            ->where ('journals.boutique_id', '=',Auth::user()->boutique->id)
+            ->where ('ventes.boutique_id', '=',Auth::user()->boutique->id)
             ->where('journals.annee', '=', $id)
             ->sum('preventes.prixtotal');
         return $vente;
@@ -2180,7 +2180,7 @@ class VentesController extends Controller
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
-            ->where ('journals.boutique_id', '=',$ed)
+            ->where ('ventes.boutique_id', '=',$ed)
             ->where('journals.annee', '=', $id)
             ->sum('preventes.prixtotal');
         return $vente;
