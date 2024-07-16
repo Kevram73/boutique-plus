@@ -40,6 +40,9 @@
                         <input type="number" name="total" id="total" class="form-control" value="0" readonly/>
                     </div>
                 </div>
+                <div class="col-md-4 form-group">
+                    <button class="btn btn-primary" id="search">Recuperer</button>
+                </div>
 
             </div>
             <section class="panel">
@@ -100,7 +103,7 @@ $(document).ready(function() {
         });
     }
 
-    $('#boutique, #date_deb, #date_fin').change(fetchSalesData);
+    $('#search').click(fetchSalesData);
 });
 </script>
 @endsection
