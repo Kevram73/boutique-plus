@@ -2661,7 +2661,7 @@ class VentesController extends Controller
         $date_fin = $request->input('date_fin');
 
         $ventes = [];
-        if($boutique== "" || $boutique == 0){
+        if($boutique== null || $boutique == 0){
             $ventes = Vente::where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
         }
         else{
