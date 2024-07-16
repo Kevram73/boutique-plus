@@ -1386,7 +1386,7 @@ class VentesController extends Controller
         }else{
             $vente->with_tva = false;
             $vente->totaux = $total;
-             
+
         }
 
         $vente->update();
@@ -2072,7 +2072,7 @@ class VentesController extends Controller
             ->join('journals', function ($join) {
                 $join->on('ventes.journal_id', '=', 'journals.id');
             })
-            ->where ('journals.boutique_id', '=',$ad)
+            ->where ('ventes.boutique_id', '=',$ad)
             ->where('journals.mois', '=', $id)
             ->where('journals.annee', '=', $ed)
             ->select('ventes.id as id','ventes.numero as vente','ventes.totaux as totaux', 'users.nom as user')

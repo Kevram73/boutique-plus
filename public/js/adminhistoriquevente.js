@@ -213,7 +213,7 @@ $('#choix').on('change',function ( ) {
                 });
             })
         }
-        
+
         if ($('#choix').val()=="an"){
             $('#jr').hide();
             $('#depense').show();
