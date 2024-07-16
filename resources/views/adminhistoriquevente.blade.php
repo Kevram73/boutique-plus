@@ -23,14 +23,14 @@
                 <div class="col-md-4 form-group">
                     <label class="col-md-4 control-label">Date de debut</label>
                     <div class="col-md-9 form-group">
-                        <input type="date" class="form-control" name="date_deb" id="date_deb" placeholder="Entrez la date de debut" required/>
+                        <input type="date" class="form-control" name="date_deb" id="date_deb" value="" placeholder="Entrez la date de debut" required/>
                     </div>
                 </div>
 
                 <div class="col-md-4 form-group">
                     <label class="col-md-4 control-label">Date de fin</label>
                     <div class="col-md-9 form-group">
-                        <input type="date" class="form-control" name="date_fin" id="date_fin" placeholder="Entrez la date de fin" required/>
+                        <input type="date" class="form-control" name="date_fin" id="date_fin" value="" placeholder="Entrez la date de fin" required/>
                     </div>
                 </div>
 
@@ -39,9 +39,6 @@
                     <div class="col-sm-9">
                         <input type="number" name="total" id="total" class="form-control" value="0" readonly/>
                     </div>
-                </div>
-                <div class="col-md-4 form-group">
-                    <button class="btn btn-primary" id="search">Recuperer</button>
                 </div>
 
             </div>
@@ -103,7 +100,7 @@ $(document).ready(function() {
         });
     }
 
-    $('#search').click(fetchSalesData);
+    $('#boutique, #date_deb, #date_fin').change(fetchSalesData);
 });
 </script>
 @endsection
