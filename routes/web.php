@@ -366,7 +366,7 @@ Route::get('/fermer', 'VentesController@fermer');
 Route::get('/deletevente-{id}', 'VentesController@destroy');
 Route::post('/updatevente', 'VentesController@update');
 Route::get('/edit', 'VentesController@edit');
-Route::get('/showvente-{id}', 'VentesController@show');
+Route::get('/showvente-{id}', 'VentesController@show')->name("show.vente");
 Route::get('/detailvente-{id}', 'VentesController@show')->name('detailvente');
 Route::get('/detailvente2-{id}', 'VentesController@show')->name('detailvente2');
 Route::get('/recupererventedate-{id}', 'VentesController@ventedate');
