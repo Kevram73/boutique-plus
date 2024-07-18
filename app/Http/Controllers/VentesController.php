@@ -2689,7 +2689,7 @@ class VentesController extends Controller
             return [
                 'numero' => $vente->numero,
                 'totaux' => $vente->totaux,
-                'action' => '<a href="' . route('ventes.show', $vente->id) . '">Voir</a>'
+                'action' => '<a href="' . route('show.vente', $vente->id) . '">Voir</a>'
             ];
         });
     
