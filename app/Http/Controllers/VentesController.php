@@ -2662,21 +2662,39 @@ class VentesController extends Controller
         ]);
     }
 
-    public function sales_data(Request $request){
-        $boutique = $request->input('boutique');
-        $date_deb = $request->input('date_deb');
-        $date_fin = $request->input('date_fin');
 
-        $ventes = [];
-        if($boutique== null || $boutique == 0){
-            $ventes = Vente::where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
+    public function sales_data(Request $request)
+    {
+        $boutique_id = $request->query('boutique');
+        $date_deb = $request->query('date_deb');
+        $date_fin = $request->query('date_fin');
+    
+        $query = Vente::query();
+    
+        if ($boutique_id && $boutique_id != 0) {
+            $query->where('boutique_id', $boutique_id);
         }
-        else{
-            $ventes = Vente::where('boutique_id', $boutique)->where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
+    
+        if ($date_deb) {
+            $query->whereDate('date_vente', '>=', $date_deb);
         }
-
-        return response()->json($ventes);
-
+    
+        if ($date_fin) {
+            $query->whereDate('date_vente', '<=', $date_fin);
+        }
+    
+        $ventes = $query->get();
+    
+        $data = $ventes->map(function ($vente) {
+            return [
+                'numero' => $vente->numero,
+                'totaux' => $vente->totaux,
+                'action' => '<a href="' . route('ventes.show', $vente->id) . '">Voir</a>'
+            ];
+        });
+    
+        return response()->json($data);
     }
+
 
 }
