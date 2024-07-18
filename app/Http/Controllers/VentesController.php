@@ -2685,6 +2685,8 @@ class VentesController extends Controller
     
         $ventes = $query->get();
     
+        $total = $ventes->sum('totaux');
+    
         $data = $ventes->map(function ($vente) {
             return [
                 'numero' => $vente->numero,
@@ -2693,8 +2695,12 @@ class VentesController extends Controller
             ];
         });
     
-        return response()->json($data);
-    }
+        return response()->json([
+            'ventes' => $data,
+            'total' => $total,
+        ]);
+}
+
 
 
 }
