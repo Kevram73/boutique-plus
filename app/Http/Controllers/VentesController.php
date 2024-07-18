@@ -2570,58 +2570,65 @@ class VentesController extends Controller
     }
 
     public function getLivraisonsByProduit(Request $request)
-    {
-        try {
-            // Obtenir les paramètres de la requête
-            $modele_id = $request->query('modele_id');
-            $boutique_id = $request->query('boutique_id');
+{
+    try {
+        // Obtenir les paramètres de la requête
+        $modele_id = $request->query('modele_id');
+        $boutique_id = $request->query('boutique_id');
 
-            // Valider que les paramètres sont des nombres
-            if (!is_numeric($modele_id) || !is_numeric($boutique_id)) {
-                return response()->json([
-                    'error' => 'Les paramètres modele_id et boutique_id doivent être des nombres.',
-                ], 400);
-            }
-
-            // Récupérer les livraisons associées au modèle et à la boutique
-            $livraisons = livraisonCommande::join('livraisons', 'livraison_commandes.livraison_id', '=', 'livraisons.id') // Jointure explicite
-                            ->where('livraisons.boutique_id', $boutique_id) // Filtrage par boutique_id
-                            ->where('livraison_commandes.modele_id', $modele_id) // Filtrage par modele_id
-                            ->with('livraison') // Charger les relations nécessaires
-                            ->get(); // Obtenir les résultats
-
-
-            if ($livraisons->isEmpty()) {
-                return response()->json([
-                    'message' => 'Aucune livraison trouvée pour ce modèle et cette boutique.',
-                    'data' => $livraisons
-                ], 404);
-            }
-
-            // Mapper les résultats pour obtenir les données requises
-            $livraisons_data = $livraisons->map(function ($livraison_commande) {
-                $livraison = $livraison_commande->livraison;
-
-                return [
-                    'id' => $livraison->id,
-                    'numero' => $livraison->numero,
-                    'date_livraison' => $livraison->date_livraison,
-                    'modele_libelle' => $livraison_commande->modele_produit()->libelle, // Libelle du modèle
-                    'quantite_restante' => $livraison_commande->quantite_livre -  $livraison_commande->quantite_vendue, // Quantité restante
-                ];
-            });
-
+        // Valider que les paramètres sont des nombres
+        if (!is_numeric($modele_id) || !is_numeric($boutique_id)) {
             return response()->json([
-                'livraisons' => $livraisons_data,
-            ]);
-
-        } catch (Exception $e) {
-            // Gestion des exceptions inattendues
-            return response()->json([
-                'error' => 'Erreur inattendue : ' . $e->getMessage(),
-            ], 500);
+                'error' => 'Les paramètres modele_id et boutique_id doivent être des nombres.',
+            ], 400);
         }
+
+        // Récupérer les livraisons associées au modèle et à la boutique
+        $livraisons = livraisonCommande::join('livraisons', 'livraison_commandes.livraison_id', '=', 'livraisons.id') // Jointure explicite
+                        ->where('livraisons.boutique_id', $boutique_id) // Filtrage par boutique_id
+                        ->where('livraison_commandes.modele_id', $modele_id) // Filtrage par modele_id
+                        ->with('livraison') 
+                        ->get(); // Obtenir les résultats
+
+
+        if ($livraisons->isEmpty()) {
+            return response()->json([
+                'message' => 'Aucune livraison trouvée pour ce modèle et cette boutique.',
+                'data' => $livraisons
+            ], 404);
+        }
+
+        // Mapper les résultats pour obtenir les données requises
+        $livraisons_data = $livraisons->map(function ($livraison_commande) {
+            $livraison = $livraison_commande->livraison;
+            $quantite_restante = $livraison_commande->quantite_livre - $livraison_commande->quantite_vendue;
+
+            // Ne pas inclure les livraisons dont la quantité restante est égale à zéro
+            if ($quantite_restante <= 0) {
+                return null;
+            }
+
+            return [
+                'id' => $livraison->id,
+                'numero' => $livraison->numero,
+                'date_livraison' => $livraison->date_livraison,
+                'modele_libelle' => $livraison_commande->modele_produit()->libelle, // Libelle du modèle
+                'quantite_restante' => $quantite_restante, // Quantité restante
+            ];
+        })->filter(); // Filtrer les valeurs nulles
+
+        return response()->json([
+            'livraisons' => $livraisons_data->values(), // Réindexer le tableau
+        ]);
+
+    } catch (Exception $e) {
+        // Gestion des exceptions inattendues
+        return response()->json([
+            'error' => 'Erreur inattendue : ' . $e->getMessage(),
+        ], 500);
     }
+}
+
 
 
     public function delivered_vente($id){
