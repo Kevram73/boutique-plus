@@ -212,7 +212,6 @@ class TransfertsController extends Controller
                 $livraisonCommande = livraisonCommande::where('livraison_id', $livraisonId)
                                                     ->where('modele_id', $modeleId)
                                                     ->first();
-                dd($livraisonCommande);
 
                 if ($livraisonCommande) {
                     $livraisonCommande->quantite_vendue += $quantiteToTransfer;
