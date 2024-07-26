@@ -2601,14 +2601,16 @@ class VentesController extends Controller
             // Mapper les résultats pour obtenir les données requises
             $livraisons_data = $livraisons->map(function ($livraison_commande) {
                 $livraison = $livraison_commande->livraison;
+                if($livraison_commande->quantite_livre -  $livraison_commande->quantite_vendue > 0){
+                    return [
+                        'id' => $livraison->id,
+                        'numero' => $livraison->numero,
+                        'date_livraison' => $livraison->date_livraison,
+                        'modele_libelle' => $livraison_commande->modele_produit()->libelle, // Libelle du modèle
+                        'quantite_restante' => $livraison_commande->quantite_livre -  $livraison_commande->quantite_vendue, // Quantité restante
+                    ];
+                }
 
-                return [
-                    'id' => $livraison->id,
-                    'numero' => $livraison->numero,
-                    'date_livraison' => $livraison->date_livraison,
-                    'modele_libelle' => $livraison_commande->modele_produit()->libelle, // Libelle du modèle
-                    'quantite_restante' => $livraison_commande->quantite_livre -  $livraison_commande->quantite_vendue, // Quantité restante
-                ];
             });
 
             return response()->json([
