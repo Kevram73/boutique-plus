@@ -167,67 +167,72 @@ class TransfertsController extends Controller
     // }
 
     public function store(Request $request)
-    {
-        return $request->all();
-        DB::beginTransaction();
-        try {
-            // Création de l'objet Transfert avec les données nécessaires
-            $transfert = new Transfert([
-                'code' => "TSF" . now()->format('Y') . "-" . (DB::table('transferts')->max('id') + 1),
-                'status' => 0,
-                'magasin_transfert_id' => Auth::user()->boutique->id,
-                'magasin_reception_id' => $request->input('idmagasin'),
-                'livraison' => $request->input('livraison')
-            ]);
-            $transfert->save();
+{
+    DB::beginTransaction();
+    try {
+        // Create the Transfert object with necessary data
+        $transfert = new Transfert([
+            'code' => "TSF" . now()->format('Y') . "-" . (DB::table('transferts')->max('id') + 1),
+            'status' => 0,
+            'magasin_transfert_id' => Auth::user()->boutique->id,
+            'magasin_reception_id' => $request->input('idmagasin'),
+            'livraison' => $request->input('livraison')
+        ]);
+        $transfert->save();
 
-            // Traitement des données des produits à transférer
-            $produitTransfertData = explode('|', $request->input('produitTransfertData'));
-            for ($i = 0; $i < count($produitTransfertData); $i += 4) {
-                $liv_num = Livraison::where('numero', $produitTransfertData[$i+2])->first();
-                $modele = Modele::find($produitTransfertData[$i]);
-                $quantiteToTransfer = min($produitTransfertData[$i+3], $modele->quantite); // Assurer de ne pas transférer plus que le stock disponible
+        // Process the product transfer data
+        $produitTransfertData = explode('|', $request->input('produitTransfertData'));
+        for ($i = 0; $i < count($produitTransfertData); $i += 4) {
+            $livraisonNumero = $produitTransfertData[$i+2];
+            $modeleId = $produitTransfertData[$i];
+            $modeleLibelle = $produitTransfertData[$i+1];
+            $quantiteToTransfer = $produitTransfertData[$i+3];
 
-                if ($quantiteToTransfer <= 0 || !$modele) {
-                    throw new \Exception("Stock insuffisant ou modèle introuvable pour " . $produitTransfertData[$i+1]);
-                }
+            $liv_num = Livraison::where('numero', $livraisonNumero)->first();
+            $modele = Modele::find($modeleId);
 
-                // Insertion des lignes de transfert
-                DB::table('transfert_lignes')->insert([
-                    'transfert_id' => $transfert->id,
-                    'modele_libelle' => $produitTransfertData[$i+1],
-                    'modele_qte' => $quantiteToTransfer,
-                    'modele_transfert_id' => $produitTransfertData[$i+3],
-                    'modele_reception_id' => null, // Ce champ sera mis à jour dans la méthode update
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-
-
-                // Décrémenter le stock du modèle transféré
-                $modele->decrement('quantite', $quantiteToTransfer);
-
-                $livraisonId = $request->input('livraison');
-                $modeleId = $produitTransfertData[$i];
-
-                $livraisonCommande = livraisonCommande::where('livraison_id', $liv_num->id)
-                                                    ->where('modele_id', $modeleId)
-                                                    ->first();
-
-                if ($livraisonCommande) {
-                    $livraisonCommande->quantite_vendue += $quantiteToTransfer;
-                    $livraisonCommande->save();
-                }
-
+            if (!$modele) {
+                throw new \Exception("Modèle introuvable pour " . $modeleLibelle);
             }
 
-            DB::commit();
-            return $transfert;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => $e->getMessage()], 400);
+            $quantiteToTransfer = min($quantiteToTransfer, $modele->quantite); // Ensure not transferring more than available stock
+
+            if ($quantiteToTransfer <= 0) {
+                throw new \Exception("Stock insuffisant pour " . $modeleLibelle);
+            }
+
+            // Insert the transfer lines
+            DB::table('transfert_lignes')->insert([
+                'transfert_id' => $transfert->id,
+                'modele_libelle' => $modeleLibelle,
+                'modele_qte' => $quantiteToTransfer,
+                'modele_transfert_id' => $modeleId,
+                'modele_reception_id' => null, // This field will be updated in the update method
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            // Decrement the stock of the transferred model
+            $modele->decrement('quantite', $quantiteToTransfer);
+
+            $livraisonCommande = livraisonCommande::where('livraison_id', $liv_num->id)
+                                                  ->where('modele_id', $modeleId)
+                                                  ->first();
+
+            if ($livraisonCommande) {
+                $livraisonCommande->quantite_vendue += $quantiteToTransfer;
+                $livraisonCommande->save();
+            }
         }
+
+        DB::commit();
+        return response()->json(['transfert' => $transfert], 201);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['error' => $e->getMessage()], 400);
     }
+}
+
 
 
 
