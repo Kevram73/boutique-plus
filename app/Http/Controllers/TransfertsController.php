@@ -204,7 +204,8 @@ class TransfertsController extends Controller
                 // Décrémenter le stock du modèle transféré
                 $modele->decrement('quantite', $quantiteToTransfer);
 
-                return $livraison_commande = livraisonCommande::where('livraison_id', $request->input('livraison'))->where('modele_id', $produitTransfertData[$i])->get()->first();
+                $livraison_commande = livraisonCommande::where('livraison_id', $request->input('livraison'))->where('modele_id', $produitTransfertData[$i])->get()->first();
+                return $livraison_commande;
                 $livraison_commande->quantite_vendue += $quantiteToTransfer;
                 $livraison_commande->save();
 
