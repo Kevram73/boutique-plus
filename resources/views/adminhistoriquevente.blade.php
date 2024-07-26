@@ -93,9 +93,10 @@ $(document).ready(function() {
             },
             success: function(data) {
                 $('#achatTable tbody').empty();
-                data.forEach(function(sale) {
+                data.ventes.forEach(function(sale) {
                     $('#achatTable tbody').append('<tr><td>' + sale.numero + '</td><td>' + sale.totaux + '</td><td>' + sale.action + '</td></tr>');
                 });
+                $('#total').val(data.total);
             }
         });
     }

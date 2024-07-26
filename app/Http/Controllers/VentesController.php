@@ -2613,17 +2613,59 @@ class VentesController extends Controller
 
             });
 
+        // Valider que les paramètres sont des nombres
+        if (!is_numeric($modele_id) || !is_numeric($boutique_id)) {
             return response()->json([
-                'livraisons' => $livraisons_data,
-            ]);
-
-        } catch (Exception $e) {
-            // Gestion des exceptions inattendues
-            return response()->json([
-                'error' => 'Erreur inattendue : ' . $e->getMessage(),
-            ], 500);
+                'error' => 'Les paramètres modele_id et boutique_id doivent être des nombres.',
+            ], 400);
         }
+
+        // Récupérer les livraisons associées au modèle et à la boutique
+        $livraisons = livraisonCommande::join('livraisons', 'livraison_commandes.livraison_id', '=', 'livraisons.id') // Jointure explicite
+                        ->where('livraisons.boutique_id', $boutique_id) // Filtrage par boutique_id
+                        ->where('livraison_commandes.modele_id', $modele_id) // Filtrage par modele_id
+                        ->with('livraison')
+                        ->get(); // Obtenir les résultats
+
+
+        if ($livraisons->isEmpty()) {
+            return response()->json([
+                'message' => 'Aucune livraison trouvée pour ce modèle et cette boutique.',
+                'data' => $livraisons
+            ], 404);
+        }
+
+        // Mapper les résultats pour obtenir les données requises
+        $livraisons_data = $livraisons->map(function ($livraison_commande) {
+            $livraison = $livraison_commande->livraison;
+            $quantite_restante = $livraison_commande->quantite_livre - $livraison_commande->quantite_vendue;
+
+            // Ne pas inclure les livraisons dont la quantité restante est égale à zéro
+            if ($quantite_restante > 0) {
+                return [
+                    'id' => $livraison->id,
+                    'numero' => $livraison->numero,
+                    'date_livraison' => $livraison->date_livraison,
+                    'modele_libelle' => $livraison_commande->modele_produit()->libelle, // Libelle du modèle
+                    'quantite_restante' => $quantite_restante, // Quantité restante
+                ];
+            }
+
+
+        })->filter(); // Filtrer les valeurs nulles
+
+        return response()->json([
+            'livraisons' => $livraisons_data->values(), // Réindexer le tableau
+        ]);
+
+    } catch (Exception $e) {
+        // Gestion des exceptions inattendues
+        return response()->json([
+            'error' => 'Erreur inattendue : ' . $e->getMessage(),
+        ], 500);
     }
+}
+
 
 
     public function delivered_vente($id){
@@ -2657,21 +2699,45 @@ class VentesController extends Controller
         ]);
     }
 
-    public function sales_data(Request $request){
-        $boutique = $request->input('boutique');
-        $date_deb = $request->input('date_deb');
-        $date_fin = $request->input('date_fin');
 
-        $ventes = [];
-        if($boutique== null || $boutique == 0){
-            $ventes = Vente::where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
+    public function sales_data(Request $request)
+    {
+        $boutique_id = $request->query('boutique');
+        $date_deb = $request->query('date_deb');
+        $date_fin = $request->query('date_fin');
+
+        $query = Vente::query();
+
+        if ($boutique_id && $boutique_id != 0) {
+            $query->where('boutique_id', $boutique_id);
         }
-        else{
-            $ventes = Vente::where('boutique_id', $boutique)->where('created_at', '>=' $date_deb)->where('created_at', '<=', $date_fin)->get();
+
+        if ($date_deb) {
+            $query->whereDate('date_vente', '>=', $date_deb);
         }
 
-        return response()->json($ventes);
+        if ($date_fin) {
+            $query->whereDate('date_vente', '<=', $date_fin);
+        }
 
-    }
+        $ventes = $query->get();
+
+        $total = $ventes->sum('totaux');
+
+        $data = $ventes->map(function ($vente) {
+            return [
+                'numero' => $vente->numero,
+                'totaux' => $vente->totaux,
+                'action' => '<a href="' . route('show.vente', $vente->id) . '">Voir</a>'
+            ];
+        });
+
+        return response()->json([
+            'ventes' => $data,
+            'total' => $total,
+        ]);
+}
+
+
 
 }
