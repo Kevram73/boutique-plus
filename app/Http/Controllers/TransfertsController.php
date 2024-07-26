@@ -184,6 +184,7 @@ class TransfertsController extends Controller
             // Traitement des données des produits à transférer
             $produitTransfertData = explode('|', $request->input('produitTransfertData'));
             for ($i = 0; $i < count($produitTransfertData); $i += 4) {
+                $liv_num = Livraison::where('numero', $produitTransfertData[$i+2])->first();
                 $modele = Modele::find($produitTransfertData[$i]);
                 $quantiteToTransfer = min($produitTransfertData[$i+3], $modele->quantite); // Assurer de ne pas transférer plus que le stock disponible
 
@@ -209,7 +210,7 @@ class TransfertsController extends Controller
                 $livraisonId = $request->input('livraison');
                 $modeleId = $produitTransfertData[$i];
 
-                $livraisonCommande = livraisonCommande::where('livraison_id', $livraisonId)
+                $livraisonCommande = livraisonCommande::where('livraison_id', $liv_num->id)
                                                     ->where('modele_id', $modeleId)
                                                     ->first();
 
