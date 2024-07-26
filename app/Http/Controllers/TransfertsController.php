@@ -168,6 +168,7 @@ class TransfertsController extends Controller
 
     public function store(Request $request)
     {
+        return $request->all();
         DB::beginTransaction();
         try {
             // Création de l'objet Transfert avec les données nécessaires
@@ -200,6 +201,8 @@ class TransfertsController extends Controller
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
+
+                DB::table('livraison_commandes')->where('livraison_id', $)
 
                 // Décrémenter le stock du modèle transféré
                 $modele->decrement('quantite', $quantiteToTransfer);
