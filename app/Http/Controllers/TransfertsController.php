@@ -202,7 +202,6 @@ class TransfertsController extends Controller
                     'updated_at' => now()
                 ]);
 
-                DB::table('livraison_commandes')->where('livraison_id', $)
 
                 // Décrémenter le stock du modèle transféré
                 $modele->decrement('quantite', $quantiteToTransfer);
