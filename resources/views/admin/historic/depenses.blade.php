@@ -13,7 +13,7 @@
                 <div class="col-md-3 form-group">
                     <label for="boutique" class="control-label">Boutique</label>
                     <select name="boutique" id="boutique" class="form-control populate">
-                        <option>Choisissez votre boutique</option>
+                        <option value="0">Choisissez votre boutique</option>
                         <option value="0">Toutes les boutiques</option>
                         @foreach($shops as $boutique)
                             <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
