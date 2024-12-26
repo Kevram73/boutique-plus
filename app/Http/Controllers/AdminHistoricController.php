@@ -57,16 +57,23 @@ class AdminHistoricController extends Controller
         'livraisons' => Livraison::query(),
         default => throw new \InvalidArgumentException('Type non valide'),
     };
+    $tableName = $validated['type'];
 
     // Application des filtres conditionnels
     $data = $model
-    ->join('users', "{$model->getModel()->getTable()}.user_id", '=', 'users.id')
-    ->join('boutiques', "{$model->getModel()->getTable()}.boutique_id", '=', 'boutiques.id')
-        ->when(isset($validated['start_date']), fn($query) => $query->where('created_at', '>=', $validated['start_date']))
-        ->when(isset($validated['end_date']), fn($query) => $query->where('created_at', '<=', $validated['end_date']))
-        ->when(isset($validated['shop_id']), fn($query) => $query->where('boutique_id', $validated['shop_id']))
-        ->orderBy('created_at', 'desc')
-        ->get();
+    ->join('users', "{$tableName}.user_id", '=', 'users.id') // Joindre avec la table users
+    ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Joindre avec la table boutiques
+    ->when(isset($validated['start_date']), fn($query) => $query->where("{$tableName}.created_at", '>=', $validated['start_date'])) // Filtrer par date de début
+    ->when(isset($validated['end_date']), fn($query) => $query->where("{$tableName}.created_at", '<=', $validated['end_date'])) // Filtrer par date de fin
+    ->when(isset($validated['shop_id']), fn($query) => $query->where("{$tableName}.boutique_id", $validated['shop_id'])) // Filtrer par boutique
+    ->orderBy("{$tableName}.created_at", 'desc') // Trier par date
+    ->select(
+        "{$tableName}.*", // Toutes les colonnes du modèle principal
+        'users.name as user_name', // Nom de l'utilisateur
+        'boutiques.nom as boutique_name' // Nom de la boutique
+    )
+    ->get();
+
 
     // Retour des données sous format JSON
     return response()->json($data);
