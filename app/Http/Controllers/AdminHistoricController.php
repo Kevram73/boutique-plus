@@ -98,18 +98,18 @@ class AdminHistoricController extends Controller
     if ($validated['type'] === 'ventes') {
         $data = $data->map(function ($item) {
             // Conversion et formatage des montants
-            $item->totaux = number_format((float)$item->totaux, 2, ',', '.'); 
-            $item->montant_reduction = number_format((float)$item->montant_reduction, 2, ',', '.'); 
+            $item->totaux = number_format((float)$item->totaux, 2, ',', '.');
+            $item->montant_reduction = number_format((float)$item->montant_reduction, 2, ',', '.');
             return $item;
         });
     } elseif ($validated['type'] === 'depenses') {
         $data = $data->map(function ($item) {
             // Conversion et formatage des montants
-            $item->montant = number_format((float)$item->montant, 2, ',', '.'); 
+            $item->montant = number_format((float)$item->montant, 2, ',', '.');
             return $item;
         });
     }
-    
+
 
 
     // Retour des données sous format JSON
