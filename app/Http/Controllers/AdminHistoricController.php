@@ -77,7 +77,6 @@ class AdminHistoricController extends Controller
                          ->orWhere('users.prenom', 'like', "%{$validated['search']}%")
                          ->orWhere('boutiques.nom', 'like', "%{$validated['search']}%")
                          ->orWhere('clients.nom', 'like', "%{$validated['search']}%")
-                         ->orWhere('montant', 'like', "%{$validated['search']}%")
                          ->orWhere('motif', 'like', "%{$validated['search']}%");
             });
         })
