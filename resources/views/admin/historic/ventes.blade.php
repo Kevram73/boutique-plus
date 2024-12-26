@@ -103,8 +103,8 @@ $(document).ready(function() {
                 const tbody = $('#venteTable tbody');
                 tbody.empty();
 
-                if (data.data.length > 0) {
-                    data.data.forEach(function(vente) {
+                if (data.length > 0) {
+                    data.forEach(function(vente) {
                         tbody.append(`
                             <tr>
                                 <td>${vente.numero}</td>
