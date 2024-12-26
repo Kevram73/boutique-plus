@@ -114,6 +114,7 @@ $(document).ready(function() {
                                 <td>${livraison.date_livraison}</td>
                                 <td>${livraison.boutique_name}</td>
                                 <td>${livraison.status}</td>
+                                <td>${depense.justifier ? 'Terminée' : 'En attente'}</td>
                             </tr>
                         `);
                     });
