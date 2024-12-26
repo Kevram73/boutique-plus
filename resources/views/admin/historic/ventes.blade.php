@@ -105,7 +105,9 @@ $(document).ready(function() {
 
                 if (data.data.length > 0) {
                     const formatter = new Intl.NumberFormat('fr-FR', { style: 'decimal', minimumFractionDigits: 2 });
-                    const typeVente = vente.type_vente === 1 
+                    
+                    data.data.forEach(function(vente) {
+                        const typeVente = vente.type_vente === 1 
                         ? 'Simple' 
                         : vente.type_vente === 2 
                         ? 'Crédit' 
@@ -114,7 +116,6 @@ $(document).ready(function() {
                         : vente.type_vente === 4 
                         ? 'En gros'
                         : 'Inconnu'; 
-                    data.data.forEach(function(vente) {
                         tbody.append(`
                             <tr>
                                 <td>${vente.numero}</td>
