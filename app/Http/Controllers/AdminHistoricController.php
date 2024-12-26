@@ -95,18 +95,21 @@ class AdminHistoricController extends Controller
     ->orderBy("{$tableName}.created_at", 'desc') // Trier par la date
     ->paginate(25); // Pagination avec 25 résultats par page
 
-    if($validated['type'] === 'ventes') {
+    if ($validated['type'] === 'ventes') {
         $data = $data->map(function ($item) {
-            $item->totaux = number_format($item->totaux, 2, ',', ' '); // Format : 1 234,56
-            $item->montant_reduction = number_format($item->montant_reduction, 2, ',', ' '); // Format : 1 234,56
+            // Conversion et formatage des montants
+            $item->totaux = number_format((float)$item->totaux, 2, ',', '.'); 
+            $item->montant_reduction = number_format((float)$item->montant_reduction, 2, ',', '.'); 
             return $item;
         });
-    } else if($validated['type'] === 'depenses') {
+    } elseif ($validated['type'] === 'depenses') {
         $data = $data->map(function ($item) {
-            $item->montant = number_format($item->montant, 2, ',', ' '); // Format : 1 234,56
+            // Conversion et formatage des montants
+            $item->montant = number_format((float)$item->montant, 2, ',', '.'); 
             return $item;
         });
     }
+    
 
 
     // Retour des données sous format JSON
