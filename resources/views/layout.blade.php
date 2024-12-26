@@ -710,6 +710,10 @@
 		<script src="{{ asset('octopus/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 		<script src="{{ asset('octopus/assets/vendor/magnific-popup/magnific-popup.js')}}"></script>
 		<script src="{{ asset('octopus/assets/vendor/jquery-placeholder/jquery.placeholder.js')}}"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+<!-- JS DataTables -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
         <script src="/vendor/numeral/numeral.min.js"></script>
         <script>

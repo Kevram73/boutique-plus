@@ -1,10 +1,6 @@
 @extends('layout')
 @section('contenu')
 <!-- CSS DataTables -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-
-<!-- JS DataTables -->
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <div class="inner-wrapper">
     <section role="main" class="content-body">
