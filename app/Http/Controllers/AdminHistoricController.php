@@ -97,8 +97,8 @@ class AdminHistoricController extends Controller
 
     if($validated['type'] === 'ventes') {
         $data = $data->map(function ($item) {
-            $item->total = number_format($item->total, 2, ',', ' '); // Format : 1 234,56
-            $item->reduction = number_format($item->reduction, 2, ',', ' '); // Format : 1 234,56
+            $item->totaux = number_format($item->totaux, 2, ',', ' '); // Format : 1 234,56
+            $item->montant_reduction = number_format($item->montant_reduction, 2, ',', ' '); // Format : 1 234,56
             return $item;
         });
     } else if($validated['type'] === 'depenses') {
