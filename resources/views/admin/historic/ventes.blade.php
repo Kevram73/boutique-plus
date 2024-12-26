@@ -89,7 +89,7 @@ $(document).ready(function() {
         $('#venteTable tbody').html('<tr><td colspan="9" class="text-center">Chargement...</td></tr>');
 
         $.ajax({
-            url: '{{ route("historic_sales_fetch") }}', // Route côté backend
+            url: '{{ route("historic_fetch") }}', // Route côté backend
             method: 'GET',
             data: {
                 boutique,
