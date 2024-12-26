@@ -102,8 +102,8 @@
                 const tbody = $('#depenseTable tbody');
                 tbody.empty();
 
-                if (data.data.length > 0) {
-                    data.data.forEach(function(depense) {
+                if (data.length > 0) {
+                    data.forEach(function(depense) {
                         tbody.append(`
                             <tr>
                                 <td>${depense.name}</td>
