@@ -99,6 +99,7 @@ $(document).ready(function() {
                 date_deb,
                 date_fin,
                 search,
+                type: 'livraisons',
                 page
             },
             success: function(data) {
