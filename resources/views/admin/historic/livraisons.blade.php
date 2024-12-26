@@ -108,13 +108,17 @@ $(document).ready(function() {
 
                 if (data.data.length > 0) {
                     data.data.forEach(function(livraison) {
+                        const statusBadge = livraison.status
+                ? '<span class="badge bg-success">Terminée</span>'
+                : '<span class="badge bg-warning text-dark">En attente</span>';
+
                         tbody.append(`
                             <tr>
                                 <td>${livraison.numero}</td>
                                 <td>${livraison.date_livraison}</td>
                                 <td>${livraison.boutique_name}</td>
 
-                                <td>${livraison.status ? 'Terminée' : 'En attente'}</td>
+                                <td>${statusBadge}</td>
                             </tr>
                         `);
                     });

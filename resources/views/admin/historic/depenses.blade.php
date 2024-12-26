@@ -104,6 +104,7 @@
 
                 if (data.length > 0) {
                     data.forEach(function(depense) {
+                        
                         tbody.append(`
                             <tr>
                                 <td>${depense.name}</td>
