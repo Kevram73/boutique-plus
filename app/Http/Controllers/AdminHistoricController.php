@@ -61,8 +61,13 @@ class AdminHistoricController extends Controller
     $tableName = $validated['type'];
 
     // Définir la colonne de date à utiliser dynamiquement
-    $dateColumn = $validated['type'] === 'ventes' ? 'date_vente' : 'date_dep';
-
+    $dateColumn = match ($validated['type']) {
+        'ventes' => 'date_vente',
+        'depenses' => 'date_dep',
+        'livraisons' => 'date_livraison',
+        default => throw new \InvalidArgumentException('Type non valide'),
+    };
+    
     // Application des filtres conditionnels
     if ($validated['type'] === 'ventes') {
         $data = $model
@@ -103,7 +108,7 @@ class AdminHistoricController extends Controller
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
             ->when($validated['shop_id'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['shop_id']))
             ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '>=', $validated['start_date']))
-            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '<=', $validated['end_date']))
+            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '<=', $validated['start_date']))
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
@@ -127,10 +132,26 @@ class AdminHistoricController extends Controller
             $item->montant = number_format((float)$item->montant, 2, ',', '.');
             return $item;
         });
+    } elseif ($validated['type'] === 'livraisons') {
+        $data = $model
+            ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
+            ->when($validated['shop_id'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['shop_id']))
+            ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '>=', $validated['start_date']))
+            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '<=', $validated['end_date']))
+            ->when($validated['search'] ?? null, function ($q) use ($validated) {
+                $q->where(function ($subQuery) use ($validated) {
+                    $subQuery->where('boutiques.nom', 'like', "%{$validated['search']}%")
+                             ->orWhere('status', 'like', "%{$validated['search']}%");
+                });
+            })
+            ->select(
+                "{$tableName}.*",
+                'boutiques.nom as boutique_name'
+            )
+            ->orderBy("{$tableName}.created_at", 'desc')
+            ->paginate(25);
+
     }
-
-
-
 
     // Retour des données sous format JSON
     return response()->json($data);
