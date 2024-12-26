@@ -1,5 +1,11 @@
 @extends('layout')
 @section('contenu')
+<!-- CSS DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+<!-- JS DataTables -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
 <div class="inner-wrapper">
     <section role="main" class="content-body">
         <header class="page-header">
@@ -68,6 +74,52 @@
 @endsection
 
 @section('js')
+<script>
+$(document).ready(function() {
+    // Initialisation de DataTable
+    const table = $('#depenseTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '{{ route("historic_fetch") }}',
+            method: 'GET',
+            data: function(d) {
+                // Ajout des filtres aux données envoyées par DataTables
+                d.boutique = $('#boutique').val();
+                d.date_deb = $('#date_deb').val();
+                d.date_fin = $('#date_fin').val();
+                d.type = 'depenses';
+            }
+        },
+        columns: [
+            { data: 'name', title: 'Nom' },
+            { data: 'montant', title: 'Montant' },
+            { data: 'motif', title: 'Motif' },
+            { data: 'boutique_name', title: 'Boutique' },
+            { data: 'user_nom_prenom', title: 'Utilisateur' },
+            { data: 'date_dep', title: 'Date' },
+            { data: 'justifier', title: 'Justifié ?', render: function(data) {
+                return data ? 'Oui' : 'Non';
+            }},
+        ],
+        order: [[5, 'desc']], // Tri par défaut sur la colonne "Date"
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/fr-FR.json'
+        }
+    });
+
+    // Rafraîchir la table lorsque les filtres changent
+    $('#boutique, #date_deb, #date_fin').on('change', function() {
+        table.ajax.reload();
+    });
+});
+</script>
+@endsection
+
+
+
+@section('js')
+
 <script>
 $(document).ready(function() {
     // Fonction pour récupérer les données via AJAX
