@@ -82,7 +82,7 @@ $(document).ready(function() {
         // Effectuer une requête AJAX
         $.ajax({
             url: '{{ route("historic_fetch") }}', // Route définie côté backend
-            method: 'POST',
+            method: 'GET',
             data: { boutique, date_deb, date_fin, type: 'depenses' },
             success: function(data) {
                 // Vider le tableau avant d'insérer les nouvelles données

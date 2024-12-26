@@ -622,4 +622,4 @@ Route::get('/historiques/vente', 'VentesController@sales_data')->name('historiqu
 Route::get('/adminhistoriquedepenses', 'AdminHistoricController@depenses')->name('historic_depenses');
 Route::get('/adminhistoriqueventes', 'AdminHistoricController@ventes')->name('historic_ventes');
 Route::get('/adminhistoriquelivraisons', 'AdminHistoricController@livraisons')->name('historic_livraisons');
-Route::post('/adminhistoricfetch', 'AdminHistoricController@fetchData')->name('historic_fetch');
+Route::get('/adminhistoricfetch', 'AdminHistoricController@fetchData')->name('historic_fetch');
