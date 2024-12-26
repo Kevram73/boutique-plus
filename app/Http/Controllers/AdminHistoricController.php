@@ -10,6 +10,12 @@ use App\Boutique;
 
 class AdminHistoricController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Affiche la page des Dépenses.
      */
@@ -67,7 +73,7 @@ class AdminHistoricController extends Controller
         'livraisons' => 'date_livraison',
         default => throw new \InvalidArgumentException('Type non valide'),
     };
-    
+
     // Application des filtres conditionnels
     if ($validated['type'] === 'ventes') {
         $data = $model
