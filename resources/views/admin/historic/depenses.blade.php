@@ -104,13 +104,13 @@
 
                 if (data.length > 0) {
                     const formatter = new Intl.NumberFormat('fr-FR', { style: 'decimal', minimumFractionDigits: 2 });
-
+                    
                     data.forEach(function(depense) {
 
                         tbody.append(`
                             <tr>
                                 <td>${depense.name}</td>
-                                <td>${formatter.format(depense.montant)}</td>
+                                <td>${depense.montant}</td>
                                 <td>${depense.motif}</td>
                                 <td>${depense.boutique_name}</td>
                                 <td>${depense.user_nom} ${depense.user_prenom}</td>
