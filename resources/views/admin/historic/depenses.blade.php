@@ -113,14 +113,7 @@ $(document).ready(function() {
         table.ajax.reload();
     });
 });
-</script>
-@endsection
 
-
-
-@section('js')
-
-<script>
 $(document).ready(function() {
     // Fonction pour récupérer les données via AJAX
     function fetchExpenseData() {
