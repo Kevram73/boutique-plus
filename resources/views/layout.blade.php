@@ -669,13 +669,18 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="{{route('adminhistoriquevente')}}">
+                                                <a href="{{route('historic_ventes')}}">
                                                     DES VENTES
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="{{route('adminhistoriquedivers')}}">
-                                                    DES DIVERS
+                                                <a href="{{route('historic_depenses')}}">
+                                                    DES DEPENSES
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('historic_livraisons')}}">
+                                                    DES LIVRAISONS
                                                 </a>
                                             </li>
                                         </ul>

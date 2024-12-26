@@ -617,3 +617,9 @@ Route::post('/save-avoir', 'ClientsController@save_avoir')->name('save_avoir');
 Route::get('/client/avoir/{id}', 'ClientsController@client_avoir_liste')->name('avoir_liste');
 
 Route::get('/historiques/vente', 'VentesController@sales_data')->name('historique_vente');
+
+
+Route::get('/adminhistoriquedepenses', 'AdminHistoricController@depenses')->name('historic_depenses');
+Route::get('/adminhistoriqueventes', 'AdminHistoricController@ventes')->name('historic_ventes');
+Route::get('/adminhistoriquelivraisons', 'AdminHistoricController@livraisons')->name('historic_livraisons');
+Route::post('/adminhistoricfetch', 'AdminHistoricController@fetchData')->name('historic_fetch');
