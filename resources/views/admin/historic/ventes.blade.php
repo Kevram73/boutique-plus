@@ -105,6 +105,15 @@ $(document).ready(function() {
 
                 if (data.data.length > 0) {
                     const formatter = new Intl.NumberFormat('fr-FR', { style: 'decimal', minimumFractionDigits: 2 });
+                    const typeVente = vente.type_vente === 1 
+                        ? 'Simple' 
+                        : vente.type_vente === 2 
+                        ? 'Crédit' 
+                        : vente.type_vente === 3 
+                        ? 'Non livré' 
+                        : vente.type_vente === 4 
+                        ? 'En gros'
+                        : 'Inconnu'; 
                     data.data.forEach(function(vente) {
                         tbody.append(`
                             <tr>
@@ -115,7 +124,7 @@ $(document).ready(function() {
                                 <td>${formatter.format(vente.montant_reduction)}</td>
                                 <td>${formatter.format(vente.totaux)}</td>
                                 <td><a href="${vente.facture}" target="_blank">Voir</a></td>
-                                <td>${vente.type_vente}</td>
+                                <td>${typeVente}</td>
                                 <td>${vente.user_nom} ${vente.user_prenom}</td>
                             </tr>
                         `);
