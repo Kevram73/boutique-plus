@@ -96,6 +96,7 @@ $(document).ready(function() {
                 date_deb,
                 date_fin,
                 search, // Inclure le critère de recherche
+                type: 'ventes',
                 page // Numéro de page
             },
             success: function(data) {
