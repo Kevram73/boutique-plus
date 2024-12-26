@@ -88,9 +88,9 @@ $(document).ready(function() {
                 // Vider le tableau avant d'insérer les nouvelles données
                 $('#depenseTable tbody').empty();
 
-                if (data.depenses && data.depenses.length > 0) {
+                if (data && data.length > 0) {
                     // Insérer les données dans le tableau
-                    data.depenses.forEach(function(depense) {
+                    data.forEach(function(depense) {
                         $('#depenseTable tbody').append(`
                             <tr>
                                 <td>${depense.name}</td>
