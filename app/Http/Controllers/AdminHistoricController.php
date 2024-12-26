@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Depense;
-use App\Vente;
+use App\vente;
 use App\Livraison;
 use Illuminate\Http\Request;
 use App\Boutique;
