@@ -78,9 +78,9 @@ class AdminHistoricController extends Controller
     if ($validated['type'] === 'ventes') {
         $data = $model
             ->join('users', "{$tableName}.user_id", '=', 'users.id') // Join avec la table users
-            ->leftJoin('clients', "{$tableName}.client_id", '=', 'clients.id') // Join optionnel avec la table clients
-            ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique'])) // Appliquer le filtre boutique uniquement si une boutique est choisie
-            ->when($validated['boutique'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
+            ->leftJoin('clients', "{$tableName}.client_id", '=', 'clients.id') // Join optionnel avec clients
+            ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
+            ->when($validated['shop_id'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['shop_id']))
             ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '>=', $validated['start_date']))
             ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['end_date']))
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
@@ -100,10 +100,8 @@ class AdminHistoricController extends Controller
             )
             ->orderBy("{$tableName}.created_at", 'desc')
             ->paginate(25);
-
-        
-
-    } elseif ($validated['type'] === 'depenses') {
+    }
+     elseif ($validated['type'] === 'depenses') {
         $data = $model
             ->join('users', "{$tableName}.user_id", '=', 'users.id') // Join avec la table users
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
