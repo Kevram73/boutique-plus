@@ -15,7 +15,7 @@
                         <select name="boutique" id="boutique" class="form-control populate">
                             <option>Choisissez votre boutique</option>
                             <option value="0">Toutes les boutiques</option>
-                            @foreach($boutiques as $boutique)
+                            @foreach($shops as $boutique)
                                 <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
                             @endforeach
                         </select>
