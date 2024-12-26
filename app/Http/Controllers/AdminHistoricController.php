@@ -95,6 +95,19 @@ class AdminHistoricController extends Controller
     ->orderBy("{$tableName}.created_at", 'desc') // Trier par la date
     ->paginate(25); // Pagination avec 25 résultats par page
 
+    if($validated['type'] === 'ventes') {
+        $data = $data->map(function ($item) {
+            $item->total = number_format($item->total, 2, ',', ' '); // Format : 1 234,56
+            $item->reduction = number_format($item->reduction, 2, ',', ' '); // Format : 1 234,56
+            return $item;
+        });
+    } else if($validated['type'] === 'depenses') {
+        $data = $data->map(function ($item) {
+            $item->montant = number_format($item->montant, 2, ',', ' '); // Format : 1 234,56
+            return $item;
+        });
+    }
+
 
     // Retour des données sous format JSON
     return response()->json($data);
