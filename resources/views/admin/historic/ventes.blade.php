@@ -81,7 +81,7 @@ $(document).ready(function() {
         $('#venteTable tbody').html('<tr><td colspan="9" class="text-center">Chargement...</td></tr>');
 
         $.ajax({
-            url: '{{ route("historique_vente") }}', // Définir cette route côté backend
+            url: '', // Définir cette route côté backend
             method: 'GET',
             data: { boutique, date_deb, date_fin },
             success: function(data) {
