@@ -96,8 +96,8 @@ $(document).ready(function() {
                                 <td>${depense.name}</td>
                                 <td>${depense.montant}</td>
                                 <td>${depense.motif}</td>
-                                <td>${depense.boutique_id}</td>
-                                <td>${depense.user_id}</td>
+                                <td>${depense.boutiques.nom}</td>
+                                <td>${depense.users.nom} ${depense.users.prenom}</td>
                                 <td>${depense.date_dep}</td>
                                 <td>${depense.justifier ? 'Oui' : 'Non'}</td>
                             </tr>

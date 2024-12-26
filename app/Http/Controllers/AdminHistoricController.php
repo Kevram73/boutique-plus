@@ -60,6 +60,8 @@ class AdminHistoricController extends Controller
 
     // Application des filtres conditionnels
     $data = $model
+    ->join('users', "{$model->getModel()->getTable()}.user_id", '=', 'users.id')
+    ->join('boutiques', "{$model->getModel()->getTable()}.boutique_id", '=', 'boutiques.id')
         ->when(isset($validated['start_date']), fn($query) => $query->where('created_at', '>=', $validated['start_date']))
         ->when(isset($validated['end_date']), fn($query) => $query->where('created_at', '<=', $validated['end_date']))
         ->when(isset($validated['shop_id']), fn($query) => $query->where('boutique_id', $validated['shop_id']))
