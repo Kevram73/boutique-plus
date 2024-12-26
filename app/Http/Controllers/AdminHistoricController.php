@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Depense;
-use App\Models\Vente;
-use App\Models\Livraison;
+use App\Depense;
+use App\Vente;
+use App\Livraison;
 use Illuminate\Http\Request;
-use App\Models\Boutique;
+use App\Boutique;
 
 class AdminHistoricController extends Controller
 {
