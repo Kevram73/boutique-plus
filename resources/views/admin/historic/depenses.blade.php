@@ -102,10 +102,10 @@
                 const tbody = $('#depenseTable tbody');
                 tbody.empty();
 
-                if (data.length > 0) {
+                if (data.data.length > 0) {
                     const formatter = new Intl.NumberFormat('fr-FR', { style: 'decimal', minimumFractionDigits: 2 });
                     
-                    data.forEach(function(depense) {
+                    data.data.forEach(function(depense) {
 
                         tbody.append(`
                             <tr>

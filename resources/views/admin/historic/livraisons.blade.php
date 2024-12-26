@@ -9,41 +9,33 @@
         <div class="row" id="historique-livraisons">
             <div class="row">
                 <!-- Filtre Boutique -->
-                <div class="col-md-4 form-group">
-                    <label class="col-md-4 control-label">Boutique</label>
-                    <div class="col-md-9 form-group">
-                        <select name="boutique" id="boutique" class="form-control populate">
-                            <option value="">Choisissez votre boutique</option>
-                            <option value="0">Toutes les boutiques</option>
-                            @foreach($shops as $boutique)
-                                <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="col-md-3 form-group">
+                    <label for="boutique" class="control-label">Boutique</label>
+                    <select name="boutique" id="boutique" class="form-control populate">
+                        <option>Choisissez votre boutique</option>
+                        <option value="0">Toutes les boutiques</option>
+                        @foreach($shops as $boutique)
+                            <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <!-- Filtre Date de début -->
-                <div class="col-md-4 form-group">
-                    <label class="col-md-4 control-label">Date de début</label>
-                    <div class="col-md-9 form-group">
-                        <input type="date" class="form-control" name="date_deb" id="date_deb" />
-                    </div>
+                <div class="col-md-3 form-group">
+                    <label for="date_deb" class="control-label">Date de début</label>
+                    <input type="date" class="form-control" name="date_deb" id="date_deb" />
                 </div>
 
                 <!-- Filtre Date de fin -->
-                <div class="col-md-4 form-group">
-                    <label class="col-md-4 control-label">Date de fin</label>
-                    <div class="col-md-9 form-group">
-                        <input type="date" class="form-control" name="date_fin" id="date_fin" />
-                    </div>
+                <div class="col-md-3 form-group">
+                    <label for="date_fin" class="control-label">Date de fin</label>
+                    <input type="date" class="form-control" name="date_fin" id="date_fin" />
                 </div>
 
-                <!-- Recherche -->
-                <div class="col-md-4 form-group">
-                    <label class="col-md-4 control-label">Recherche</label>
-                    <div class="col-md-9 form-group">
-                        <input type="text" class="form-control" id="search" placeholder="Rechercher..." />
-                    </div>
+                <!-- Recherche par caractères -->
+                <div class="col-md-3 form-group">
+                    <label for="search" class="control-label">Recherche</label>
+                    <input type="text" class="form-control" name="search" id="search" placeholder="Rechercher..." />
                 </div>
             </div>
 

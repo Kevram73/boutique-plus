@@ -103,17 +103,17 @@ $(document).ready(function() {
                 const tbody = $('#venteTable tbody');
                 tbody.empty();
 
-                if (data.length > 0) {
+                if (data.data.length > 0) {
                     const formatter = new Intl.NumberFormat('fr-FR', { style: 'decimal', minimumFractionDigits: 2 });
-                    data.forEach(function(vente) {
+                    data.data.forEach(function(vente) {
                         tbody.append(`
                             <tr>
                                 <td>${vente.numero}</td>
                                 <td>${vente.client_name}</td>
                                 <td>${vente.date_vente}</td>
                                 <td>${vente.boutique_name}</td>
-                                <td>${vente.montant_reduction}</td>
-                                <td>${vente.totaux}</td>
+                                <td>${formatter.format(vente.montant_reduction)}</td>
+                                <td>${formatter.format(vente.totaux)}</td>
                                 <td><a href="${vente.facture}" target="_blank">Voir</a></td>
                                 <td>${vente.type_vente}</td>
                                 <td>${vente.user_nom} ${vente.user_prenom}</td>
