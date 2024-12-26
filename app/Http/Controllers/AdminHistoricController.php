@@ -54,7 +54,7 @@ class AdminHistoricController extends Controller
     // Mapping du type vers le modèle approprié
     $model = match ($validated['type']) {
         'depenses' => Depense::query(),
-        'ventes' => Vente::query(),
+        'ventes' => vente::query(),
         'livraisons' => Livraison::query(),
         default => throw new \InvalidArgumentException('Type non valide'),
     };
