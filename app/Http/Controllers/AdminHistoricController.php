@@ -52,7 +52,7 @@ class AdminHistoricController extends Controller
     $validated = $request->validate([
         'type' => 'required|in:depenses,ventes,livraisons',
         'date_deb' => 'nullable|date',
-        'date_fin' => 'nullable|date|after_or_equal:start_date',
+        'date_fin' => 'nullable|date|after_or_equal:date_deb',
         'boutique' => 'nullable|integer',
         'search' => 'nullable|string|max:255',
     ]);
@@ -82,7 +82,7 @@ class AdminHistoricController extends Controller
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
             ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
             ->when($validated['date_deb'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '>=', $validated['date_deb']))
-            ->when($validated['date_fin'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['date_fin'])) // Utilisation correcte de end_date
+            ->when($validated['date_fin'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['date_fin'])) // Utilisation correcte de date_fin
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
@@ -105,8 +105,8 @@ class AdminHistoricController extends Controller
             ->join('users', "{$tableName}.user_id", '=', 'users.id') // Join avec la table users
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
             ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
-            ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '>=', $validated['start_date']))
-            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '<=', $validated['end_date'])) // Correction ici
+            ->when($validated['date_deb'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '>=', $validated['date_deb']))
+            ->when($validated['date_fin'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '<=', $validated['date_fin'])) // Correction ici
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
@@ -128,8 +128,8 @@ class AdminHistoricController extends Controller
         $data = $model
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
             ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
-            ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '>=', $validated['start_date']))
-            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '<=', $validated['end_date'])) // Correction ici
+            ->when($validated['date_deb'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '>=', $validated['date_deb']))
+            ->when($validated['date_fin'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '<=', $validated['date_fin'])) // Correction ici
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('boutiques.nom', 'like', "%{$validated['search']}%")
