@@ -1,5 +1,6 @@
 @extends('layout')
 @section('contenu')
+
 <div class="inner-wrapper">
     <section role="main" class="content-body">
         <header class="page-header">
@@ -7,104 +8,119 @@
         </header>
 
         <div class="row" id="historique-depenses">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Filtres</h6>
+            <div class="row">
+                <!-- Filtre Boutique -->
+                <div class="col-md-4 form-group">
+                    <label class="col-md-4 control-label">Boutique</label>
+                    <div class="col-md-9 form-group">
+                        <select name="boutique" id="boutique" class="form-control populate">
+                            <option>Choisissez votre boutique</option>
+                            <option value="0">Toutes les boutiques</option>
+                            @foreach($shops as $boutique)
+                                <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form class="row g-3">
-                        <!-- Filtre Boutique -->
-                        <div class="col-md-4">
-                            <label for="boutique" class="form-label">Boutique</label>
-                            <select id="boutique" class="form-select">
-                                <option value="">Choisissez votre boutique</option>
-                                <option value="0">Toutes les boutiques</option>
-                                @foreach($shops as $boutique)
-                                    <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
-                                @endforeach
-                            </select>
-                        </div>
 
-                        <!-- Filtre Date de début -->
-                        <div class="col-md-4">
-                            <label for="date_deb" class="form-label">Date de début</label>
-                            <input type="date" id="date_deb" class="form-control" />
-                        </div>
+                <!-- Filtre Date de début -->
+                <div class="col-md-4 form-group">
+                    <label class="col-md-4 control-label">Date de début</label>
+                    <div class="col-md-9 form-group">
+                        <input type="date" class="form-control" name="date_deb" id="date_deb" required/>
+                    </div>
+                </div>
 
-                        <!-- Filtre Date de fin -->
-                        <div class="col-md-4">
-                            <label for="date_fin" class="form-label">Date de fin</label>
-                            <input type="date" id="date_fin" class="form-control" />
-                        </div>
-                    </form>
+                <!-- Filtre Date de fin -->
+                <div class="col-md-4 form-group">
+                    <label class="col-md-4 control-label">Date de fin</label>
+                    <div class="col-md-9 form-group">
+                        <input type="date" class="form-control" name="date_fin" id="date_fin" required/>
+                    </div>
                 </div>
             </div>
 
             <!-- Table des dépenses -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Liste des Dépenses</h6>
+            <section class="panel">
+                <header class="panel-heading">
+                    <h1 class="panel-title">LISTES DES DÉPENSES</h1>
+                </header>
+
+                <div class="panel-body">
+                    <table class="table table-bordered table-striped mb-none" id="depenseTable">
+                        <thead>
+                            <tr>
+                                <th class="center hidden-phone">Nom</th>
+                                <th class="center hidden-phone">Montant</th>
+                                <th class="center hidden-phone">Motif</th>
+                                <th class="center hidden-phone">Boutique</th>
+                                <th class="center hidden-phone">Utilisateur</th>
+                                <th class="center hidden-phone">Date</th>
+                                <th class="center hidden-phone">Justifié?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Les données seront insérées ici via AJAX -->
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover" id="depenseTable" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Montant</th>
-                                    <th>Motif</th>
-                                    <th>Boutique</th>
-                                    <th>Utilisateur</th>
-                                    <th>Date</th>
-                                    <th>Justifié ?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Les données seront insérées ici via AJAX -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            </section>
         </div>
 @endsection
 
 @section('js')
 <script>
 $(document).ready(function() {
-    // Initialisation de DataTable
-    const table = $('#depenseTable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: '{{ route("historic_fetch") }}',
-            method: 'GET',
-            data: function(d) {
-                d.boutique = $('#boutique').val();
-                d.date_deb = $('#date_deb').val();
-                d.date_fin = $('#date_fin').val();
-                d.type = 'depenses';
-            }
-        },
-        columns: [
-            { data: 'name', title: 'Nom' },
-            { data: 'montant', title: 'Montant' },
-            { data: 'motif', title: 'Motif' },
-            { data: 'boutique_name', title: 'Boutique' },
-            { data: 'user_nom_prenom', title: 'Utilisateur' },
-            { data: 'date_dep', title: 'Date' },
-            { data: 'justifier', title: 'Justifié ?', render: function(data) {
-                return data ? 'Oui' : 'Non';
-            }},
-        ],
-        order: [[5, 'desc']],
-        
-    });
+    // Fonction pour récupérer les données via AJAX
+    function fetchExpenseData() {
+        const boutique = $('#boutique').val();
+        const date_deb = $('#date_deb').val();
+        const date_fin = $('#date_fin').val();
 
-    // Rafraîchir la table lorsque les filtres changent
-    $('#boutique, #date_deb, #date_fin').on('change', function() {
-        table.ajax.reload();
-    });
+        // Ajouter un indicateur de chargement
+        $('#depenseTable tbody').html('<tr><td colspan="7" class="text-center">Chargement...</td></tr>');
+
+        // Effectuer une requête AJAX
+        $.ajax({
+            url: '{{ route("historic_fetch") }}', // Route définie côté backend
+            method: 'GET',
+            data: { boutique, date_deb, date_fin, type: 'depenses' },
+            success: function(data) {
+                // Vider le tableau avant d'insérer les nouvelles données
+                $('#depenseTable tbody').empty();
+
+                if (data && data.length > 0) {
+                    // Insérer les données dans le tableau
+                    data.forEach(function(depense) {
+                        $('#depenseTable tbody').append(`
+                            <tr>
+                                <td>${depense.name}</td>
+                                <td>${depense.montant}</td>
+                                <td>${depense.motif}</td>
+                                <td>${depense.boutique_name}</td>
+                                <td>${depense.user_nom} ${depense.user_prenom}</td>
+                                <td>${depense.date_dep}</td>
+                                <td>${depense.justifier ? 'Oui' : 'Non'}</td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    // Afficher un message si aucune donnée n'est trouvée
+                    $('#depenseTable tbody').append('<tr><td colspan="7" class="text-center">Aucune dépense trouvée</td></tr>');
+                }
+            },
+            error: function(xhr) {
+                // Afficher un message d'erreur en cas de problème
+                $('#depenseTable tbody').html(`<tr><td colspan="7" class="text-center text-danger">Erreur lors de la récupération des données (${xhr.status}: ${xhr.statusText})</td></tr>`);
+            }
+        });
+    }
+
+    // Gestionnaire d'événements pour les champs de filtre
+    $('#boutique, #date_deb, #date_fin').on('change', fetchExpenseData);
+
+    // Charger les données par défaut au chargement de la page
+    fetchExpenseData();
 });
 </script>
 @endsection
