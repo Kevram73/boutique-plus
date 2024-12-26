@@ -111,7 +111,7 @@ $(document).ready(function() {
                                 <td>${vente.client_name}</td>
                                 <td>${vente.date_vente}</td>
                                 <td>${vente.boutique_name}</td>
-                                <td>${vente.reduction}</td>
+                                <td>${vente.montant_reduction}</td>
                                 <td>${vente.totaux}</td>
                                 <td><a href="${vente.facture}" target="_blank">Voir</a></td>
                                 <td>${vente.type_vente}</td>
