@@ -73,7 +73,7 @@ class AdminHistoricController extends Controller
         'users.prenom as user_prenom', // Prénom de l'utilisateur
         'boutiques.nom as boutique_name' // Nom de la boutique
     )
-    ->paginate(10);
+    ->paginate(25);
 
     // Retour des données sous format JSON
     return response()->json($data);
