@@ -70,6 +70,8 @@ class AdminHistoricController extends Controller
         $q->where(function ($subQuery) use ($validated) {
             $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
                      ->orWhere('users.prenom', 'like', "%{$validated['search']}%")
+                     ->orWhere('boutiques.nom', 'like', "%{$validated['search']}%")
+                     ->orWhere('montant', 'like', "%{$validated['search']}%")
                      ->orWhere('motif', 'like', "%{$validated['search']}%");
         });
     })
