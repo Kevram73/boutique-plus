@@ -51,8 +51,8 @@ class AdminHistoricController extends Controller
     // Validation des paramètres d'entrée
     $validated = $request->validate([
         'type' => 'required|in:depenses,ventes,livraisons',
-        'start_date' => 'nullable|date',
-        'end_date' => 'nullable|date|after_or_equal:start_date',
+        'date_deb' => 'nullable|date',
+        'date_fin' => 'nullable|date|after_or_equal:start_date',
         'boutique' => 'nullable|integer',
         'search' => 'nullable|string|max:255',
     ]);
@@ -81,8 +81,8 @@ class AdminHistoricController extends Controller
             ->leftJoin('clients', "{$tableName}.client_id", '=', 'clients.id') // Join optionnel avec clients
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
             ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
-            ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '>=', $validated['start_date']))
-            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['end_date'])) // Utilisation correcte de end_date
+            ->when($validated['date_deb'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '>=', $validated['date_deb']))
+            ->when($validated['date_fin'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['date_fin'])) // Utilisation correcte de end_date
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
