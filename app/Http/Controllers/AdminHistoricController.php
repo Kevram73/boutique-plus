@@ -102,11 +102,11 @@ class AdminHistoricController extends Controller
             ->paginate(25);
 
         // Formatage des montants
-        $data = $data->map(function ($item) {
-            $item->totaux = number_format((float)$item->totaux, 2, ',', '.');
-            $item->montant_reduction = number_format((float)$item->montant_reduction, 2, ',', '.');
-            return $item;
-        });
+        // $data = $data->map(function ($item) {
+        //     $item->totaux = number_format((float)$item->totaux, 2, ',', '.');
+        //     $item->montant_reduction = number_format((float)$item->montant_reduction, 2, ',', '.');
+        //     return $item;
+        // });
 
     } elseif ($validated['type'] === 'depenses') {
         $data = $model
@@ -134,10 +134,10 @@ class AdminHistoricController extends Controller
             ->paginate(25);
 
         // Formatage des montants
-        $data = $data->map(function ($item) {
-            $item->montant = number_format((float)$item->montant, 2, ',', '.');
-            return $item;
-        });
+        // $data = $data->map(function ($item) {
+        //     $item->montant = number_format((float)$item->montant, 2, ',', '.');
+        //     return $item;
+        // });
     } elseif ($validated['type'] === 'livraisons') {
         $data = $model
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
