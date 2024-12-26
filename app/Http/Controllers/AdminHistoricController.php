@@ -82,7 +82,7 @@ class AdminHistoricController extends Controller
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
             ->when($validated['shop_id'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['shop_id']))
             ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '>=', $validated['start_date']))
-            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['end_date']))
+            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['end_date'])) // Utilisation correcte de end_date
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
@@ -100,14 +100,13 @@ class AdminHistoricController extends Controller
             )
             ->orderBy("{$tableName}.created_at", 'desc')
             ->paginate(25);
-    }
-     elseif ($validated['type'] === 'depenses') {
+    } elseif ($validated['type'] === 'depenses') {
         $data = $model
             ->join('users', "{$tableName}.user_id", '=', 'users.id') // Join avec la table users
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
-            ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique'])) // Appliquer le filtre boutique uniquement si une boutique est choisie
+            ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
             ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '>=', $validated['start_date']))
-            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '<=', $validated['start_date']))
+            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_dep", '<=', $validated['end_date'])) // Correction ici
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
@@ -125,15 +124,12 @@ class AdminHistoricController extends Controller
             )
             ->orderBy("{$tableName}.created_at", 'desc')
             ->paginate(25);
-
-
-
     } elseif ($validated['type'] === 'livraisons') {
         $data = $model
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
-            ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique'])) // Appliquer le filtre boutique uniquement si une boutique est choisie
+            ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
             ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '>=', $validated['start_date']))
-            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '<=', $validated['end_date']))
+            ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_livraison", '<=', $validated['end_date'])) // Correction ici
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
                 $q->where(function ($subQuery) use ($validated) {
                     $subQuery->where('boutiques.nom', 'like', "%{$validated['search']}%")
@@ -146,9 +142,8 @@ class AdminHistoricController extends Controller
             )
             ->orderBy("{$tableName}.created_at", 'desc')
             ->paginate(25);
-
-
     }
+    
 
     // Retour des données sous format JSON
     return response()->json($data);
