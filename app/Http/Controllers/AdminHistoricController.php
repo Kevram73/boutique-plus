@@ -69,7 +69,8 @@ class AdminHistoricController extends Controller
     ->orderBy("{$tableName}.created_at", 'desc') // Trier par date
     ->select(
         "{$tableName}.*", // Toutes les colonnes du modèle principal
-        'users.name as user_name', // Nom de l'utilisateur
+        'users.nom as user_nom', // Nom de l'utilisateur
+        'users.prenom as user_prenom', // Prénom de l'utilisateur
         'boutiques.nom as boutique_name' // Nom de la boutique
     )
     ->get();
