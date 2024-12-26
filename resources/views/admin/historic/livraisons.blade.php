@@ -136,27 +136,49 @@ $(document).ready(function() {
     }
 
     function updatePagination(data) {
-        const pagination = $('#pagination');
-        pagination.empty();
+    const pagination = $('#pagination');
+    pagination.empty();
 
-        if (data.total > data.per_page) {
-            if (data.prev_page_url) {
-                pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page - 1}">Précédent</a></li>`);
-            }
+    if (data.total > data.per_page) {
+        // Bouton "Précédent"
+        if (data.prev_page_url) {
+            pagination.append(`
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="${data.current_page - 1}">Précédent</a>
+                </li>
+            `);
+        } else {
+            pagination.append(`
+                <li class="page-item disabled">
+                    <span class="page-link">Précédent</span>
+                </li>
+            `);
+        }
 
-            for (let i = 1; i <= data.last_page; i++) {
-                pagination.append(`
-                    <li class="page-item ${i === data.current_page ? 'active' : ''}">
-                        <a class="page-link" href="#" data-page="${i}">${i}</a>
-                    </li>
-                `);
-            }
+        // Page actuelle
+        pagination.append(`
+            <li class="page-item active">
+                <span class="page-link">${data.current_page}</span>
+            </li>
+        `);
 
-            if (data.next_page_url) {
-                pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page + 1}">Suivant</a></li>`);
-            }
+        // Bouton "Suivant"
+        if (data.next_page_url) {
+            pagination.append(`
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="${data.current_page + 1}">Suivant</a>
+                </li>
+            `);
+        } else {
+            pagination.append(`
+                <li class="page-item disabled">
+                    <span class="page-link">Suivant</span>
+                </li>
+            `);
         }
     }
+}
+
 
     $('#pagination').on('click', '.page-link', function(e) {
         e.preventDefault();
