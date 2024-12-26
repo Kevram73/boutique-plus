@@ -70,6 +70,7 @@
 @section('js')
 <script>
 $(document).ready(function() {
+    // Fonction pour récupérer les données via AJAX
     function fetchExpenseData() {
         const boutique = $('#boutique').val();
         const date_deb = $('#date_deb').val();
@@ -78,39 +79,47 @@ $(document).ready(function() {
         // Ajouter un indicateur de chargement
         $('#depenseTable tbody').html('<tr><td colspan="7" class="text-center">Chargement...</td></tr>');
 
+        // Effectuer une requête AJAX
         $.ajax({
-            url: '{{ route("historic_depenses") }}', // Définir cette route côté backend
-            method: 'GET',
-            data: { boutique, date_deb, date_fin },
+            url: '{{ route("historic_fetch") }}', // Route définie côté backend
+            method: 'POST',
+            data: { boutique, date_deb, date_fin, type: 'depenses' },
             success: function(data) {
+                // Vider le tableau avant d'insérer les nouvelles données
                 $('#depenseTable tbody').empty();
 
-                if (data.depenses.length > 0) {
+                if (data.depenses && data.depenses.length > 0) {
+                    // Insérer les données dans le tableau
                     data.depenses.forEach(function(depense) {
                         $('#depenseTable tbody').append(`
                             <tr>
-                                <td>${depense.nom}</td>
+                                <td>${depense.name}</td>
                                 <td>${depense.montant}</td>
                                 <td>${depense.motif}</td>
-                                <td>${depense.boutique}</td>
-                                <td>${depense.utilisateur}</td>
-                                <td>${depense.date}</td>
-                                <td>${depense.justifie ? 'Oui' : 'Non'}</td>
+                                <td>${depense.boutique_id}</td>
+                                <td>${depense.user_id}</td>
+                                <td>${depense.date_dep}</td>
+                                <td>${depense.justifier ? 'Oui' : 'Non'}</td>
                             </tr>
                         `);
                     });
                 } else {
+                    // Afficher un message si aucune donnée n'est trouvée
                     $('#depenseTable tbody').append('<tr><td colspan="7" class="text-center">Aucune dépense trouvée</td></tr>');
                 }
             },
-            error: function() {
-                $('#depenseTable tbody').html('<tr><td colspan="7" class="text-center text-danger">Erreur lors de la récupération des données</td></tr>');
+            error: function(xhr) {
+                // Afficher un message d'erreur en cas de problème
+                $('#depenseTable tbody').html(`<tr><td colspan="7" class="text-center text-danger">Erreur lors de la récupération des données (${xhr.status}: ${xhr.statusText})</td></tr>`);
             }
         });
     }
 
-    // Déclenche la requête AJAX lorsqu'un filtre change
-    $('#boutique, #date_deb, #date_fin').change(fetchExpenseData);
+    // Gestionnaire d'événements pour les champs de filtre
+    $('#boutique, #date_deb, #date_fin').on('change', fetchExpenseData);
+
+    // Charger les données par défaut au chargement de la page
+    fetchExpenseData();
 });
 </script>
 @endsection

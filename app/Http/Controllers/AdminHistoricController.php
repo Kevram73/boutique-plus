@@ -41,29 +41,33 @@ class AdminHistoricController extends Controller
      * Récupère les données filtrées via AJAX.
      */
     public function fetchData(Request $request)
-    {
-        $type = $request->input('type');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-        $shopId = $request->input('shop_id');
+{
+    // Validation des paramètres d'entrée
+    $validated = $request->validate([
+        'type' => 'required|in:depenses,ventes,livraisons',
+        'start_date' => 'nullable|date',
+        'end_date' => 'nullable|date|after_or_equal:start_date',
+        'shop_id' => 'nullable|integer',
+    ]);
 
-        if (!in_array($type, ['depenses', 'ventes', 'livraisons'])) {
-            return response()->json(['error' => 'Type non valide'], 400);
-        }
+    // Mapping du type vers le modèle approprié
+    $model = match ($validated['type']) {
+        'depenses' => Depense::query(),
+        'ventes' => Vente::query(),
+        'livraisons' => Livraison::query(),
+        default => throw new \InvalidArgumentException('Type non valide'),
+    };
 
-        $model = match ($type) {
-            'depenses' => Depense::query(),
-            'ventes' => Vente::query(),
-            'livraisons' => Livraison::query(),
-        };
+    // Application des filtres conditionnels
+    $data = $model
+        ->when(isset($validated['start_date']), fn($query) => $query->where('created_at', '>=', $validated['start_date']))
+        ->when(isset($validated['end_date']), fn($query) => $query->where('created_at', '<=', $validated['end_date']))
+        ->when(isset($validated['shop_id']), fn($query) => $query->where('boutique_id', $validated['shop_id']))
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        $data = $model
-            ->when($startDate, fn($query) => $query->where('created_at', '>=', $startDate))
-            ->when($endDate, fn($query) => $query->where('created_at', '<=', $endDate))
-            ->when($shopId, fn($query) => $query->where('boutique_id', $shopId))
-            ->orderBy('created_at', 'desc')
-            ->get();
+    // Retour des données sous format JSON
+    return response()->json($data);
+}
 
-        return response()->json($data);
-    }
 }
