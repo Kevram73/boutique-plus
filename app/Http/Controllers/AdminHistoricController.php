@@ -78,7 +78,7 @@ class AdminHistoricController extends Controller
                          ->orWhere('boutiques.nom', 'like', "%{$validated['search']}%")
                          ->orWhere('clients.nom', 'like', "%{$validated['search']}%")
                          ->orWhere('motif', 'like', "%{$validated['search']}%");
-                if ($tableName !== 'ventes') {
+                if ($validated['type'] !== 'ventes') {
                     $subQuery->orWhere("{$tableName}.montant", 'like', "%{$validated['search']}%")
                                 ->orWhere("{$tableName}.motif", 'like', "%{$validated['search']}%");
                 }
