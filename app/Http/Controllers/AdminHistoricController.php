@@ -65,34 +65,36 @@ class AdminHistoricController extends Controller
 
     // Application des filtres conditionnels
     $data = $model
-        ->join('users', "{$tableName}.user_id", '=', 'users.id')
-        ->leftJoin('clients', "{$tableName}.client_id", '=', 'clients.id') // Utilisation de `leftJoin` si client est optionnel
-        ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id')
-        ->when($validated['shop_id'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['shop_id']))
-        ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.{$dateColumn}", '>=', $validated['start_date']))
-        ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.{$dateColumn}", '<=', $validated['end_date']))
-        ->when($validated['search'] ?? null, function ($q) use ($validated) {
-            $q->where(function ($subQuery) use ($validated) {
-                $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
-                         ->orWhere('users.prenom', 'like', "%{$validated['search']}%")
-                         ->orWhere('boutiques.nom', 'like', "%{$validated['search']}%")
-                         ->orWhere('clients.nom', 'like', "%{$validated['search']}%")
-                         ->orWhere('motif', 'like', "%{$validated['search']}%");
-                if ($validated['type'] !== 'ventes') {
-                    $subQuery->orWhere("{$tableName}.montant", 'like', "%{$validated['search']}%")
-                                ->orWhere("{$tableName}.motif", 'like', "%{$validated['search']}%");
-                }
-            });
-        })
-        ->select(
-            "{$tableName}.*", // Toutes les colonnes de la table principale
-            'users.nom as user_nom',
-            'users.prenom as user_prenom',
-            'boutiques.nom as boutique_name',
-            'clients.nom as client_name'
-        )
-        ->orderBy("{$tableName}.created_at", 'desc')
-        ->paginate(25);
+    ->join('users', "{$tableName}.user_id", '=', 'users.id') // Association avec la table users
+    ->leftJoin('clients', "{$tableName}.client_id", '=', 'clients.id') // Client optionnel
+    ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Association avec boutiques
+    ->when($validated['shop_id'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['shop_id'])) // Filtre par boutique
+    ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.{$dateColumn}", '>=', $validated['start_date'])) // Filtre par date de début
+    ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.{$dateColumn}", '<=', $validated['end_date'])) // Filtre par date de fin
+    ->when($validated['search'] ?? null, function ($q) use ($validated, $tableName) {
+        $q->where(function ($subQuery) use ($validated, $tableName) {
+            $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
+                     ->orWhere('users.prenom', 'like', "%{$validated['search']}%")
+                     ->orWhere('boutiques.nom', 'like', "%{$validated['search']}%")
+                     ->orWhere('clients.nom', 'like', "%{$validated['search']}%");
+
+            // Ajouter condition pour montant et motif uniquement si non ventes
+            if ($tableName !== 'ventes') {
+                $subQuery->orWhere("{$tableName}.montant", 'like', "%{$validated['search']}%")
+                         ->orWhere("{$tableName}.motif", 'like', "%{$validated['search']}%");
+            }
+        });
+    })
+    ->select(
+        "{$tableName}.*", // Toutes les colonnes de la table principale
+        'users.nom as user_nom',
+        'users.prenom as user_prenom',
+        'boutiques.nom as boutique_name',
+        'clients.nom as client_name'
+    )
+    ->orderBy("{$tableName}.created_at", 'desc') // Trier par la date
+    ->paginate(25); // Pagination avec 25 résultats par page
+
 
     // Retour des données sous format JSON
     return response()->json($data);
