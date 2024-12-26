@@ -63,6 +63,11 @@
                             <!-- Les données seront insérées ici via AJAX -->
                         </tbody>
                     </table>
+                    <div class="pagination-wrapper mt-3">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <!-- Les boutons de pagination seront insérés ici dynamiquement -->
+                        </ul>
+                    </div>
                 </div>
             </section>
         </div>
@@ -70,57 +75,98 @@
 
 @section('js')
 <script>
-$(document).ready(function() {
-    // Fonction pour récupérer les données via AJAX
-    function fetchExpenseData() {
-        const boutique = $('#boutique').val();
-        const date_deb = $('#date_deb').val();
-        const date_fin = $('#date_fin').val();
+    $(document).ready(function() {
+        let currentPage = 1; // Page actuelle
 
-        // Ajouter un indicateur de chargement
-        $('#depenseTable tbody').html('<tr><td colspan="7" class="text-center">Chargement...</td></tr>');
+        function fetchExpenseData(page = 1) {
+            const boutique = $('#boutique').val();
+            const date_deb = $('#date_deb').val();
+            const date_fin = $('#date_fin').val();
 
-        // Effectuer une requête AJAX
-        $.ajax({
-            url: '{{ route("historic_fetch") }}', // Route définie côté backend
-            method: 'GET',
-            data: { boutique, date_deb, date_fin, type: 'depenses' },
-            success: function(data) {
-                // Vider le tableau avant d'insérer les nouvelles données
-                $('#depenseTable tbody').empty();
+            $('#depenseTable tbody').html('<tr><td colspan="7" class="text-center">Chargement...</td></tr>');
 
-                if (data && data.length > 0) {
-                    // Insérer les données dans le tableau
-                    data.forEach(function(depense) {
-                        $('#depenseTable tbody').append(`
-                            <tr>
-                                <td>${depense.name}</td>
-                                <td>${depense.montant}</td>
-                                <td>${depense.motif}</td>
-                                <td>${depense.boutique_name}</td>
-                                <td>${depense.user_nom} ${depense.user_prenom}</td>
-                                <td>${depense.date_dep}</td>
-                                <td>${depense.justifier ? 'Oui' : 'Non'}</td>
-                            </tr>
-                        `);
-                    });
-                } else {
-                    // Afficher un message si aucune donnée n'est trouvée
-                    $('#depenseTable tbody').append('<tr><td colspan="7" class="text-center">Aucune dépense trouvée</td></tr>');
+            $.ajax({
+                url: '{{ route("historic_fetch") }}',
+                method: 'GET',
+                data: {
+                    boutique,
+                    date_deb,
+                    date_fin,
+                    type: 'depenses',
+                    page // Envoyer le numéro de page
+                },
+                success: function(data) {
+                    const tbody = $('#depenseTable tbody');
+                    tbody.empty();
+
+                    if (data.data.length > 0) {
+                        data.data.forEach(function(depense) {
+                            tbody.append(`
+                                <tr>
+                                    <td>${depense.name}</td>
+                                    <td>${depense.montant}</td>
+                                    <td>${depense.motif}</td>
+                                    <td>${depense.boutique_name}</td>
+                                    <td>${depense.user_nom} ${depense.user_prenom}</td>
+                                    <td>${depense.date_dep}</td>
+                                    <td>${depense.justifier ? 'Oui' : 'Non'}</td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        tbody.append('<tr><td colspan="7" class="text-center">Aucune dépense trouvée</td></tr>');
+                    }
+
+                    // Mettre à jour la pagination
+                    updatePagination(data);
+                },
+                error: function(xhr) {
+                    $('#depenseTable tbody').html(`<tr><td colspan="7" class="text-center text-danger">Erreur lors de la récupération des données (${xhr.status}: ${xhr.statusText})</td></tr>`);
                 }
-            },
-            error: function(xhr) {
-                // Afficher un message d'erreur en cas de problème
-                $('#depenseTable tbody').html(`<tr><td colspan="7" class="text-center text-danger">Erreur lors de la récupération des données (${xhr.status}: ${xhr.statusText})</td></tr>`);
+            });
+        }
+
+        function updatePagination(data) {
+            const pagination = $('#pagination');
+            pagination.empty();
+
+            if (data.total > data.per_page) {
+                if (data.prev_page_url) {
+                    pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page - 1}">Précédent</a></li>`);
+                }
+
+                for (let i = 1; i <= data.last_page; i++) {
+                    pagination.append(`
+                        <li class="page-item ${i === data.current_page ? 'active' : ''}">
+                            <a class="page-link" href="#" data-page="${i}">${i}</a>
+                        </li>
+                    `);
+                }
+
+                if (data.next_page_url) {
+                    pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page + 1}">Suivant</a></li>`);
+                }
+            }
+        }
+
+        // Écouter les clics sur la pagination
+        $('#pagination').on('click', '.page-link', function(e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (page) {
+                currentPage = page;
+                fetchExpenseData(page);
             }
         });
-    }
 
-    // Gestionnaire d'événements pour les champs de filtre
-    $('#boutique, #date_deb, #date_fin').on('change', fetchExpenseData);
+        // Rafraîchir les données lorsque les filtres changent
+        $('#boutique, #date_deb, #date_fin').on('change', function() {
+            fetchExpenseData(1); // Revenir à la première page lors des filtres
+        });
 
-    // Charger les données par défaut au chargement de la page
-    fetchExpenseData();
-});
-</script>
+        // Charger les données par défaut
+        fetchExpenseData();
+    });
+    </script>
+
 @endsection
