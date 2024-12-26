@@ -80,7 +80,7 @@ class AdminHistoricController extends Controller
             ->join('users', "{$tableName}.user_id", '=', 'users.id') // Join avec la table users
             ->leftJoin('clients', "{$tableName}.client_id", '=', 'clients.id') // Join optionnel avec clients
             ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Join avec boutiques
-            ->when($validated['shop_id'] ?? null, fn($q) => $q->where("{$tableName}.boutique_id", $validated['shop_id']))
+            ->when(isset($validated['boutique']) && $validated['boutique'] != 0, fn($q) => $q->where("{$tableName}.boutique_id", $validated['boutique']))
             ->when($validated['start_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '>=', $validated['start_date']))
             ->when($validated['end_date'] ?? null, fn($q) => $q->where("{$tableName}.date_vente", '<=', $validated['end_date'])) // Utilisation correcte de end_date
             ->when($validated['search'] ?? null, function ($q) use ($validated) {
