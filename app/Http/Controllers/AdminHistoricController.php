@@ -61,18 +61,20 @@ class AdminHistoricController extends Controller
 
     // Application des filtres conditionnels
     $data = $model
-    ->join('users', "{$tableName}.user_id", '=', 'users.id') // Joindre avec la table users
-    ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id') // Joindre avec la table boutiques
-    ->when(isset($validated['start_date']), fn($query) => $query->where("{$tableName}.created_at", '>=', $validated['start_date'])) // Filtrer par date de début
-    ->when(isset($validated['end_date']), fn($query) => $query->where("{$tableName}.created_at", '<=', $validated['end_date'])) // Filtrer par date de fin
-    ->when(isset($validated['shop_id']), fn($query) => $query->where("{$tableName}.boutique_id", $validated['shop_id'])) // Filtrer par boutique
-    ->orderBy("{$tableName}.created_at", 'desc') // Trier par date
-    ->select(
-        "{$tableName}.*", // Toutes les colonnes du modèle principal
-        'users.nom as user_nom', // Nom de l'utilisateur
-        'users.prenom as user_prenom', // Prénom de l'utilisateur
-        'boutiques.nom as boutique_name' // Nom de la boutique
-    )
+    ->join('users', "{$tableName}.user_id", '=', 'users.id')
+    ->join('boutiques', "{$tableName}.boutique_id", '=', 'boutiques.id')
+    ->when($validated['boutique'] ?? null, fn($q) => $q->where('boutique_id', $validated['boutique']))
+    ->when($validated['date_deb'] ?? null, fn($q) => $q->where('date_dep', '>=', $validated['date_deb']))
+    ->when($validated['date_fin'] ?? null, fn($q) => $q->where('date_dep', '<=', $validated['date_fin']))
+    ->when($validated['search'] ?? null, function ($q) use ($validated) {
+        $q->where(function ($subQuery) use ($validated) {
+            $subQuery->where('users.nom', 'like', "%{$validated['search']}%")
+                     ->orWhere('users.prenom', 'like', "%{$validated['search']}%")
+                     ->orWhere('motif', 'like', "%{$validated['search']}%");
+        });
+    })
+    ->select("{$tableName}.*", 'users.nom as user_nom', 'users.prenom as user_prenom', 'boutiques.nom as boutique_name')
+    ->orderBy("{$tableName}.created_at", 'desc')
     ->paginate(25);
 
     // Retour des données sous format JSON

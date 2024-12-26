@@ -10,35 +10,36 @@
         <div class="row" id="historique-depenses">
             <div class="row">
                 <!-- Filtre Boutique -->
-                <div class="col-md-4 form-group">
-                    <label class="col-md-4 control-label">Boutique</label>
-                    <div class="col-md-9 form-group">
-                        <select name="boutique" id="boutique" class="form-control populate">
-                            <option>Choisissez votre boutique</option>
-                            <option value="0">Toutes les boutiques</option>
-                            @foreach($shops as $boutique)
-                                <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="col-md-3 form-group">
+                    <label for="boutique" class="control-label">Boutique</label>
+                    <select name="boutique" id="boutique" class="form-control populate">
+                        <option>Choisissez votre boutique</option>
+                        <option value="0">Toutes les boutiques</option>
+                        @foreach($shops as $boutique)
+                            <option value="{{ $boutique->id }}">{{ $boutique->nom }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <!-- Filtre Date de début -->
-                <div class="col-md-4 form-group">
-                    <label class="col-md-4 control-label">Date de début</label>
-                    <div class="col-md-9 form-group">
-                        <input type="date" class="form-control" name="date_deb" id="date_deb" required/>
-                    </div>
+                <div class="col-md-3 form-group">
+                    <label for="date_deb" class="control-label">Date de début</label>
+                    <input type="date" class="form-control" name="date_deb" id="date_deb" />
                 </div>
 
                 <!-- Filtre Date de fin -->
-                <div class="col-md-4 form-group">
-                    <label class="col-md-4 control-label">Date de fin</label>
-                    <div class="col-md-9 form-group">
-                        <input type="date" class="form-control" name="date_fin" id="date_fin" required/>
-                    </div>
+                <div class="col-md-3 form-group">
+                    <label for="date_fin" class="control-label">Date de fin</label>
+                    <input type="date" class="form-control" name="date_fin" id="date_fin" />
+                </div>
+
+                <!-- Recherche par caractères -->
+                <div class="col-md-3 form-group">
+                    <label for="search" class="control-label">Recherche</label>
+                    <input type="text" class="form-control" name="search" id="search" placeholder="Rechercher..." />
                 </div>
             </div>
+
 
             <!-- Table des dépenses -->
             <section class="panel">
@@ -76,97 +77,97 @@
 @section('js')
 <script>
     $(document).ready(function() {
-        let currentPage = 1; // Page actuelle
+    let currentPage = 1;
 
-        function fetchExpenseData(page = 1) {
-            const boutique = $('#boutique').val();
-            const date_deb = $('#date_deb').val();
-            const date_fin = $('#date_fin').val();
+    function fetchExpenseData(page = 1) {
+        const boutique = $('#boutique').val();
+        const date_deb = $('#date_deb').val();
+        const date_fin = $('#date_fin').val();
+        const search = $('#search').val(); // Nouvelle variable de recherche
 
-            $('#depenseTable tbody').html('<tr><td colspan="7" class="text-center">Chargement...</td></tr>');
+        $('#depenseTable tbody').html('<tr><td colspan="7" class="text-center">Chargement...</td></tr>');
 
-            $.ajax({
-                url: '{{ route("historic_fetch") }}',
-                method: 'GET',
-                data: {
-                    boutique,
-                    date_deb,
-                    date_fin,
-                    type: 'depenses',
-                    page // Envoyer le numéro de page
-                },
-                success: function(data) {
-                    const tbody = $('#depenseTable tbody');
-                    tbody.empty();
+        $.ajax({
+            url: '{{ route("historic_fetch") }}',
+            method: 'GET',
+            data: {
+                boutique,
+                date_deb,
+                date_fin,
+                search, // Inclure la recherche dans les données
+                type: 'depenses',
+                page
+            },
+            success: function(data) {
+                const tbody = $('#depenseTable tbody');
+                tbody.empty();
 
-                    if (data.data.length > 0) {
-                        data.data.forEach(function(depense) {
-                            tbody.append(`
-                                <tr>
-                                    <td>${depense.name}</td>
-                                    <td>${depense.montant}</td>
-                                    <td>${depense.motif}</td>
-                                    <td>${depense.boutique_name}</td>
-                                    <td>${depense.user_nom} ${depense.user_prenom}</td>
-                                    <td>${depense.date_dep}</td>
-                                    <td>${depense.justifier ? 'Oui' : 'Non'}</td>
-                                </tr>
-                            `);
-                        });
-                    } else {
-                        tbody.append('<tr><td colspan="7" class="text-center">Aucune dépense trouvée</td></tr>');
-                    }
-
-                    // Mettre à jour la pagination
-                    updatePagination(data);
-                },
-                error: function(xhr) {
-                    $('#depenseTable tbody').html(`<tr><td colspan="7" class="text-center text-danger">Erreur lors de la récupération des données (${xhr.status}: ${xhr.statusText})</td></tr>`);
-                }
-            });
-        }
-
-        function updatePagination(data) {
-            const pagination = $('#pagination');
-            pagination.empty();
-
-            if (data.total > data.per_page) {
-                if (data.prev_page_url) {
-                    pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page - 1}">Précédent</a></li>`);
+                if (data.data.length > 0) {
+                    data.data.forEach(function(depense) {
+                        tbody.append(`
+                            <tr>
+                                <td>${depense.name}</td>
+                                <td>${depense.montant}</td>
+                                <td>${depense.motif}</td>
+                                <td>${depense.boutique_name}</td>
+                                <td>${depense.user_nom} ${depense.user_prenom}</td>
+                                <td>${depense.date_dep}</td>
+                                <td>${depense.justifier ? 'Oui' : 'Non'}</td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    tbody.append('<tr><td colspan="7" class="text-center">Aucune dépense trouvée</td></tr>');
                 }
 
-                for (let i = 1; i <= data.last_page; i++) {
-                    pagination.append(`
-                        <li class="page-item ${i === data.current_page ? 'active' : ''}">
-                            <a class="page-link" href="#" data-page="${i}">${i}</a>
-                        </li>
-                    `);
-                }
-
-                if (data.next_page_url) {
-                    pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page + 1}">Suivant</a></li>`);
-                }
-            }
-        }
-
-        // Écouter les clics sur la pagination
-        $('#pagination').on('click', '.page-link', function(e) {
-            e.preventDefault();
-            const page = $(this).data('page');
-            if (page) {
-                currentPage = page;
-                fetchExpenseData(page);
+                updatePagination(data);
+            },
+            error: function(xhr) {
+                $('#depenseTable tbody').html(`<tr><td colspan="7" class="text-center text-danger">Erreur lors de la récupération des données (${xhr.status}: ${xhr.statusText})</td></tr>`);
             }
         });
+    }
 
-        // Rafraîchir les données lorsque les filtres changent
-        $('#boutique, #date_deb, #date_fin').on('change', function() {
-            fetchExpenseData(1); // Revenir à la première page lors des filtres
-        });
+    function updatePagination(data) {
+        const pagination = $('#pagination');
+        pagination.empty();
 
-        // Charger les données par défaut
-        fetchExpenseData();
+        if (data.total > data.per_page) {
+            if (data.prev_page_url) {
+                pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page - 1}">Précédent</a></li>`);
+            }
+
+            for (let i = 1; i <= data.last_page; i++) {
+                pagination.append(`
+                    <li class="page-item ${i === data.current_page ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>
+                `);
+            }
+
+            if (data.next_page_url) {
+                pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${data.current_page + 1}">Suivant</a></li>`);
+            }
+        }
+    }
+
+    $('#pagination').on('click', '.page-link', function(e) {
+        e.preventDefault();
+        const page = $(this).data('page');
+        if (page) {
+            currentPage = page;
+            fetchExpenseData(page);
+        }
     });
+
+    // Rafraîchir les données lorsque les filtres changent ou lors de la saisie dans la recherche
+    $('#boutique, #date_deb, #date_fin, #search').on('change keyup', function() {
+        fetchExpenseData(1);
+    });
+
+    fetchExpenseData();
+});
+
     </script>
 
 @endsection
