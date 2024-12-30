@@ -31,19 +31,26 @@ class ModelesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $modele=Modele::with(['produit','boutique'])->where ('boutique_id', '=',Auth::user()->boutique->id )->get();
-        return datatables()->of($modele)
-            ->addColumn('action', function ($clt){
+{
+    $modele = Modele::with(['produit', 'boutique'])->where('boutique_id', '=', Auth::user()->boutique->id)->get();
 
-                return '<a class="btn btn-info" onclick="showmodele('.$clt->id.')"><i class="fa fa-info"></i></a>' .
-                    '<a class="btn btn-success" onclick="editmodele('.$clt->id.')"><i class="fa fa-pencil"></i></a>' .
-                    '<a class="btn btn-danger" onclick="deletemodele('.$clt->id.')"><i class="fa fa-trash-o"></i></a>' .
-                    '<a class="btn btn-primary" href="' . route('show_modele_livraison', $clt->id) . '"><i class="fa fa-eye"></i></a>';
+    return datatables()->of($modele)
+        ->addColumn('action', function ($clt) {
+            // Boutons communs
+            $actions = '<a class="btn btn-info" onclick="showmodele(' . $clt->id . ')"><i class="fa fa-info"></i></a>' .
+                '<a class="btn btn-success" onclick="editmodele(' . $clt->id . ')"><i class="fa fa-pencil"></i></a>' .
+                '<a class="btn btn-danger" onclick="deletemodele(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>';
 
-            })
-            ->make(true) ;
-    }
+            // Bouton conditionnel
+            if (Auth::user()->boutique->is_stock == 0) {
+                $actions .= '<a class="btn btn-primary" href="' . route('show_modele_livraison', $clt->id) . '"><i class="fa fa-eye"></i></a>';
+            }
+
+            return $actions;
+        })
+        ->make(true);
+}
+
 
 
     public function allmodelvent($id)
