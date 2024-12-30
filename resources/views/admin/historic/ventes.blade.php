@@ -142,7 +142,7 @@
                                 <td>${vente.boutique_name}</td>
                                 <td>${formatter.format(vente.montant_reduction)}</td>
                                 <td>${formatter.format(vente.totaux)}</td>
-                                <td><a href="${vente.facture}" target="_blank">Voir</a></td>
+                                <td><a href="/factures/${vente.facture}" target="_blank">Voir</a></td>
                                 <td><span class="badge ${badgeClass}">${typeVente}</span></td>
                                 <td>${vente.user_nom} ${vente.user_prenom}</td>
                             </tr>
