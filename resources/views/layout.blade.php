@@ -231,7 +231,6 @@
 
 
                                     @endif
-                                    @if (Auth::user()->boutique->is_stock == 0)
                                     <li class="nav-parent">
                                         <a>
                                             <i class="fa  fa-cubes" aria-hidden="true"></i>
@@ -260,7 +259,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    @endif
+                                    
                                     @if (Auth::user()->boutique->is_central == 1)
 
                                     <li class="nav-parent">
@@ -347,7 +346,7 @@
                                                     <i class="fa  fa-book" aria-hidden="true"></i>
                                                     <span>{{ Str::upper(__('msg.results'))  }}</span>
                                                 </a>
-                                            </li>ro
+                                            </li>
                                         </ul>
                                     </li>
 
@@ -710,7 +709,7 @@
 		<script src="{{ asset('octopus/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 		<script src="{{ asset('octopus/assets/vendor/magnific-popup/magnific-popup.js')}}"></script>
 		<script src="{{ asset('octopus/assets/vendor/jquery-placeholder/jquery.placeholder.js')}}"></script>
-        
+
         <script src="/vendor/numeral/numeral.min.js"></script>
         <script>
         // switch between locales
