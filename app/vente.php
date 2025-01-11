@@ -44,17 +44,15 @@ class vente extends Model
 
     protected $formatAttributes = ['with_avoir', 'montant_reduction', 'totaux'];
 
-    // Accessor générique pour formater les montants
-    public function getAttribute($key)
+    public function getAttributeValue($key)
     {
-        // Vérifie si l'attribut doit être formaté
+        // Si l'attribut doit être formaté
         if (in_array($key, $this->formatAttributes) && isset($this->attributes[$key])) {
-            $value = $this->attributes[$key];
-            return $this->formatAmount($value);
+            return $this->formatAmount($this->attributes[$key]);
         }
 
-        // Utilise le comportement par défaut pour les autres attributs
-        return parent::getAttribute($key);
+        // Utilise le comportement par défaut pour tous les autres attributs
+        return parent::getAttributeValue($key);
     }
 
     // Méthode pour formater les montants
