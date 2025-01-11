@@ -9,4 +9,6 @@ class DepenseFile extends Model
     protected $guarded  = [
         'id'
     ];
+
+   
 }

@@ -69,4 +69,6 @@ class Livraison extends Model
         }
 
     }
+
+    
 }

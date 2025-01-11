@@ -16,4 +16,6 @@ class produitProvision extends Model
     public function provision(){
         return $this->belongsTo('App\Provision');
     }
+
+    
 }

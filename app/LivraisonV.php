@@ -12,4 +12,7 @@ class LivraisonV extends Model
     public function boutique(){
         return $this->belongsTo('App\Boutique');
     }
+
+   
+
 }

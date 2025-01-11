@@ -20,4 +20,6 @@ class Produit extends Model
     public  function modele(){
         return $this->hasMany('App\Modele');
     }
+
+    
 }

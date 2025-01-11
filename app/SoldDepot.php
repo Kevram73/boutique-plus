@@ -9,4 +9,6 @@ class SoldDepot extends Model
     protected $guarded  = [
         'id'
     ];
+
+   
 }

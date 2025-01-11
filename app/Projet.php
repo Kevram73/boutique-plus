@@ -13,4 +13,11 @@ class Projet extends Model
     public function boutique(){
         return $this->belongsTo('App\Boutique');
     }
+
+   
+    // Méthode pour formater les montants
+    protected function formatAmount($value)
+    {
+        return number_format($value, 2, ',', ' ');
+    }
 }

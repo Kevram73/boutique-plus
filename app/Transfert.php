@@ -21,4 +21,6 @@ class Transfert extends Model
     {
         return $this->belongsTo('App\Boutique','magasin_reception_id');
     }
+
+    
 }

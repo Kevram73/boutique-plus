@@ -28,4 +28,6 @@ class livraisonCommande extends Model
     {
         return Modele::find($this->modele_id);
     }
+
+    
 }

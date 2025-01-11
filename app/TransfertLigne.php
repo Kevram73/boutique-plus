@@ -11,4 +11,6 @@ class TransfertLigne extends Model
     protected $fillable = [
         'modele_reception_id'
     ];
+
+    
 }

@@ -19,4 +19,10 @@ class Avoir extends Model
     {
         return $this->belongsTo(Boutique::class);
     }
+
+    public function getAmountAttribute($value)
+    {
+        // Formate le montant avec 2 décimales et des séparateurs de milliers
+        return number_format($value, 2, ',', ' ');
+    }
 }

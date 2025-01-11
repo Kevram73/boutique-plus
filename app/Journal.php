@@ -10,4 +10,5 @@ class Journal extends Model
         return $this->belongsTo('App\Boutique');
     }
 
+    
 }
