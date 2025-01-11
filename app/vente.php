@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class vente extends Model
 {
 
-    protected $fillable = ['with_avoir', 'montant_reduction', 'totaux'];
-
+ 
     public function  prevente(){
         return $this->hasMany('App\Prevente');
     }
@@ -46,17 +45,21 @@ class vente extends Model
         return $this->hasMany(Reglement::class);
     }
 
-
-
-    public function getAttributeValue($key)
+    public function getWithAvoirAttribute($value)
     {
-        // Si l'attribut doit être formaté
-        if (in_array($key, $this->fillable) && isset($this->attributes[$key])) {
-            return $this->formatAmount($this->attributes[$key]);
-        }
+        return $this->formatAmount($value);
+    }
 
-        // Utilise le comportement par défaut pour tous les autres attributs
-        return parent::getAttributeValue($key);
+    // Accessor pour "montant_reduction"
+    public function getMontantReductionAttribute($value)
+    {
+        return $this->formatAmount($value);
+    }
+
+    // Accessor pour "totaux"
+    public function getTotauxAttribute($value)
+    {
+        return $this->formatAmount($value);
     }
 
     // Méthode pour formater les montants

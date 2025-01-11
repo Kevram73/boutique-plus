@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reglement extends Model
 {
+    protected $guarded  = [
+        'id'
+    ];
 
     public function boutique(){
         return $this->belongsTo('App\Boutique');
@@ -20,12 +23,12 @@ class Reglement extends Model
         return $this->belongsTo(Client::class);
     }
 
-    protected $fillable = ['montant_donne', 'montant_restant', 'total'];
+    protected $formatAttributes = ['solde_total', 'autre_champ'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

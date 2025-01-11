@@ -24,22 +24,14 @@ class commandeModele extends Model
         return $this->hasMany(LivraisonCommande::class, 'commande_modele_id');
     }
 
-    protected $fillable = ['prix', 'total'];
+    public function getPrixAttribute($value)
+{
+    return $value !== null ? $this->formatAmount($value) : '0,00';
+}
 
-    // Accessor générique
-    public function __get($key)
-    {
-        if (in_array($key, $this->fillable)) {
-            $value = parent::__get($key);
-            return $this->formatAmount($value);
-        }
+public function getTotalAttribute($value)
+{
+    return $value !== null ? $this->formatAmount($value) : '0,00';
+}
 
-        return parent::__get($key);
-    }
-
-    // Méthode pour formater les montants
-    protected function formatAmount($value)
-    {
-        return number_format($value, 2, ',', ' ');
-    }
 }
