@@ -10,7 +10,7 @@ class Sold extends Model
         'id'
     ];
 
-    protected $formatAttributes = ['montant'];
+    protected $guarded = ['montant'];
 
     // Accessor générique
     public function __get($key)

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Facture extends Model
 {
-    protected $formatAttributes = ['montant_reduction', 'prixapayer'];
+    protected $guarded = ['montant_reduction', 'prixapayer'];
 
     // Accessor générique
     public function __get($key)

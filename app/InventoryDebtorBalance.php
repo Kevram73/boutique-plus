@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventoryDebtorBalance extends Model
 {
-    protected $formatAttributes = ['montant', 'montant_rembourser'];
+    protected $guarded = ['montant', 'montant_rembourser'];
 
     // Accessor générique
     public function __get($key)

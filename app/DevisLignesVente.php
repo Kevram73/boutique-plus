@@ -10,7 +10,7 @@ class DevisLignesVente extends Model
         return $this->hasMany('App\modeleFournisseur');
     }
 
-    protected $formatAttributes = ['reduction', 'prixtotal'];
+    protected $guarded = ['reduction', 'prixtotal'];
 
     // Accessor générique
     public function __get($key)

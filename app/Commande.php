@@ -22,7 +22,7 @@ class Commande extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    protected $formatAttributes = ['totaux'];
+    protected $guarded = ['totaux'];
 
     // Accessor générique
     public function __get($key)

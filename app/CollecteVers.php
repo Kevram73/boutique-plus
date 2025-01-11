@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CollecteVers extends Model
 {
     protected $table = 'collecteVers';
-    protected $formatAttributes = ['montantCollecte', 'montantVerse', 'veille', 'reste'];
+    protected $guarded = ['montantCollecte', 'montantVerse', 'veille', 'reste'];
 
     // Accessor générique
     public function __get($key)

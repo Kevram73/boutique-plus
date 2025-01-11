@@ -26,7 +26,7 @@ class modeleFournisseur extends Model
         return $this->hasMany('App\commandeModele');
     }
 
-    protected $formatAttributes = ['prix'];
+    protected $guarded = ['prix'];
 
     // Accessor générique
     public function __get($key)

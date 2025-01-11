@@ -20,7 +20,7 @@ class Client extends Authenticatable
         return $this->hasMany('App\Reglement');
     }
 
-    protected $formatAttributes = ['solde', 'avoir'];
+    protected $guarded = ['solde', 'avoir'];
 
     // Accessor générique
     public function __get($key)

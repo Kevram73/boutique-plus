@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CompteBancaire extends Model
 {
 
-    protected $formatAttributes = ['solder'];
+    protected $guarded = ['solder'];
 
     // Accessor générique
     public function __get($key)

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Etat extends Model
 {
     protected $table = 'etats';
-    protected $formatAttributes = ['amount', 'total'];
+    protected $guarded = ['amount', 'total'];
 
     // Accessor générique
     public function __get($key)

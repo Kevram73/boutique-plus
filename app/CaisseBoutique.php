@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CaisseBoutique extends Model
 {
-    protected $formatAttributes = ['solde_total'];
+    protected $guarded = ['solde_total'];
 
     // Accessor générique
     public function __get($key)

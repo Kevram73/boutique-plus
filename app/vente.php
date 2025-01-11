@@ -42,7 +42,7 @@ class vente extends Model
         return $this->hasMany(Reglement::class);
     }
 
-    protected $formatAttributes = ['with_avoir', 'montant_reduction', 'totaux'];
+    protected $guarded = ['with_avoir', 'montant_reduction', 'totaux'];
 
     public function getAttributeValue($key)
     {

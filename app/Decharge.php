@@ -19,7 +19,7 @@ class Decharge extends Model
         return $this->belongsTo('App\Fournisseur');
     }
 
-    protected $formatAttributes = ['montant'];
+    protected $guarded = ['montant'];
 
     // Accessor générique
     public function __get($key)

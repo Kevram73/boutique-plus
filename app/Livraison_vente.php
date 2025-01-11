@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Livraison_vente extends Model
 {
-    protected $formatAttributes = ['solde_total', 'autre_champ'];
+    protected $guarded = ['solde_total', 'autre_champ'];
 
     // Accessor générique
     public function __get($key)

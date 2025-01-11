@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inventaires extends Model
 {
-    protected $formatAttributes = [];
+    protected $guarded = [];
 
     // Accessor générique
     public function __get($key)

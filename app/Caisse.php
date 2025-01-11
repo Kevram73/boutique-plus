@@ -15,7 +15,7 @@ class Caisse extends Model
         return $this->belongsTo(Boutique::class);
     }
 
-    protected $formatAttributes = [
+    protected $guarded = [
         'solde',
         'soldeMagasin',
         'montantcollecte',

@@ -14,7 +14,7 @@ class Fournisseur extends Model
         return $this->hasMany('App\Reccete', 'fournisseur_id');
     }
 
-    protected $formatAttributes = ['solde'];
+    protected $guarded = ['solde'];
 
     // Accessor générique
     public function __get($key)

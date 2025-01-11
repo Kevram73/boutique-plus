@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Immobilisation extends Model
 {
-    protected $formatAttributes = ['montant'];
+    protected $guarded = ['montant'];
 
     // Accessor générique
     public function __get($key)

@@ -14,7 +14,7 @@ class DevisVente extends Model
         return $this->belongsTo('App\User');
     }
 
-    protected $formatAttributes = ['montant_reduction', 'totaux'];
+    protected $guarded = ['montant_reduction', 'totaux'];
 
     // Accessor générique
     public function __get($key)

@@ -14,7 +14,7 @@ class ReglementAchat extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    protected $formatAttributes = ['montant_donne', 'montant_restant', 'total'];
+    protected $guarded = ['montant_donne', 'montant_restant', 'total'];
 
     // Accessor générique
     public function __get($key)

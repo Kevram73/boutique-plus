@@ -16,7 +16,7 @@ class Modele extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    protected $formatAttributes = ['prix_achat', 'prix_tonne'];
+    protected $guarded = ['prix_achat', 'prix_tonne'];
 
     // Accessor générique
     public function __get($key)

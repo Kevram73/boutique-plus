@@ -23,7 +23,7 @@ class Reglement extends Model
         return $this->belongsTo(Client::class);
     }
 
-    protected $formatAttributes = ['montant_donne', 'montant_restant', 'total'];
+    protected $guarded = ['montant_donne', 'montant_restant', 'total'];
 
     // Accessor générique
     public function __get($key)

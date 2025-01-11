@@ -24,7 +24,7 @@ class commandeModele extends Model
         return $this->hasMany(LivraisonCommande::class, 'commande_modele_id');
     }
 
-    protected $formatAttributes = ['prix', 'total'];
+    protected $guarded = ['prix', 'total'];
 
     // Accessor générique
     public function __get($key)
