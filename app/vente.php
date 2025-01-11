@@ -42,22 +42,18 @@ class vente extends Model
         return $this->hasMany(Reglement::class);
     }
 
-    protected $formatAttributes = ['with_avoir', 'montant_reduction', 'totaux'];
+    public function getWithAvoirAttribute($value)
+{
+    return number_format($value, 2, ',', ' ');
+}
 
-    // Accessor générique
-    public function __get($key)
-    {
-        if (in_array($key, $this->formatAttributes)) {
-            $value = parent::__get($key);
-            return $this->formatAmount($value);
-        }
+public function getMontantReductionAttribute($value)
+{
+    return number_format($value, 2, ',', ' ');
+}
 
-        return parent::__get($key);
-    }
-
-    // Méthode pour formater les montants
-    protected function formatAmount($value)
-    {
-        return number_format($value, 2, ',', ' ');
-    }
+public function getTotauxAttribute($value)
+{
+    return number_format($value, 2, ',', ' ');
+}
 }
