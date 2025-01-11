@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Depense extends Model
 {
-    protected $fillable  = [
+    protected $formatAttributes  = [
         'id'
     ];
 
@@ -14,12 +14,12 @@ class Depense extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    protected $fillable = ['montant'];
+    protected $formatAttributes = ['montant'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

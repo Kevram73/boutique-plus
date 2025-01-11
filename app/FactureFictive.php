@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class FactureFictive extends Model
 {
-    protected $fillable = ['solde_total', 'autre_champ'];
+    protected $formatAttributes = ['solde_total', 'autre_champ'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

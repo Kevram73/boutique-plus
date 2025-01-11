@@ -14,12 +14,12 @@ class Fournisseur extends Model
         return $this->hasMany('App\Reccete', 'fournisseur_id');
     }
 
-    protected $fillable = ['solde'];
+    protected $formatAttributes = ['solde'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

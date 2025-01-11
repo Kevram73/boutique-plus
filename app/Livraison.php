@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Livraison extends Model
 {
 
-    protected $fillable = [
+    protected $formatAttributes = [
         'numero',
         'date_livraison',
         'boutique_id',

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class vente extends Model
 {
 
-    protected $fillable = ['with_avoir', 'montant_reduction', 'totaux'];
+    protected $formatAttributes = ['with_avoir', 'montant_reduction', 'totaux'];
 
     public function  prevente(){
         return $this->hasMany('App\Prevente');
@@ -50,7 +50,7 @@ class vente extends Model
     public function getAttributeValue($key)
     {
         // Si l'attribut doit être formaté
-        if (in_array($key, $this->fillable) && isset($this->attributes[$key])) {
+        if (in_array($key, $this->formatAttributes) && isset($this->attributes[$key])) {
             return $this->formatAmount($this->attributes[$key]);
         }
 

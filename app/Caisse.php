@@ -15,7 +15,7 @@ class Caisse extends Model
         return $this->belongsTo(Boutique::class);
     }
 
-    protected $fillable = [
+    protected $formatAttributes = [
         'solde',
         'soldeMagasin',
         'montantcollecte',
@@ -33,7 +33,7 @@ class Caisse extends Model
     // Accessor générique pour les attributs à formater
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

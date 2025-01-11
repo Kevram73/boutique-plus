@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Decharge extends Model
 {
-    protected $fillable = [
+    protected $formatAttributes = [
         'nom',
         'prenoms',
         'cni',
@@ -19,12 +19,12 @@ class Decharge extends Model
         return $this->belongsTo('App\Fournisseur');
     }
 
-    protected $fillable = ['montant'];
+    protected $formatAttributes = ['montant'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

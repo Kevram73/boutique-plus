@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inventaires extends Model
 {
-    protected $fillable = [];
+    protected $formatAttributes = [];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

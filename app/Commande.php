@@ -22,12 +22,12 @@ class Commande extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    protected $fillable = ['totaux'];
+    protected $formatAttributes = ['totaux'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->fillable)) {
+        if (in_array($key, $this->formatAttributes)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

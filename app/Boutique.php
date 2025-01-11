@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Boutique extends Model
 {
-    protected $fillable = [
+    protected $formatAttributes = [
         'nom','telephone','adresse'
     ];
     public function user(){

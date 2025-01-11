@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recette extends Model
 {
-    protected $fillable  = [
+    protected $formatAttributes  = [
         'id'
     ];
 
