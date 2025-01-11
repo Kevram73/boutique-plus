@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class JournalDepense extends Model
 {
-    protected $guarded  = [
+    protected $fillable  = [
         'id'
     ];
 
@@ -14,12 +14,12 @@ class JournalDepense extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    protected $guarded = ['solde_total', 'autre_champ'];
+    protected $fillable = ['solde_total', 'autre_champ'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class CaisseBoutique extends Model
 {
-    protected $guarded = ['solde_total'];
+    protected $fillable = ['solde_total'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Retour extends Model
 {
-    protected $guarded  = [
+    protected $fillable  = [
         'id'
     ];
 

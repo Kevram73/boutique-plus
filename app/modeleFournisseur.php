@@ -26,12 +26,12 @@ class modeleFournisseur extends Model
         return $this->hasMany('App\commandeModele');
     }
 
-    protected $guarded = ['prix'];
+    protected $fillable = ['prix'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

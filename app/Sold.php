@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sold extends Model
 {
-    protected $guarded  = [
+    protected $fillable  = [
         'id'
     ];
 
-    protected $guarded = ['montant'];
+    protected $fillable = ['montant'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

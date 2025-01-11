@@ -23,12 +23,12 @@ class Prevente extends Model
         return livraison::where('numero', $this->livraison)->get()->first();
     }
 
-    protected $guarded = ['prix', 'prixtotal'];
+    protected $fillable = ['prix', 'prixtotal'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

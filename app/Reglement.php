@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reglement extends Model
 {
-    protected $guarded  = [
+    protected $fillable  = [
         'id'
     ];
 
@@ -23,12 +23,12 @@ class Reglement extends Model
         return $this->belongsTo(Client::class);
     }
 
-    protected $guarded = ['montant_donne', 'montant_restant', 'total'];
+    protected $fillable = ['montant_donne', 'montant_restant', 'total'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

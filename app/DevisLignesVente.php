@@ -10,12 +10,12 @@ class DevisLignesVente extends Model
         return $this->hasMany('App\modeleFournisseur');
     }
 
-    protected $guarded = ['reduction', 'prixtotal'];
+    protected $fillable = ['reduction', 'prixtotal'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

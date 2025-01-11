@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjetModel extends Model
 {
-    protected $guarded  = [
+    protected $fillable  = [
         'id'
     ];
 

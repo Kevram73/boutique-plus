@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class CollecteVers extends Model
 {
     protected $table = 'collecteVers';
-    protected $guarded = ['montantCollecte', 'montantVerse', 'veille', 'reste'];
+    protected $fillable = ['montantCollecte', 'montantVerse', 'veille', 'reste'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

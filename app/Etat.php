@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Etat extends Model
 {
     protected $table = 'etats';
-    protected $guarded = ['amount', 'total'];
+    protected $fillable = ['amount', 'total'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->guarded)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }
