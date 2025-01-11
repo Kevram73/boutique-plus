@@ -14,22 +14,26 @@ class DevisVente extends Model
         return $this->belongsTo('App\User');
     }
 
-    protected $fillable = ['montant_reduction', 'totaux'];
-
-    // Accessor générique
-    public function __get($key)
+    public function getMontantReductionAttribute($value)
     {
-        if (in_array($key, $this->fillable)) {
-            $value = parent::__get($key);
-            return $this->formatAmount($value);
-        }
+        return $this->formatAmount($value);
+    }
 
-        return parent::__get($key);
+    // Accessor pour "totaux"
+    public function getTotauxAttribute($value)
+    {
+        return $this->formatAmount($value);
     }
 
     // Méthode pour formater les montants
     protected function formatAmount($value)
     {
-        return number_format($value, 2, ',', ' ');
+        // Vérifie si la valeur est numérique avant de la formater
+        if (is_numeric($value)) {
+            return number_format($value, 2, ',', ' ');
+        }
+
+        // Retourne la valeur brute si ce n'est pas un nombre
+        return $value;
     }
 }

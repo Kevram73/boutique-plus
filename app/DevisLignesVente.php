@@ -10,23 +10,27 @@ class DevisLignesVente extends Model
         return $this->hasMany('App\modeleFournisseur');
     }
 
-    protected $fillable = ['reduction', 'prixtotal'];
-
-    // Accessor générique
-    public function __get($key)
+    public function getReductionAttribute($value)
     {
-        if (in_array($key, $this->fillable)) {
-            $value = parent::__get($key);
-            return $this->formatAmount($value);
-        }
+        return $this->formatAmount($value);
+    }
 
-        return parent::__get($key);
+    // Accessor pour "prixtotal"
+    public function getPrixtotalAttribute($value)
+    {
+        return $this->formatAmount($value);
     }
 
     // Méthode pour formater les montants
     protected function formatAmount($value)
     {
-        return number_format($value, 2, ',', ' ');
+        // Vérifie si la valeur est numérique avant de la formater
+        if (is_numeric($value)) {
+            return number_format($value, 2, ',', ' ');
+        }
+
+        // Retourne la valeur brute si ce n'est pas un nombre
+        return $value;
     }
 }
 

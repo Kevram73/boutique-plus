@@ -14,22 +14,32 @@ class ReglementAchat extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    protected $fillable = ['montant_donne', 'montant_restant', 'total'];
-
-    // Accessor générique
-    public function __get($key)
+    public function getMontantDonneAttribute($value)
     {
-        if (in_array($key, $this->fillable)) {
-            $value = parent::__get($key);
-            return $this->formatAmount($value);
-        }
+        return $this->formatAmount($value);
+    }
 
-        return parent::__get($key);
+    // Accessor pour "montant_restant"
+    public function getMontantRestantAttribute($value)
+    {
+        return $this->formatAmount($value);
+    }
+
+    // Accessor pour "total"
+    public function getTotalAttribute($value)
+    {
+        return $this->formatAmount($value);
     }
 
     // Méthode pour formater les montants
     protected function formatAmount($value)
     {
-        return number_format($value, 2, ',', ' ');
+        // Vérifie si la valeur est numérique avant de la formater
+        if (is_numeric($value)) {
+            return number_format($value, 2, ',', ' ');
+        }
+
+        // Retourne la valeur brute si ce n'est pas un nombre
+        return $value;
     }
 }
