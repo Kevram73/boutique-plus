@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reglement extends Model
 {
-    protected $fillable  = [
-        'id'
-    ];
 
     public function boutique(){
         return $this->belongsTo('App\Boutique');
