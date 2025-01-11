@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class vente extends Model
 {
+
+    protected $guarded = ['with_avoir', 'montant_reduction', 'totaux'];
+
     public function  prevente(){
         return $this->hasMany('App\Prevente');
     }
@@ -42,7 +45,7 @@ class vente extends Model
         return $this->hasMany(Reglement::class);
     }
 
-    protected $guarded = ['with_avoir', 'montant_reduction', 'totaux'];
+
 
     public function getAttributeValue($key)
     {
