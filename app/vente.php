@@ -47,7 +47,7 @@ class vente extends Model
     public function getAttributeValue($key)
     {
         // Si l'attribut doit être formaté
-        if (in_array($key, $this->formatAttributes) && isset($this->attributes[$key])) {
+        if (in_array($key, $this->guarded) && isset($this->attributes[$key])) {
             return $this->formatAmount($this->attributes[$key]);
         }
 

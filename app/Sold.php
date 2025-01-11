@@ -15,7 +15,7 @@ class Sold extends Model
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->formatAttributes)) {
+        if (in_array($key, $this->guarded)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }
