@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class CompteBancaire extends Model
 {
 
-    protected $formatAttributes = ['solder'];
+    protected $fillable = ['solder'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->formatAttributes)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

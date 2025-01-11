@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjetModel extends Model
 {
-    protected $formatAttributes  = [
+    protected $fillable  = [
         'id'
     ];
 

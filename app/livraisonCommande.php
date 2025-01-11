@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class livraisonCommande extends Model
 {
-    protected $formatAttributes = [
+    protected $fillable = [
         'commande_modele_id',
         'livraison_id',
         'modele_id',

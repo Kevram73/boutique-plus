@@ -8,7 +8,7 @@ class TransfertLigne extends Model
 {
     protected $table = "transfert_lignes";
 
-    protected $formatAttributes = [
+    protected $fillable = [
         'modele_reception_id'
     ];
 

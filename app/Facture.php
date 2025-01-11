@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Facture extends Model
 {
-    protected $formatAttributes = ['montant_reduction', 'prixapayer'];
+    protected $fillable = ['montant_reduction', 'prixapayer'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->formatAttributes)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

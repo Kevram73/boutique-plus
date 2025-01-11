@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventoryDebtorBalance extends Model
 {
-    protected $formatAttributes = ['montant', 'montant_rembourser'];
+    protected $fillable = ['montant', 'montant_rembourser'];
 
     // Accessor générique
     public function __get($key)
     {
-        if (in_array($key, $this->formatAttributes)) {
+        if (in_array($key, $this->fillable)) {
             $value = parent::__get($key);
             return $this->formatAmount($value);
         }

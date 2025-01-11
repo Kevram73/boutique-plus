@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transfert extends Model
 {
-    protected $formatAttributes = [
+    protected $fillable = [
         'code',
         'status',
         'magasin_transfert_id',
