@@ -8,20 +8,30 @@ class Versement extends Model
 {
     protected $formatAttributes = ['montant'];
 
-    // Accessor générique
-    public function __get($key)
+    // Accessor générique pour formater les montants
+    public function getAttribute($key)
     {
-        if (in_array($key, $this->formatAttributes)) {
-            $value = parent::__get($key);
+        // Vérifie si l'attribut doit être formaté
+        if (in_array($key, $this->formatAttributes) && isset($this->attributes[$key])) {
+            $value = $this->attributes[$key];
             return $this->formatAmount($value);
         }
 
-        return parent::__get($key);
+        // Utilise le comportement par défaut pour les autres attributs
+        return parent::getAttribute($key);
     }
 
     // Méthode pour formater les montants
     protected function formatAmount($value)
     {
-        return number_format($value, 2, ',', ' ');
+        // Vérifie que la valeur est numérique avant de la formater
+        if (is_numeric($value)) {
+            return number_format($value, 2, ',', ' ');
+        }
+
+        // Retourne la valeur brute si ce n'est pas un nombre
+        return $value;
     }
+
+ 
 }
