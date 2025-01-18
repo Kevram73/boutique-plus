@@ -499,7 +499,7 @@ class CaisseController extends Controller
         try{
         //dd($request);
         $allcommande= explode( ',', $request->input('venTable') );
-        //dd($allcommande);
+        dd($allcommande);
 
         //$i=DB::table('billing_caisses')->max('id');
         $id=DB::table('caisses')->max('id');
@@ -595,7 +595,7 @@ class CaisseController extends Controller
                             })
                             ->where('reglements.type', 1)
                             ->sum('montant_donne');
-            
+
             $reglements_part2 = Reglement::whereDate('reglements.created_at', $date)
                             ->whereHas('client', function($query) use ($boutiqueId) {
                                 $query->where('boutique_id', $boutiqueId);
