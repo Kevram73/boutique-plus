@@ -26,6 +26,7 @@ class Boutique extends Model
                     ->withPivot(["is_active", "key", "value"])
                     ->withTimestamps();
     }
+    
     public function ventes()
     {
         return $this->hasMany(Vente::class);
