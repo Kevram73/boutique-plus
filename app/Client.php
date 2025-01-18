@@ -20,28 +20,28 @@ class Client extends Authenticatable
         return $this->hasMany('App\Reglement');
     }
 
-    public function getSoldeAttribute($value)
-    {
-        return $this->formatAmount($value);
-    }
+    // public function getSoldeAttribute($value)
+    // {
+    //     return $this->formatAmount($value);
+    // }
 
-    // Accessor pour "avoir"
-    public function getAvoirAttribute($value)
-    {
-        return $this->formatAmount($value);
-    }
+    // // Accessor pour "avoir"
+    // public function getAvoirAttribute($value)
+    // {
+    //     return $this->formatAmount($value);
+    // }
 
-    // Méthode pour formater les montants
-    protected function formatAmount($value)
-    {
-        // Vérifie si la valeur est numérique avant de la formater
-        if (is_numeric($value)) {
-            return number_format($value, 2, ',', ' ');
-        }
+    // // Méthode pour formater les montants
+    // protected function formatAmount($value)
+    // {
+    //     // Vérifie si la valeur est numérique avant de la formater
+    //     if (is_numeric($value)) {
+    //         return number_format($value, 2, ',', ' ');
+    //     }
 
-        // Retourne la valeur brute si ce n'est pas un nombre
-        return $value;
-    }
+    //     // Retourne la valeur brute si ce n'est pas un nombre
+    //     return $value;
+    // }
 
 
 }

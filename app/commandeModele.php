@@ -24,14 +24,14 @@ class commandeModele extends Model
         return $this->hasMany(LivraisonCommande::class, 'commande_modele_id');
     }
 
-    public function getPrixAttribute($value)
-{
-    return $value !== null ? $this->formatAmount($value) : '0,00';
-}
+//     public function getPrixAttribute($value)
+// {
+//     return $value !== null ? $this->formatAmount($value) : '0,00';
+// }
 
-public function getTotalAttribute($value)
-{
-    return $value !== null ? $this->formatAmount($value) : '0,00';
-}
+// public function getTotalAttribute($value)
+// {
+//     return $value !== null ? $this->formatAmount($value) : '0,00';
+// }
 
 }

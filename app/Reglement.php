@@ -23,27 +23,27 @@ class Reglement extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function getSoldeTotalAttribute($value)
-    {
-        return $this->formatAmount($value);
-    }
+    // public function getSoldeTotalAttribute($value)
+    // {
+    //     return $this->formatAmount($value);
+    // }
 
-    // Accessor pour "autre_champ"
-    public function getAutreChampAttribute($value)
-    {
-        return $this->formatAmount($value);
-    }
+    // // Accessor pour "autre_champ"
+    // public function getAutreChampAttribute($value)
+    // {
+    //     return $this->formatAmount($value);
+    // }
 
-    // Méthode pour formater les montants
-    protected function formatAmount($value)
-    {
-        // Vérifie si la valeur est numérique avant de la formater
-        if (is_numeric($value)) {
-            return number_format($value, 2, ',', ' ');
-        }
+    // // Méthode pour formater les montants
+    // protected function formatAmount($value)
+    // {
+    //     // Vérifie si la valeur est numérique avant de la formater
+    //     if (is_numeric($value)) {
+    //         return number_format($value, 2, ',', ' ');
+    //     }
 
-        // Retourne la valeur brute si ce n'est pas un nombre
-        return $value;
-    }
+    //     // Retourne la valeur brute si ce n'est pas un nombre
+    //     return $value;
+    // }
 
 }

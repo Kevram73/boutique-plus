@@ -10,20 +10,20 @@ class Charges extends Model
         return $this->belongsTo('App\Boutique');
     }
 
-    public function getMontantAttribute($value)
-    {
-        return $this->formatAmount($value);
-    }
+    // public function getMontantAttribute($value)
+    // {
+    //     return $this->formatAmount($value);
+    // }
 
-    // Méthode pour formater les montants
-    protected function formatAmount($value)
-    {
-        // Vérifie que la valeur est numérique avant de la formater
-        if (is_numeric($value)) {
-            return number_format($value, 2, ',', ' ');
-        }
+    // // Méthode pour formater les montants
+    // protected function formatAmount($value)
+    // {
+    //     // Vérifie que la valeur est numérique avant de la formater
+    //     if (is_numeric($value)) {
+    //         return number_format($value, 2, ',', ' ');
+    //     }
 
-        // Retourne la valeur brute si ce n'est pas un nombre
-        return $value;
-    }
+    //     // Retourne la valeur brute si ce n'est pas un nombre
+    //     return $value;
+    // }
 }

@@ -33,9 +33,9 @@ class Decharge extends Model
     }
 
     // Méthode pour formater les montants
-    protected function formatAmount($value)
-    {
-        return number_format($value, 2, ',', ' ');
-    }
+    // protected function formatAmount($value)
+    // {
+    //     return number_format($value, 2, ',', ' ');
+    // }
 
 }
