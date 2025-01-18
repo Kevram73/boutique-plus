@@ -499,7 +499,7 @@ class CaisseController extends Controller
         try{
         //dd($request);
         $allcommande= explode( ',', $request->input('venTable') );
-        dd($allcommande);
+        // dd($allcommande);
 
         //$i=DB::table('billing_caisses')->max('id');
         $id=DB::table('caisses')->max('id');
