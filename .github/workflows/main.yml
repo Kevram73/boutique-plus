@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI for boutique.mingoube.com
+name: CI for test-shop.mingoube.com
 
 # Controls when the workflow will run
 on:
