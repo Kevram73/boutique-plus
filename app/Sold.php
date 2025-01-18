@@ -9,4 +9,5 @@ class Sold extends Model
     protected $guarded  = [
         'id'
     ];
+    
 }
