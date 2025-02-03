@@ -60,11 +60,24 @@ class ProvisionsController extends Controller
             })
             ->select ('produit_provisions.*','fournisseurs.nom as fournisseur','produits.nom as produit')
             ->get();
-        return datatables()->of($provision)
+            return datatables()->of($provision)
             ->addColumn('action', function ($clt) {
-                          return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
-                                    <a class="btn btn-success" onclick="edit(' . $clt->id . ')"> <i class="fa fa-pencil"></i></a>
-                                    <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a> ';
+                return  '<a class="btn btn-info" onclick="show(' . $clt->id . ')" >
+                            <i class="fa fa-info"></i>
+                        </a>
+                        <a class="btn btn-success" onclick="edit(' . $clt->id . ')">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                        <a class="btn btn-primary" href="/livraison/bon/commande/' . $clt->id . '">
+                            <i class="fa fa-print"></i>
+                        </a>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+
             })
             ->make(true);
     }
