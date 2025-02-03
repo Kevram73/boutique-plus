@@ -1425,9 +1425,7 @@ public function indexNew($id)
 
     public function livraison_bon_commande(Request $request, $id)
     {
-        $livraisonCommande = livraisonCommande::where('commande_modele_id', $id);
-        $livraisons = Livraison::where('id', $livraisonCommande->first()->livraison_id)->get();
-
+        $livraisons = Livraison::find($id);
 
         $name = "bon_commande_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
 
