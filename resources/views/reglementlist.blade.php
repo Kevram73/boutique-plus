@@ -289,7 +289,7 @@
                                     });
 
                                 //post des données
-                                $('#ajout_reglement  form').on('submit', function (e) {
+                                $('#ajout_reglement form').on('submit', function (e) {
 
                                     let url,message;
                                     if (!$('#idreglement').val()){

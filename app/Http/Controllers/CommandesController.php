@@ -83,7 +83,8 @@ class CommandesController extends Controller
         return datatables()->of($commande)
             ->addColumn('action', function ($clt) {
                 return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
-                                    <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a> ';
+                                    <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>
+                                    <a class="btn btn-primary" href="/livraison/bon/commande/' . $clt->id . '"><i class="fa fa-file-o"></i></a> ';
             })
             ->make(true);
     }
@@ -206,7 +207,7 @@ class CommandesController extends Controller
                 })
                 ->where('ventes.client_id', '=', $clients[$i]->id)
                 ->SUM('reglements.montant_restant');
-            $credit[$i] = $total; 
+            $credit[$i] = $total;
         }
         $cre=count($clients);
         return view('newcommande2',compact('categorie', 'produits', 'modeles', 'fournisseurs', 'mod','modele2','clients','credit','cre'));
@@ -283,7 +284,7 @@ class CommandesController extends Controller
 
             $commande= Commande::findOrFail($commande ->id);
             $commande->totaux=$commande->totaux+  $commandemodele -> total;
-            $commande->update();  
+            $commande->update();
         $commande= Commande::findOrFail($commande->id);
 
             if($commande->credit == 1)
@@ -292,12 +293,12 @@ class CommandesController extends Controller
 
                 // Mise à jour des informations de l'utilisateur
                 $fournisseur->solde = $commande->totaux + $fournisseur->solde;
-    
+
                 // Sauvegarde des modifications
                 $fournisseur->save();
             }
         }
-        
+
         $etat = new Etat();
         $etat->fournisseur_id = $commande->fournisseur_id;
         $etat->amount = $commande->totaux;
@@ -307,7 +308,7 @@ class CommandesController extends Controller
         $etat->order_num = $commande->numero;
         $etat->type = "commande";
         $etat->save();
-    
+
 
         $historique=new Historique();
         $historique->actions = "Creer";
@@ -367,12 +368,12 @@ class CommandesController extends Controller
 
                 // Mise à jour des informations de l'utilisateur
                 $fournisseur->solde = $commande->totaux + $fournisseur->solde;
-    
+
                 // Sauvegarde des modifications
                 $fournisseur->save();
             }
         }
-        
+
         $etat = new Etat();
         $etat->fournisseur_id = $commande->fournisseur_id;
         $etat->amount = $commande->totaux;
@@ -431,14 +432,14 @@ class CommandesController extends Controller
             $commande= Commande::findOrFail($commande ->id);
             $commande->totaux=$commande->totaux+  $commandemodele -> total;
             $commande->update();
-          
+
               if($commande ->credit==1)
             {
                 $fournisseur = Fournisseur::find($commande->fournisseur_id);
-    
+
                 // Mise à jour des informations de l'utilisateur
                 $fournisseur->solde = $commande->totaux + $fournisseur->solde;
-    
+
                 // Sauvegarde des modifications
                 $fournisseur->save();
             }
@@ -1040,7 +1041,7 @@ class CommandesController extends Controller
     public function historique()
     {
         $fournisseurs=Fournisseur::all();
-        $produits=Modele::all()     
+        $produits=Modele::all()
            ->where ('boutique_id', '=',Auth::user()->boutique->id );
         ;
         return view('historiqueachat',compact('fournisseurs','produits'));
@@ -1126,7 +1127,7 @@ class CommandesController extends Controller
         //echo $request->product;
         /*  $test = DB::table('modeles')
              //->join('modele_fournisseurs', 'modeles.id', '=', 'modele_fournisseurs.modele_id')
-            
+
               ->join('commande_modeles', 'commande_modeles.modele', '=', 'modeles.id')
                ->join('commandes', 'commandes.id', '=', 'commande_modeles.commande_id')
               ->join('fournisseurs', 'fournisseurs.id', '=', 'commandes.fournisseur_id')
@@ -1151,8 +1152,8 @@ class CommandesController extends Controller
         {
          $modele = $modele
              ->where ('modeles.id', '=', $request->produit);
-        }  
-        
+        }
+
         if($request->fournisseur > 0)
          {
             // echo " Je recupere le fournisseur -------------------------------";
@@ -1164,7 +1165,7 @@ class CommandesController extends Controller
              $modele
              ->where ('commandes.created_at', '>=', $request->debut);
          }
- 
+
          if(!empty($request->fin))
          {
              $modele
@@ -1176,10 +1177,10 @@ class CommandesController extends Controller
         ->get();
 
          return datatables()->of($modele)
-       
-        ->make(true) ;   
+
+        ->make(true) ;
      }
-    
+
 
 
     public function allfournihistoriquesum(Request $request)
@@ -1193,7 +1194,7 @@ class CommandesController extends Controller
         })
          ->join('fournisseurs', function ($join) {
             $join->on('fournisseurs.id', '=', 'commandes.fournisseur_id');
-        });  
+        });
         //dd($modele);
 
         if($request->product > 0)
