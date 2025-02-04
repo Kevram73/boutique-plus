@@ -197,7 +197,8 @@
             <div>BON DE COMMANDE: <span>N° {{ $commande->id }}</span></div>
             <div>Date de la commande: <span>{{ {{ date('d-m-Y', strtotime($commande->date_commande)) }}
  }}</span></div>
-            <div>Date de livraison: <span>{{ \Carbon\Carbon::parse($commande->date_commande)->addDays(1)->format('d-m-Y') }}
+            <div>Date de livraison: <span>{{ {{ date('d-m-Y', strtotime($commande->date_commande->addDays(1))) }}
+ }}
             </span></div>
         </div>
     </div>
