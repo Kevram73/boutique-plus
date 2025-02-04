@@ -21,6 +21,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use DateTime;
+use PDF;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Exception;
 
 class CommandesController extends Controller
 {
@@ -95,7 +99,7 @@ class CommandesController extends Controller
 
         $name = "bon_commande_provider_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
 
-        
+
         try{
             $options = new Options();
             $options->set('isHtml5ParserEnabled', true);
