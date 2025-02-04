@@ -19,6 +19,11 @@ class commandeModele extends Model
         return $this->belongsTo(Modele::class, 'modele_id');
     }
 
+    public function my_modele()
+    {
+        return Modele::where('id', $this->modele)->first();
+    }
+
     public function livraisons()
     {
         return $this->hasMany(LivraisonCommande::class, 'commande_modele_id');
