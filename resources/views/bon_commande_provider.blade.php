@@ -181,7 +181,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ Auth::user()->boutique->nom }}</td>
+                        <td>{{ MINGOUBE & FILS }}</td>
                         <td>{{ Auth::user()->boutique->adresse }}</td>
                         <td>{{ Auth::user()->nom }}</td>
                         <td>{{ Auth::user()->boutique->telephone }}</td>
@@ -230,7 +230,7 @@
 
     <!-- Footer Text -->
 
-    <p class="date">Fait à {{ Auth::user()->boutique->nom }}, ce @php
+    <p class="date">Fait à Lomé, ce @php
     setlocale(LC_TIME, 'fr_FR.UTF-8');
     $date = new DateTimeImmutable(now());
     echo strftime('%A %d %B %Y', $date->getTimestamp());
