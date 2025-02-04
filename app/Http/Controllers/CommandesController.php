@@ -84,9 +84,43 @@ class CommandesController extends Controller
             ->addColumn('action', function ($clt) {
                 return  '<a class="btn btn-info " onclick="show(' . $clt->id . ')" ><i class="fa  fa-info"></i></a>
                                     <a class="btn btn-danger" onclick="deletepro(' . $clt->id . ')"><i class="fa fa-trash-o"></i></a>
-                                    <a class="btn btn-primary" href="/livraison/bon/commande/' . $clt->id . '"><i class="fa fa-file-o"></i></a> ';
+                                    <a class="btn btn-primary" href="/bon/commande/provider/' . $clt->id . '"><i class="fa fa-file-o"></i></a> ';
             })
             ->make(true);
+    }
+
+    public function bon_commande_provider(Request $request, $id)
+    {
+        $commande = Commande::find($id);
+
+        $name = "bon_commande_provider_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
+
+        try{
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', TRUE);
+            $options->set('isPhpEnabled', true);
+
+            $dompdf = new Dompdf($options);
+
+            // Chargez la vue dans Dompdf
+            $view = view('bon_commande_provider',compact('commande'))->render();
+            $dompdf->loadHtml($view);
+
+            // Définissez la taille du papier
+            $dompdf->setPaper('a4');
+
+            // Rendez le PDF
+            $dompdf->render();
+
+            // Enregistrez le PDF dans un répertoire
+            file_put_contents(public_path("bons/" . $name), $dompdf->output());
+
+        }catch(Exception $e)
+        {}
+
+        //return $pdf->download($name);
+        return response()->download(public_path("bons/" . $name));
     }
 
 
