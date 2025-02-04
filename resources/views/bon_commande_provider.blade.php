@@ -201,6 +201,7 @@
             </span></div>
         </div>
     </div>
+    <div style="padding-top: 40px"></div>
     @php
         $total = 0;
     @endphp
@@ -210,6 +211,7 @@
         <tr>
             <th>Réf.</th>
             <th>Désignation</th>
+            <th>Unité</th>
             <th>Prix Unitaire</th>
             <th>Quantité</th>
             <th>Montant Total</th>
@@ -221,6 +223,7 @@
             <tr>
                 <td>{{$cmdModele->my_modele()->ref_modele}}</td>
                 <td>{{$cmdModele->my_modele()->libelle}}</td>
+                <td>Kg</td>
                 <td>{{$cmdModele->prix}}</td>
                 <td>{{$cmdModele->quantite}}</td>
                 <td>{{$cmdModele->total}}</td>
