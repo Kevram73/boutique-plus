@@ -181,7 +181,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ MINGOUBE & FILS }}</td>
+                        <td>MINGOUBE & FILS</td>
                         <td>{{ Auth::user()->boutique->adresse }}</td>
                         <td>{{ Auth::user()->nom }}</td>
                         <td>{{ Auth::user()->boutique->telephone }}</td>
