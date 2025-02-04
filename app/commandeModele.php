@@ -13,10 +13,10 @@ class commandeModele extends Model
     public  function modeleFournisseur(){
         return $this->belongsTo('App\modeleFournisseur');
     }
-    
+
     public function modele()
     {
-        return $this->belongsTo(Modele::class, 'modele_id');
+        return Modele::where('id', $this->modele_id)->first();
     }
 
     public function livraisons()

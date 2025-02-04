@@ -12,6 +12,10 @@ class Commande extends Model
     public function commandeModele(){
         return $this->hasMany('App\commandeModele');
     }
+
+    public function commandeModele(){
+        return commmandeModele::where('commande_id', $this->id)->get();
+    }
     public function  modeleFournisseur(){
         return $this->hasMany('App\modeleFournisseur');
     }
