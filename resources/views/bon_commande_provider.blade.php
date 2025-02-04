@@ -195,8 +195,9 @@
         <!-- Inline Elements Section -->
         <div class="inline-elt col" style="flex-grow: 1;">
             <div>BON DE COMMANDE: <span>N° {{ $commande->id }}</span></div>
-            <div>Date de la commande: <span>{{ date('d-m-Y', strtotime($commande->date_commande)) }}</span></div>
-            <div>Date de livraison: <span>{{ date('d-m-Y', strtotime($commande->date_commande->addDays(1))) }}
+            <div>Date de la commande: <span>{{ \Carbon\Carbon::parse($commande->date_commande)->format('d-m-Y') }}</span></div>
+<div>Date de livraison: <span>{{ \Carbon\Carbon::parse($commande->date_commande)->addDays(1)->format('d-m-Y') }}</span></div>
+
             </span></div>
         </div>
     </div>
