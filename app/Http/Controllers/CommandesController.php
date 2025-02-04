@@ -95,6 +95,7 @@ class CommandesController extends Controller
 
         $name = "bon_commande_provider_".date('Y-m-d_H-i-s', strtotime(now())).".pdf";
 
+        
         try{
             $options = new Options();
             $options->set('isHtml5ParserEnabled', true);
