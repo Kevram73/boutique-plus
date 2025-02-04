@@ -241,6 +241,9 @@
     echo strftime('%A %d %B %Y', $date->getTimestamp());
 @endphp</p>
 
+    <div style="padding-top: 40px"></div>
+
+
 
     <div class="bottom-space">
         <p class="second">Le gérant {{ Auth::user()->nom }}</p>
