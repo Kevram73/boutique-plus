@@ -18,7 +18,6 @@ use App\DevisVente;
 use App\DevisLignesVente;
 use Illuminate\Support\Facades\DB;
 use App\Categorie;
-use App\Commande;
 use App\FactureFictive;
 use App\produitProvision;
 use App\Retour;
@@ -73,6 +72,8 @@ class VentesController extends Controller
                 ->make(true);
 
     }
+
+
 
     // public function liste()
     // {
