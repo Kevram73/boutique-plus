@@ -16,7 +16,7 @@ class commandeModele extends Model
 
     public function modele()
     {
-        return Modele::where('id', $this->modele_id)->first();
+        return $this->belongsTo(Modele::class, 'modele_id');
     }
 
     public function livraisons()

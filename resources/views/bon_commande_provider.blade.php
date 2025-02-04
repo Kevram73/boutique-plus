@@ -212,13 +212,13 @@
             <th>Quantité</th>
             <th>Montant Total</th>
         </tr>
-        @foreach($commande->commandeModele() as $cmdModele)
+        @foreach($commande->commandeModele as $cmdModele)
                 @php
                     $total += $cmdModele->total;
                 @endphp
             <tr>
-                <td>$cmdModele->modele()->ref_modele</td>
-                <td>$cmdModele->modele()->libelle</td>
+                <td>$cmdModele->modele->ref_modele</td>
+                <td>$cmdModele->modele->libelle</td>
                 <td>$cmdModele->prix</td>
                 <td>$cmdModele->quantite</td>
                 <td>$cmdModele->total</td>
