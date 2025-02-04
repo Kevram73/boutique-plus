@@ -217,11 +217,11 @@
                     $total += $cmdModele->total;
                 @endphp
             <tr>
-                <td>$cmdModele->modele->ref_modele</td>
-                <td>$cmdModele->modele->libelle</td>
-                <td>$cmdModele->prix</td>
-                <td>$cmdModele->quantite</td>
-                <td>$cmdModele->total</td>
+                <td>{{$cmdModele->modele->ref_modele}}</td>
+                <td>{{$cmdModele->modele->libelle}}</td>
+                <td>{{$cmdModele->prix}}</td>
+                <td>{{$cmdModele->quantite}}</td>
+                <td>{{$cmdModele->total}}</td>
             </tr>
         @endforeach
     </table>
