@@ -190,7 +190,7 @@
             </table>
         </div>
 
-
+        <div style="padding-top: 60px"></div>
 
         <!-- Inline Elements Section -->
         <div class="inline-elt col" style="flex-grow: 1;">
